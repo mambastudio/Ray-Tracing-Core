@@ -157,6 +157,19 @@ public class Transform {
                             mInv.get(0,2) * x + mInv.get(1,2) * y + mInv.get(2,2) * z);
     }
     
+    public BoundingBox transform(BoundingBox b) {
+
+        BoundingBox ret = new BoundingBox(transform(new Point3f(b.minimum.x, b.minimum.y, b.minimum.z)));
+        ret = BoundingBox.union(ret, transform(new Point3f(b.maximum.x, b.minimum.y, b.minimum.z)));
+        ret = BoundingBox.union(ret, transform(new Point3f(b.minimum.x, b.maximum.y, b.minimum.z)));
+        ret = BoundingBox.union(ret, transform(new Point3f(b.minimum.x, b.minimum.y, b.maximum.z)));
+        ret = BoundingBox.union(ret, transform(new Point3f(b.minimum.x, b.maximum.y, b.maximum.z)));
+        ret = BoundingBox.union(ret, transform(new Point3f(b.maximum.x, b.maximum.y, b.minimum.z)));
+        ret = BoundingBox.union(ret, transform(new Point3f(b.maximum.x, b.minimum.y, b.maximum.z)));
+        ret = BoundingBox.union(ret, transform(new Point3f(b.maximum.x, b.maximum.y, b.maximum.z)));
+        return ret;
+    }
+    
     public void transformAssign(Normal3f n) 
     {
         float x = n.x, y = n.y, z = n.z;

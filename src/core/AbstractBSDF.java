@@ -8,20 +8,20 @@ package core;
 import core.coordinates.Normal3f;
 import core.coordinates.Point2f;
 import core.coordinates.Vector3f;
+import core.math.Color;
 import core.math.FloatValue;
 import core.math.Frame;
-import core.math.Spectrum;
 
 /**
  *
  * @author user
  */
 public abstract class AbstractBSDF {
-    protected Spectrum color = null;
+    protected Color color = null;
     protected Frame frame = null;
     protected Vector3f localWi = null;
     
-    public AbstractBSDF(Spectrum color)
+    public AbstractBSDF(Color color)
     {        
         this.color = color;        
         this.frame = new Frame();             
@@ -35,8 +35,8 @@ public abstract class AbstractBSDF {
     }
     
     public abstract BSDFType type();       
-    public abstract Spectrum sample(Point2f rndTuple, Vector3f worldWo, FloatValue pdfWo, FloatValue cosWo);
-    public abstract Spectrum evaluate(Vector3f worldWo, FloatValue cosWo, FloatValue directPdfWo, FloatValue reversePdfWo);
+    public abstract Color sample(Point2f rndTuple, Vector3f worldWo, FloatValue pdfWo, FloatValue cosWo);
+    public abstract Color evaluate(Vector3f worldWo, FloatValue cosWo, FloatValue directPdfWo, FloatValue reversePdfWo);
         
     public Vector3f getWi()
     {        
@@ -58,12 +58,12 @@ public abstract class AbstractBSDF {
         return frame.toLocal(worldWo).z;
     }
         
-    public Spectrum getSpectrum()
+    public Color getColor()
     {
         return color;
     }
     
-    public void setSpectrum(Spectrum color)
+    public void setSpectrum(Color color)
     {
         this.color = color;
     }        

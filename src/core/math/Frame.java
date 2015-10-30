@@ -70,4 +70,15 @@ public class Frame
     public Vector3 binormal(){ return mX; }
     public Vector3 tangent (){ return mY; }
     public Vector3 normal  (){ return mZ; }
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("xdir ").append(mX).append("\n");
+        builder.append("ydir ").append(mY).append("\n");
+        builder.append("zdir ").append(mZ);
+        return builder.toString();
+    }
+            
 }

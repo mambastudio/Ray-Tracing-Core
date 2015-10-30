@@ -73,6 +73,11 @@ public class Ray {
         return getMax();
     }
     
+     public float getDistanceSquared()
+    {
+        return getMax();
+    }
+    
     @Override
     public String toString()
     {

@@ -13,24 +13,24 @@ import static java.lang.Math.min;
  *
  * @author user
  */
-public class BBox 
+public class BoundingBox implements Cloneable
 {
     public Point3f minimum;
     public Point3f maximum;
    
-    public BBox() 
+    public BoundingBox() 
     {
         minimum = new Point3f(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
         maximum = new Point3f(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
     }
     
-    public BBox(Point3f p) 
+    public BoundingBox(Point3f p) 
     {
         minimum = new Point3f(p);
         maximum = new Point3f(p);
     }
     
-    public BBox(Point3f p1, Point3f p2) 
+    public BoundingBox(Point3f p1, Point3f p2) 
     {
         minimum = new Point3f(//
                 min(p1.x, p2.x), min(p1.y, p2.y), min(p1.z, p2.z));
@@ -41,6 +41,18 @@ public class BBox
     public final Point3f getCenter() 
     {
         return Point3f.mid(minimum, maximum);
+    }
+    
+    public static BoundingBox union(BoundingBox b, Point3f p) 
+    {
+        BoundingBox ret = b.clone();
+        ret.minimum.x = min(b.minimum.x, p.x);
+        ret.minimum.y = min(b.minimum.y, p.y);
+        ret.minimum.z = min(b.minimum.z, p.z);
+        ret.maximum.x = max(b.maximum.x, p.x);
+        ret.maximum.y = max(b.maximum.y, p.y);
+        ret.maximum.z = max(b.maximum.z, p.z);
+        return ret;
     }
     
     public final void include(Point3f p) 
@@ -61,7 +73,7 @@ public class BBox
         }
     }
     
-    public final void include(BBox b) {
+    public final void include(BoundingBox b) {
         if (b != null) {
             if (b.minimum.x < minimum.x)
                 minimum.x = b.minimum.x;
@@ -78,9 +90,15 @@ public class BBox
         }
     }
     
-    public void boundingSphere(Point3f c, FloatValue rad) 
+    public BoundingSphere getBoundingSphere()
     {
-        c.set(getCenter());
-        rad.value = c.distanceTo(maximum);        
+        Point3f c = getCenter();
+        return new BoundingSphere(c, c.distanceTo(maximum));
+    }
+    
+    @Override
+    public BoundingBox clone() 
+    {
+        return new BoundingBox(minimum, maximum);
     }
 }

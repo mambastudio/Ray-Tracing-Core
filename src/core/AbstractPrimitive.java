@@ -5,9 +5,10 @@
  */
 package core;
 
+import core.light.AreaLight;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
-import core.math.BBox;
+import core.math.BoundingBox;
 import core.math.Ray;
 
 /**
@@ -16,7 +17,7 @@ import core.math.Ray;
  */
 public abstract class AbstractPrimitive 
 {
-    public abstract BBox getWorldBounds();
+    public abstract BoundingBox getWorldBounds();
     public abstract boolean intersect(Ray ray, Intersection isect);
     public abstract boolean intersectP(Ray ray);
     public abstract AreaLight getAreaLight();
