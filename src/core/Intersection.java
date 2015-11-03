@@ -5,10 +5,13 @@
  */
 package core;
 
+import core.math.DifferentialGeometry;
+
 /**
  *
  * @author user
  */
 public class Intersection {
-    
+    public DifferentialGeometry dg = new DifferentialGeometry();
+    public AbstractPrimitive primitive;
 }

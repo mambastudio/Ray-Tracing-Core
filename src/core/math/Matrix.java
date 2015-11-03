@@ -11,13 +11,14 @@ import core.coordinates.Vector3f;
  *
  * @author user
  */
-public class Matrix {
+public final class Matrix {
      // m_row_col; stored column major
     float[] m = new float[16];
 
     public Matrix()
     {
-        
+        for(int i=0; i<4; i++) 
+            this.set(i, i, 1);
     }
     
     public Matrix(float a)

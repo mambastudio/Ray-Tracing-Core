@@ -33,4 +33,13 @@ public class DifferentialGeometry
     {
         this.p = p; this.n = n;
     }
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("point  ").append(p).append("\n");
+        builder.append("normal ").append(n);
+        return builder.toString();
+    }
 }

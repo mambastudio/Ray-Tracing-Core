@@ -51,6 +51,15 @@ public class Ray {
         dest.z = o.z + (tMax * d.z);
         return dest;
     }
+    
+    public final Point3f getPoint(float t)
+    {
+        Point3f dest = new Point3f();        
+        dest.x = o.x + (t * d.x);
+        dest.y = o.y + (t * d.y);
+        dest.z = o.z + (t * d.z);
+        return dest;
+    }
 
     public final void setMax(float t) 
     {

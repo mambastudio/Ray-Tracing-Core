@@ -38,6 +38,13 @@ public class BoundingBox implements Cloneable
                 max(p1.x, p2.x), max(p1.y, p2.y), max(p1.z, p2.z));
     }
     
+    public BoundingBox(float x1, float y1, float z1, float x2, float y2, float z2) {
+        minimum = new Point3f(//
+                min(x1, x2), min(y1, y2), min(z1, z2));
+        maximum = new Point3f(//
+                max(x1, x2), max(y1, y2), max(z1, z2));
+    }
+    
     public final Point3f getCenter() 
     {
         return Point3f.mid(minimum, maximum);

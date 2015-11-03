@@ -20,8 +20,8 @@ import core.math.Transform;
  */
 public abstract class AbstractShape 
 {
-    Transform o2w;
-    Transform w2o;
+    protected Transform o2w;
+    protected Transform w2o;
     
     public AbstractShape(Transform o2w, Transform w2o)
     {

@@ -5,10 +5,19 @@
  */
 package core;
 
+import core.math.BoundingBox;
+import core.math.Ray;
+import java.util.ArrayList;
+
 /**
  *
  * @author user
  */
-public class AbstractAccelerator {
+public abstract class AbstractAccelerator 
+{
+    public abstract void setPrimitives(ArrayList<AbstractPrimitive> primitives);
+    public abstract boolean intersect(Ray r, Intersection isect);
+    public abstract boolean intersectP(Ray r);
     
+    public abstract BoundingBox getWorldBounds();
 }

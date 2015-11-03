@@ -8,6 +8,8 @@ package core.math;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
+import static java.lang.Math.PI;
+import static java.lang.Math.sqrt;
 
 /**
  *
@@ -263,5 +265,39 @@ public class Utility {
         float sintheta = sinTheta(w);
         if (sintheta == 0.f) return 0.f;
         return clamp(w.y / sintheta, -1.f, 1.f);
+    }
+    
+    public static boolean quadratic(float A, float B, float C, float[] t)
+    {
+        // Find Quadratic discriminant
+        float discrim = B * B - 4.f * A * C;
+        if (discrim <= 0.) {
+            return false;
+        }
+        float rootDiscrim = (float) sqrt(discrim);
+
+        // Compute Quadratic _t_ values
+        float q;
+        if (B < 0) {
+            q = -.5f * (B - rootDiscrim);
+        } else {
+            q = -.5f * (B + rootDiscrim);
+        }
+        t[0] = q / A;
+        t[1] = C / q;
+        if (t[0] > t[1]) {
+            float swap = t[0];
+            t[0] = t[1];
+            t[1] = swap;
+        }
+        return true;
+    }
+    
+    public static float radians(float deg) {
+        return ((float) PI / 180.f) * deg;
+    }
+
+    public static float degrees(float rad) {
+        return (180.f / (float) PI) * rad;
     }
 }

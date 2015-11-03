@@ -23,4 +23,9 @@ public class Vector3f extends Vector3<Vector3f>
         super(v);
     }
     
+    public Normal3f asNormal()
+    {
+        return new Normal3f(x, y, z);
+    }
+    
 }
