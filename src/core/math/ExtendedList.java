@@ -23,6 +23,11 @@ public class ExtendedList <V>
         list = new ArrayList<>();
     }
     
+    public boolean contains(V v)
+    {
+        return list.contains(v);
+    }
+    
     public V getFirst()
     {
         return list.get(0);

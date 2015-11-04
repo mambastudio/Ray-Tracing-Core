@@ -6,6 +6,7 @@
 package core;
 
 import core.math.ExtendedList;
+import core.primitive.Geometries;
 import java.util.ArrayList;
 
 /**
@@ -14,16 +15,26 @@ import java.util.ArrayList;
  */
 public class LightCache {
     ExtendedList<AbstractLight> lightList = null;
-    ExtendedList<AbstractPrimitive> arealightList = null;
     
     AbstractBackground backgroundLight = null;
     
     public LightCache()
     {
-        lightList = new ExtendedList<>();
-        arealightList = new ExtendedList<>();
+        lightList = new ExtendedList<>();       
     }
     
+    public void clear()
+    {
+        lightList.removeAll();
+    }
+    
+    public void addBackgroundLight()
+    {
+        if(backgroundLight != null)
+            if(!lightList.contains(backgroundLight))
+                lightList.add(backgroundLight);
+                
+    }
     public void setBackgroundLight(AbstractBackground background)
     {
         this.backgroundLight = background;
@@ -39,25 +50,30 @@ public class LightCache {
         return backgroundLight != null;
     }
     
-    public void add(ArrayList<AbstractPrimitive> primitives)
+    public void add(Geometries geometry)
     {
-        for(AbstractPrimitive primitive: primitives)
-            if(primitive.getMaterial().isEmitter())
-                arealightList.add(primitive);
+        if(!geometry.getMaterial().isEmitter())
+            return;
+        
+        ArrayList<AbstractPrimitive> list = new ArrayList<>();
+        geometry.refine(list);
+        
+        for(AbstractPrimitive prim : list)
+            lightList.add(prim.getAreaLight());
     }
     
     public AbstractLight getRandomLight()
     {
-        return null;
+        return lightList.getRandom();
     }
     
     public float getLightsPdf()
     {
-        return 0f;
+        return 1f/lightList.size();
     }
     
     public int getSize()
     {
-        return 0;
+        return lightList.size();
     }
 }

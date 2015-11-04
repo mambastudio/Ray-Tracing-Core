@@ -5,10 +5,16 @@
  */
 package core;
 
+import core.math.Transform;
+
 /**
  *
  * @author user
  */
-public class AbstractBackground {
-    
+public abstract class AbstractBackground extends AbstractLight
+{
+     public AbstractBackground()
+    {
+        super(new Transform());
+    }
 }
