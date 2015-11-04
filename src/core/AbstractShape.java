@@ -41,10 +41,14 @@ public abstract class AbstractShape
     public abstract boolean intersect(Ray r, DifferentialGeometry dg);
     public abstract float getArea();
     
-    public Point3f sample(float u1, float u2, Normal3f n) 
+    public Point3f sampleA(float u1, float u2, Normal3f n) 
     {
-        throw new UnsupportedOperationException("Unimplemented Shape::Sample() method called");
-        //return Point();
+        throw new UnsupportedOperationException("Unimplemented Shape::Sample() method called");        
+    }
+    
+    public Point3f sampleW(Point3f p, float u1, float u2,
+            Normal3f n) {
+        return sampleA(u1, u2, n);
     }
     
     public float pdfA() 
@@ -52,15 +56,15 @@ public abstract class AbstractShape
         return 1.f / getArea();
     }
     
-    public float pdfW(Point3f p, Vector3f wo)
+    public float pdfW(Point3f p, Vector3f w)
     {
         DifferentialGeometry dg = new DifferentialGeometry();
-        Ray r = new Ray(p, wo);
+        Ray r = new Ray(p, w);
         
         if(!intersect(r, dg))
             return 0;
         
-        float pdfW = pdfA() * r.getDistanceSquared() / Vector3.dot(dg.n, wo);
+        float pdfW = pdfA() * r.getDistanceSquared() / Vector3.dot(dg.n, w);
         
         if (Float.isInfinite(pdfW)) 
             pdfW = 0.f;

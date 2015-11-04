@@ -17,6 +17,7 @@ import static java.lang.Math.sqrt;
  */
 public class Utility {
     public static final float PI_F = (float)Math.PI;
+    public static final float TWO_PI_F = PI_F * PI_F;
     public static final float INV_PI_F = 1.f/PI_F;
     public static final float EPS_COSINE = 1e-6f;
     
@@ -129,18 +130,7 @@ public class Utility {
         return (float) ((power + 1.f) * Math.pow(cosTheta, power) * (0.5f * INV_PI_F));
     }
     
-    public static Point3f sampleUniformTriangle(float r1, float r2, Point3f p1, Point3f p2, Point3f p3)
-    {
-        float s = (float)(Math.sqrt(r1));
-        float t = (float)r2;
-        
-        Point3f p = new Point3f();
-        p.x = (1 - s)*p1.x + s*(1 - t)*p2.x + s*t*p3.x;
-        p.y = (1 - s)*p1.y + s*(1 - t)*p2.y + s*t*p3.y;
-        p.z = (1 - s)*p1.z + s*(1 - t)*p2.z + s*t*p3.z;
-        
-        return p;
-    }
+   
     
     public static Vector3f sampleUniformSphereW(Point2f sample, FloatValue pdfSA)
     {
@@ -215,18 +205,7 @@ public class Utility {
         res.y = (float) (r * Math.sin(phi));
         return res;
     }
-    
-    public static float areaTriangle(Point3f p1, Point3f p2, Point3f p3)
-    {
-        float a = p1.distanceTo(p2);
-        float b = p1.distanceTo(p3);
-        float c = p2.distanceTo(p3);
         
-        float s = 0.5f*(a + b + c);
-        
-        return (float)Math.sqrt(s*(s-a)*(s-b)*(s-c));
-    } 
-    
     // reflect vector through (0,0,1)
     public static Vector3f reflectLocal(Vector3f w)
     {
@@ -300,4 +279,25 @@ public class Utility {
     public static float degrees(float rad) {
         return (180.f / (float) PI) * rad;
     }
+    
+    public static float lerp(float t, float v1, float v2) {
+        return (1f - t) * v1 + t * v2;
+    }
+    
+    public static float sqrtf(float f)
+    {
+        return (float)Math.sqrt(f);
+    }
+    
+    public static float cosf(float f)
+    {
+        return (float)Math.cos(f);
+    }
+    
+    public static float sinf(float f)
+    {
+        return (float)Math.sin(f);
+    }
+    
+    
 }

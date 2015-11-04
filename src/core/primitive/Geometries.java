@@ -75,5 +75,10 @@ public class Geometries extends AbstractPrimitive
     public AbstractBSDF getBSDF(Normal3f worldNormal, Vector3f worldWi) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void refine(ArrayList<AbstractPrimitive> refined) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

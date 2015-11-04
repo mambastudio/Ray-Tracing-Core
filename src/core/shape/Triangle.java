@@ -12,7 +12,8 @@ import core.coordinates.Vector3f;
 import core.math.BoundingBox;
 import core.math.DifferentialGeometry;
 import core.math.Ray;
-import core.math.Utility;
+import static core.math.MonteCarlo.areaTriangle;
+import static core.math.MonteCarlo.uniformSampleTriangle;
 
 /**
  *
@@ -132,7 +133,13 @@ public class Triangle extends AbstractShape
     @Override
     public float getArea() 
     {
-        return Utility.areaTriangle(p1, p2, p3);
+        return areaTriangle(p1, p2, p3);
     }
     
+    @Override
+    public Point3f sampleA(float u1, float u2, Normal3f n) 
+    {
+        n.set(this.n);
+        return uniformSampleTriangle(u1, u2, p1, p2, p3);
+    }
 }

@@ -9,15 +9,21 @@ import core.AbstractShape;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3;
+import core.coordinates.Vector3f;
 import core.math.BoundingBox;
 import core.math.DifferentialGeometry;
+import core.math.Frame;
+import static core.math.MonteCarlo.uniformSampleCone;
+import static core.math.MonteCarlo.uniformSampleSphere;
 import core.math.Ray;
 import core.math.Transform;
 import static core.math.Utility.PI_F;
 import static core.math.Utility.clamp;
 import static core.math.Utility.quadratic;
+import static core.math.Utility.sqrtf;
 import static java.lang.Math.acos;
 import static java.lang.Math.atan2;
+import static java.lang.Math.max;
 
 /**
  *
@@ -158,4 +164,50 @@ public class Sphere extends AbstractShape
         
         return true;
     }    
+    
+    @Override
+    public Point3f sampleA(float u1, float u2, Normal3f ns) 
+    {
+        Point3f p = Point3f.add(new Point3f(), uniformSampleSphere(u1, u2).mul(radius).asVector());
+        
+        if(ns != null)
+        {
+            Vector3f n = new Vector3f(p.x, p.y, p.z).normalize();
+            n = o2w.transform(n);
+            ns.set(n);
+        }
+        
+        return o2w.transform(p);
+    }
+    
+    @Override
+    public Point3f sampleW(Point3f p, float u1, float u2,
+            Normal3f ns) {
+        
+        Point3f pcenter = o2w.transform(new Point3f());
+        Vector3f wc = pcenter.sub(p).normalize();
+        
+        Frame frame = new Frame();
+        frame.setFromZ(wc);
+        
+        Vector3f wcX = (Vector3f) frame.mX;
+        Vector3f wcY = (Vector3f) frame.mY;
+        
+        if(p.distanceTo(pcenter) - radius*radius < 1e-4f)
+            return sampleA(u1, u2, ns);
+        
+        // sample sphere uniformly inside substended cone
+        float sinThetaMax2 = radius * radius / p.distanceToSquared(pcenter);
+        float cosThetaMax = sqrtf(max(0.f, 1.f - sinThetaMax2));
+        DifferentialGeometry dgSphere = new DifferentialGeometry();
+        Point3f ps;
+        Ray r = new Ray(p, uniformSampleCone(u1, u2, cosThetaMax, wcX, wcY, wc));
+        if(!intersect(r, dgSphere))
+            r.setMax(Vector3f.dot(pcenter.sub(p), r.d));
+        
+        ps = r.getPoint();
+        ns.set(ps.sub(pcenter).normalize());
+        
+        return ps;
+    }
 }

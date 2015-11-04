@@ -10,6 +10,7 @@ import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
 import core.math.BoundingBox;
 import core.math.Ray;
+import java.util.ArrayList;
 
 /**
  *
@@ -28,4 +29,6 @@ public abstract class AbstractPrimitive
     {
         return true;
     }
+    
+    public abstract void refine(ArrayList<AbstractPrimitive> refined);
 }

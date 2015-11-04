@@ -16,6 +16,7 @@ import core.light.AreaLight;
 import core.math.BoundingBox;
 import core.math.Ray;
 import core.math.Transform;
+import java.util.ArrayList;
 
 /**
  *
@@ -74,5 +75,10 @@ public class GeometryPrimitive extends AbstractPrimitive
     public AbstractBSDF getBSDF(Normal3f worldNormal, Vector3f worldWi) 
     {
         return material.getBSDF(worldNormal, worldWi);
+    }
+
+    @Override
+    public void refine(ArrayList<AbstractPrimitive> refined) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

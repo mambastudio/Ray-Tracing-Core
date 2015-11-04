@@ -22,4 +22,9 @@ public class Normal3f extends Vector3<Normal3f>
     public Normal3f(Vector3 v) {
         super(v);
     }
+    
+    public void set(Vector3 v)
+    {
+        x = v.x; y = v.y; z = v.z;
+    }
 }

@@ -19,6 +19,21 @@ public abstract class Vector3<T extends Vector3> implements Cloneable
     public Vector3(float a, float b, float c) {x = a; y = b; z = c;}
     public Vector3(Vector3 a) {x = a.x; y = a.y; z = a.z;}
     
+    public final T addAssign(Vector3 v) {
+        x += v.x;
+        y += v.y;
+        z += v.z;
+        return (T) this;
+    }
+    
+    public final T addAssign(float f) 
+    {
+        x += f;
+        y += f;
+        z += f;
+        return (T) this;
+    }
+    
     public T add(Vector3 a) 
     {
         Vector3 dest = clone();
@@ -26,7 +41,8 @@ public abstract class Vector3<T extends Vector3> implements Cloneable
         dest.y = y + a.y;
         dest.z = z + a.z;
         return (T) dest;
-    }    
+    }  
+    
     public T mul(Vector3 a) 
     {
         Vector3 dest = clone();

@@ -37,6 +37,11 @@ public class Point3f {
                 return z;
         }
     }
+    
+    public Vector3f asVector()
+    {
+        return new Vector3f(x, y, z);
+    }
 
     public final float distanceTo(Point3f p) {
         float dx = x - p.x;
