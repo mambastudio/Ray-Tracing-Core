@@ -12,6 +12,7 @@ import core.coordinates.Vector3f;
 import core.math.BoundingBox;
 import core.math.DifferentialGeometry;
 import core.math.Ray;
+import core.math.Transform;
 import static core.math.MonteCarlo.areaTriangle;
 import static core.math.MonteCarlo.uniformSampleTriangle;
 
@@ -25,8 +26,8 @@ public class Triangle extends AbstractShape
     Normal3f n;
     
     public Triangle(Point3f p1, Point3f p2, Point3f p3, Normal3f n)
-    {
-        super(new Transform());
+    {        
+        super(new Transform(), new Transform());
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;  

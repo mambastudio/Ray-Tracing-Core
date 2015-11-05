@@ -6,10 +6,10 @@
 package core.math;
 
 import core.coordinates.Point2f;
-import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import static java.lang.Math.PI;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 /**
  *
@@ -20,6 +20,46 @@ public class Utility {
     public static final float TWO_PI_F = PI_F * PI_F;
     public static final float INV_PI_F = 1.f/PI_F;
     public static final float EPS_COSINE = 1e-6f;
+    
+    public static Vector3f sphericalDirection(float theta, float phi)
+    {
+        float x = (float) (cos(phi) * sin(theta));
+        float y = (float) (sin(phi) * sin(theta));
+        float z = (float) cos(theta);
+        
+        return new Vector3f(x, y, z);
+    }
+    
+    public static float sphericalTheta(Vector3f v)
+    {
+        return acosf(clamp(v.z, -1, 1));
+    }
+    
+    public static float sphericalPhi(Vector3f v)
+    {
+        float p = atan2f(v.y, v.x);
+        return (p < 0.f) ? p + 2.f * PI_F : p;
+    }
+        
+    public static float acosf(float a)
+    {
+        return (float)Math.acos(a);
+    }
+    
+    public static float asinf(float a)
+    {
+        return (float)Math.asin(a);
+    }
+    
+    public static float atanf(float a)
+    {
+        return (float)Math.atan(a);
+    }
+    
+    public static float atan2f(float a, float b)
+    {
+        return (float)Math.atan2(a, b);
+    }
     
     public static float clamp(float x, float min, float max)
     {
@@ -87,21 +127,16 @@ public class Utility {
         return r0 + (1f - r0) * x * x * x * x * x;
     }
     
-    public static Vector3f sampleCosineHemisphereW(Point2f rndTuple, FloatValue pdfW)
+    public static Vector3f sampleCosineHemisphereW(float r1, float r2, FloatValue pdfW)
     {
-        float term1 = 2.f * PI_F * rndTuple.x;
-        float term2 = (float) Math.sqrt(1.f - rndTuple.y);
+        float phi = 2 * PI_F * r1;
+        float theta = acosf(sqrtf(r2));
         
-        Vector3f ret = new Vector3f(
-            (float)Math.cos(term1) * term2,
-            (float)Math.sin(term1) * term2,
-            (float)Math.sqrt(rndTuple.y));
+        Vector3f ret = sphericalDirection(theta, phi);
         
-        if(pdfW != null)
-        {
+        if(pdfW != null)        
             pdfW.value = ret.z * INV_PI_F;
-        }
-        
+       
         return ret;
     }
     
@@ -112,16 +147,19 @@ public class Utility {
         return Math.max(0.f, Vector3f.dot(aNormal, aDirection)) * INV_PI_F;
     }
         
-    public static Vector3f samplePowerCosHemisphereW(float r1, float r2, float power)
+    public static Vector3f samplePowerCosHemisphereW(float r1, float r2, float power, FloatValue pdfW)
     {
-        float term1 = 2.f * PI_F * r1;
-        float term2 = (float) Math.pow(r2, 1.f / (power + 1.f));
-        float term3 = (float) Math.sqrt(1.f - term2 * term2);
-
-        return new Vector3f(
-            (float)(Math.cos(term1) * term3),
-            (float)(Math.sin(term1) * term3),
-            term2);
+        float a = 1f/(1+power);
+        
+        float phi = 2 * PI_F * r1;
+        float theta = acosf(powf(r2, a));
+        
+        Vector3f ret = sphericalDirection(theta, phi);
+        
+        if(pdfW != null)
+            pdfW.value = (power + 1.f) * powf(ret.z, power) * (0.5f * INV_PI_F);
+        
+        return ret;
     }
     
     public static float pdfPowerCosHemisphereW(Vector3f n, Vector3f w, float power)
@@ -132,7 +170,7 @@ public class Utility {
     
    
     
-    public static Vector3f sampleUniformSphereW(Point2f sample, FloatValue pdfSA)
+    public static Vector3f sampleUniformSphereW(Point2f sample, FloatValue pdfW)
     {
         float term1 = 2.f * PI_F * sample.x;
         float term2 = (float) (2.f * Math.sqrt(sample.y - sample.y * sample.y));
@@ -142,10 +180,10 @@ public class Utility {
             (float)Math.sin(term1) * term2,
             1.f - 2.f * sample.y);
 
-        if(pdfSA != null)
+        if(pdfW != null)
         {
             //*oPdfSA = 1.f / (4.f * PI_F);
-            pdfSA.value = INV_PI_F * 0.25f;
+            pdfW.value = INV_PI_F * 0.25f;
         }
 
         return ret;
@@ -162,12 +200,12 @@ public class Utility {
         return INV_PI_F * 0.25f;
     }
     
-    public static Point2f sampleConcentricDisc(Point2f aSamples)
+    public static Point2f sampleConcentricDisc(float r1, float r2)
     {
         float phi, r;
 
-        float a = 2*aSamples.x - 1;   /* (a,b) is now on [-1,1]^2 */
-        float b = 2*aSamples.y - 1;
+        float a = 2*r1 - 1;   /* (a,b) is now on [-1,1]^2 */
+        float b = 2*r2 - 1;
 
         if(a > -b)      /* region 1 or 2 */
         {
@@ -299,5 +337,8 @@ public class Utility {
         return (float)Math.sin(f);
     }
     
-    
+    public static float powf(float a, float b)
+    {
+        return (float)Math.pow(a, b);
+    }
 }

@@ -9,6 +9,7 @@ import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import core.math.DifferentialGeometry;
 import core.math.Ray;
+import core.math.Utility;
 import core.shape.Sphere;
 
 /**
@@ -22,17 +23,8 @@ public class Test {
      */
     public static void main(String[] args) {
         
-        Sphere sphere = new Sphere();
-        
-        DifferentialGeometry dg = new DifferentialGeometry();
-        Point3f p = new Point3f(0.9f, 0, -1f);
-        Vector3f v = new Vector3f(0, 0, 1);
-        
-        Ray ray = new Ray(p, v);        
-        boolean intersect = sphere.intersect(ray, dg);
-        
-        System.out.println(dg);
-        System.out.println(ray.getMax());
+       Vector3f v = new Vector3f(0, 0, -1);
+       System.out.println(Utility.sphericalTheta(v));
                 
     }
 }

@@ -68,6 +68,14 @@ public abstract class Vector3<T extends Vector3> implements Cloneable
         v.z *= a;
         return (T) v;
     }
+    
+    public void mulAssign(float a) 
+    {        
+        x *= a;
+        y *= a;
+        z *= a;       
+    }
+    
     public T div(float a) 
     {
         Vector3 v = this.clone();
