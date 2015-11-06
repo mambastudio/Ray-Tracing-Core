@@ -8,6 +8,7 @@ package core.primitive;
 import core.AbstractAccelerator;
 import core.AbstractBSDF;
 import core.AbstractPrimitive;
+import core.AbstractShape;
 import core.Intersection;
 import core.Material;
 import core.accelerator.NullAccelerator;
@@ -40,6 +41,11 @@ public class Geometries extends AbstractPrimitive
         gPrimitives.add(prim);
     }
     
+    public void addGeometryPrimitive(AbstractShape shape)
+    {
+        gPrimitives.add(new GeometryPrimitive(shape, material));
+    }
+        
     public void init()
     {
         accelerator.setPrimitives(gPrimitives);
@@ -83,4 +89,10 @@ public class Geometries extends AbstractPrimitive
             refined.addAll(gPrimitives);
         }
     }    
+    
+    @Override
+    public boolean canIntersect() 
+    {
+        return false;
+    }
 }

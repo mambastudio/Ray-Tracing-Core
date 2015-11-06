@@ -5,6 +5,7 @@
  */
 package core;
 
+import core.bsdf.Diffuse;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
 import core.math.Color;
@@ -105,5 +106,17 @@ public class Material {
     public ArrayList<AbstractBSDF> getList()
     {
         return bsdfList;
+    }
+    
+    public static Material createLambert(Color color)
+    {
+        return new Material(new Diffuse(color));
+    }
+    
+    public static Material createEmission()
+    {
+        Material material = new Material();
+        material.setEmission(Color.WHITE);
+        return material;
     }
 }

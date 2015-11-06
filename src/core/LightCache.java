@@ -6,7 +6,6 @@
 package core;
 
 import core.math.ExtendedList;
-import core.primitive.Geometries;
 import java.util.ArrayList;
 
 /**
@@ -50,16 +49,21 @@ public class LightCache {
         return backgroundLight != null;
     }
     
-    public void add(Geometries geometry)
+    public void add(AbstractPrimitive primitive)
     {
-        if(!geometry.getMaterial().isEmitter())
+        if(!primitive.getMaterial().isEmitter())
             return;
         
-        ArrayList<AbstractPrimitive> list = new ArrayList<>();
-        geometry.refine(list);
+        if(primitive.canIntersect())
+            lightList.add(primitive.getAreaLight());
+        else
+        {
+            ArrayList<AbstractPrimitive> list = new ArrayList<>();
+            primitive.refine(list);
         
-        for(AbstractPrimitive prim : list)
-            lightList.add(prim.getAreaLight());
+            for(AbstractPrimitive prim : list)
+                lightList.add(prim.getAreaLight());
+        }       
     }
     
     public AbstractLight getRandomLight()
