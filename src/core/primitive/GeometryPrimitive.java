@@ -46,6 +46,7 @@ public class GeometryPrimitive extends AbstractPrimitive
         if(!shape.intersect(ray, isect.dg))
             return false;
         
+        isect.bsdf = material.getBSDF(isect.dg.n, ray.d);
         isect.primitive = this;
         return true;
     }

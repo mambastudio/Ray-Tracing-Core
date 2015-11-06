@@ -12,6 +12,7 @@ import core.math.DifferentialGeometry;
  * @author user
  */
 public class Intersection {
+    public AbstractBSDF bsdf = null;
     public DifferentialGeometry dg = new DifferentialGeometry();
     public AbstractPrimitive primitive;
 }
