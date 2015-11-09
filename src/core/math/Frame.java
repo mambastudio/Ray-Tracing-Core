@@ -31,7 +31,12 @@ public class Frame
         mZ = z;
     }
     
-    public void setFromZ(Vector3 z)
+    public Frame(Vector3 z)
+    {
+        setFromZ(z);
+    }
+    
+    public final void setFromZ(Vector3 z)
     {
         Vector3 tmpZ = mZ = Vector3.normalize(z);
         Vector3 tmpX = (Math.abs(tmpZ.x) > 0.99f) ? new Vector3f(0,1,0) : new Vector3f(1,0,0);

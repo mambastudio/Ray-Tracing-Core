@@ -56,6 +56,11 @@ public abstract class AbstractShape
         return 1.f / getArea();
     }
     
+    public float inverseArea()
+    {
+        return pdfA();
+    }
+    
     public float pdfW(Point3f p, Vector3f w)
     {
         DifferentialGeometry dg = new DifferentialGeometry();

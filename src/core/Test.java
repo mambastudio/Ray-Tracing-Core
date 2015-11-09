@@ -8,6 +8,7 @@ package core;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import core.math.DifferentialGeometry;
+import core.math.Matrix;
 import core.math.Ray;
 import core.math.Utility;
 import core.shape.Sphere;
@@ -23,8 +24,13 @@ public class Test {
      */
     public static void main(String[] args) {
         
-       Vector3f v = new Vector3f(0, 0, -1);
-       System.out.println(Utility.sphericalTheta(v));
-                
+        cameraTest();
+    }
+    
+    public static void cameraTest()
+    {
+        Camera camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 500, 500, 45);
+        camera.setUp();
+        System.out.println(camera.generateRay(100, 100));
     }
 }

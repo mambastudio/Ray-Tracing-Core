@@ -25,7 +25,14 @@ public abstract class AbstractScene
     
     public boolean intersect(Ray ray, Intersection isect)
     {
-        return accelerator.intersect(ray, isect);
+        boolean hit = accelerator.intersect(ray, isect);
+        
+        return hit;
+    }
+    
+    public boolean intersectP(Ray ray)
+    {
+        return accelerator.intersectP(ray);
     }
     
     public boolean occluded(Ray ray)
@@ -45,7 +52,11 @@ public abstract class AbstractScene
     
     public void initLights()
     {
+        lights.clear();
+        
         for(AbstractPrimitive prim : primitives)
            lights.add(prim);
+        
+        lights.addBackgroundLight();
     }
 }

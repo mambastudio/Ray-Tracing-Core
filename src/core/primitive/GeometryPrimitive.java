@@ -42,12 +42,12 @@ public class GeometryPrimitive extends AbstractPrimitive
 
     @Override
     public boolean intersect(Ray ray, Intersection isect) 
-    {
+    {        
         if(!shape.intersect(ray, isect.dg))
-            return false;
+            return false;        
         
         isect.bsdf = material.getBSDF(isect.dg.n, ray.d);
-        isect.primitive = this;
+        isect.primitive = this;        
         return true;
     }
 
@@ -61,7 +61,7 @@ public class GeometryPrimitive extends AbstractPrimitive
     public AreaLight getAreaLight() 
     {
         if(material.isEmitter())
-            return new AreaLight(shape, new Transform());
+            return new AreaLight(material, shape, new Transform());
         else
             return null;
     }

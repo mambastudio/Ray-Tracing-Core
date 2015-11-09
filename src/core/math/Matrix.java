@@ -92,10 +92,15 @@ public final class Matrix {
     public static Matrix mul(Matrix left, Matrix right)
     {
         Matrix res = new Matrix();
-        for(int row=0; row<4; row++)
-            for(int col=0; col<4; col++)
-                for(int i=0; i<4; i++)
-                    res.addAssign(row, col, left.get(row, i) * right.get(i, col));
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                res.set(i, j,  left.get(i, 0) * right.get(0, j)
+                            +  left.get(i, 1) * right.get(1, j)
+                            +  left.get(i, 2) * right.get(2, j)
+                            +  left.get(i, 3) * right.get(3, j)
+                );
+            }
+        }
         return res;
     }
     

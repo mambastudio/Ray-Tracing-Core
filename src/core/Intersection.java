@@ -15,4 +15,10 @@ public class Intersection {
     public AbstractBSDF bsdf = null;
     public DifferentialGeometry dg = new DifferentialGeometry();
     public AbstractPrimitive primitive;
+    
+    public boolean isEmitter()
+    {
+        if(primitive == null) return false;        
+        return primitive.getMaterial().isEmitter();
+    }
 }

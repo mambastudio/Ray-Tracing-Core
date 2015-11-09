@@ -26,58 +26,58 @@ public class Camera
     public float xResolution;
     public float yResolution;
     
-    public float aHorizontalFOV;
+    public float horizontalFOV;
     
-    public Transform mCameraTransform;   
+    public Transform cameraTransform;   
     
     public float mImagePlaneDist;
    
-    public Camera(Point3f mPosition, Point3f mLookat, Vector3f mUp, float xResolution, float yResolution, float aHorizontalFOV)
+    public Camera(Point3f position, Point3f lookat, Vector3f up, float xResolution, float yResolution, float horizontalFOV)
     {
-        this.position = mPosition;
-        this.lookat = mLookat;
-        this.up = mUp;
+        this.position = position;
+        this.lookat = lookat;
+        this.up = up;
         this.xResolution = xResolution;
         this.yResolution = yResolution;
-        this.aHorizontalFOV = aHorizontalFOV;        
-        this.mCameraTransform = new Transform();
+        this.horizontalFOV = horizontalFOV;        
+        this.cameraTransform = new Transform();
     }
     
     public void setUp()
     {
-        Vector3f dir = Vector3f.normalize(lookat.sub(position));
-        Vector3f right = Vector3f.normalize(Vector3f.cross(dir, up));
-        Vector3f up      = Vector3f.normalize(Vector3f.cross(right, dir));
+        Vector3f d = Vector3f.normalize(lookat.sub(position));
+        Vector3f r = Vector3f.normalize(Vector3f.cross(d, up));
+        Vector3f u      = Vector3f.normalize(Vector3f.cross(r, d));
                 
         Matrix e = Matrix.identity();
         e.set(0, 3, -position.x);
         e.set(1, 3, -position.y);
         e.set(2, 3, -position.z);
-        
+                
         Matrix eInv = Matrix.identity();
         eInv.set(0, 3, position.x);
         eInv.set(1, 3, position.y);
         eInv.set(2, 3, position.z);
         
         Matrix viewToWorld = Matrix.identity();
-        viewToWorld.setRow(0, right.x, up.x, -dir.x, 0);
-        viewToWorld.setRow(1, right.y, up.y, -dir.y, 0);
-        viewToWorld.setRow(2, right.z, up.z, -dir.z, 0);
-                       
-        Matrix worldToView = viewToWorld.transpose();        
-        Matrix mV = worldToView.mul(e);
+        viewToWorld.setRow(0, r.x, u.x, -d.x, 0);
+        viewToWorld.setRow(1, r.y, u.y, -d.y, 0);
+        viewToWorld.setRow(2, r.z, u.z, -d.z, 0);
+        
+        Matrix worldToView = viewToWorld.transpose();     
+        Matrix mV = worldToView.mul(e);        
         Matrix mV_Inv = eInv.mul(viewToWorld);
                                         
-        mCameraTransform.m = mV;
-        mCameraTransform.mInv = mV_Inv;      
-        
-        float tanHalfAngle = (float) Math.tan(aHorizontalFOV * Utility.PI_F / 360.f);
+        cameraTransform.m = mV;
+        cameraTransform.mInv = mV_Inv;      
+                
+        float tanHalfAngle = (float) Math.tan(horizontalFOV * Utility.PI_F / 360.f);
         mImagePlaneDist = xResolution / (2.f * tanHalfAngle);
     }
     
     public Ray getFastRay(float x, float y, float xRes, float yRes)
     {        
-        float fov = (float)Math.toRadians(aHorizontalFOV);
+        float fov = (float)Math.toRadians(horizontalFOV);
         
         Vector3f look = lookat.sub(position);
         Vector3f Du = Vector3f.cross(look, up).normalize();
@@ -107,7 +107,7 @@ public class Camera
         
     public Ray generateRay(float x, float y)
     {
-        float d = (float) (1./Math.tan(Math.toRadians(aHorizontalFOV)/2));
+        float d = (float) (1./Math.tan(Math.toRadians(horizontalFOV)/2));
         
         float a = xResolution/yResolution;
         float px = a * (2 * x/xResolution - 1);
@@ -117,8 +117,8 @@ public class Camera
         Vector3f rd = new Vector3f(px, py, pz).normalize();
         Point3f ro = new Point3f();
         
-        mCameraTransform.inverse().transformAssign(ro);
-        mCameraTransform.inverse().transformAssign(rd);
+        cameraTransform.inverse().transformAssign(ro);
+        cameraTransform.inverse().transformAssign(rd);
         
         return new Ray(ro, rd);
     }
@@ -143,9 +143,9 @@ public class Camera
     
     public Point2f worldToRaster(Point3f aHitpoint)            
     {
-        Point3f cHitpoint = mCameraTransform.transform(aHitpoint);
+        Point3f cHitpoint = cameraTransform.transform(aHitpoint);
         
-        float d = (float) (1./Math.tan(Math.toRadians(aHorizontalFOV)/2));
+        float d = (float) (1./Math.tan(Math.toRadians(horizontalFOV)/2));
         float a = xResolution/yResolution;
         
         float xndc = d*cHitpoint.x/(-a*cHitpoint.z);

@@ -108,4 +108,9 @@ public class BoundingBox implements Cloneable
     {
         return new BoundingBox(minimum, maximum);
     }
+    
+    @Override
+    public final String toString() {
+        return String.format("(%.2f, %.2f, %.2f) to (%.2f, %.2f, %.2f)", minimum.x, minimum.y, minimum.z, maximum.x, maximum.y, maximum.z);
+    }
 }

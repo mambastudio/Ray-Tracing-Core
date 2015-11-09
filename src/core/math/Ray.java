@@ -95,7 +95,8 @@ public class Ray {
         builder.append("Ray: ").append("\n");
         builder.append("         o    ").append(String.format("(%.5f, %.5f, %.5f)", o.x, o.y, o.z)).append("\n");
         builder.append("         d    ").append(String.format("(%.5f, %.5f, %.5f)", d.x, d.y, d.z)).append("\n");
-        builder.append("         tMin ").append(String.format("(%.5f)", tMin));
+        builder.append("         tMin ").append(String.format("(%.5f)", tMin)).append("\n");
+        builder.append("         tMax ").append(String.format("(%.5f)", tMax));
                 
         return builder.toString();   
     }

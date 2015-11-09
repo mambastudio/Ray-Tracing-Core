@@ -155,6 +155,9 @@ public class Sphere extends AbstractShape
         if(Vector3.dot(nhit, ray.d) < 0)
             nhit = nhit.neg();
         
+        if(!r.isInside(thit))
+            return false; 
+        
         dg.n = nhit;
         dg.p = phit;
         dg.u = u;

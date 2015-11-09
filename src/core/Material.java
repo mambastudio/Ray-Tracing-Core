@@ -47,7 +47,7 @@ public class Material {
     
     public Color getEmission()
     {
-        return emission;
+        return emission.mul(power);
     }
     
     public void setPower(float power)
@@ -76,8 +76,11 @@ public class Material {
     }
     
     public AbstractBSDF getBSDF(Normal3f worldNormal, Vector3f worldWi)
-    {
-        AbstractBSDF bsdf = getRandomBsdf();
+    {        
+        if(isEmitter())
+            return null;
+        
+        AbstractBSDF bsdf = getRandomBsdf();        
         bsdf.setUp(worldNormal, worldWi);
         return bsdf;
     }

@@ -79,7 +79,7 @@ public class Geometries extends AbstractPrimitive
 
     @Override
     public AbstractBSDF getBSDF(Normal3f worldNormal, Vector3f worldWi) {
-        return material.getBSDF(worldNormal, worldWi);
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

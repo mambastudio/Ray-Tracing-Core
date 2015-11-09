@@ -24,7 +24,7 @@ public class NullAccelerator extends AbstractAccelerator
     @Override
     public void setPrimitives(ArrayList<AbstractPrimitive> prims) {
         for(AbstractPrimitive prim : prims)
-        {
+        {            
             primitives.add(prim);
             bound.include(prim.getWorldBounds());
         }
@@ -32,10 +32,10 @@ public class NullAccelerator extends AbstractAccelerator
 
     @Override
     public boolean intersect(Ray r, Intersection isect) 
-    {
+    {        
         boolean hasIntersected = false;
         for(AbstractPrimitive prim: primitives)
-            hasIntersected |= prim.intersect(r, isect);
+            hasIntersected |= prim.intersect(r, isect);        
         return hasIntersected;
     }
 

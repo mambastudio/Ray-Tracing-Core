@@ -5,6 +5,7 @@
  */
 package core;
 
+import core.coordinates.Normal3f;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
@@ -80,6 +81,7 @@ public abstract class AbstractLight
         BoundingSphere      sceneSphere,
         Vector3f            rayDirection,
         Point3f             hitPoint,
+        Normal3f            hitNormal,
         FloatValue          directPdfA,
         FloatValue          emissionPdfW);
     
