@@ -20,8 +20,9 @@ public class Ray {
     private float tMax;
     public static final float EPSILON = 0.0001f;// 0.01f;
 
-    private Ray() 
+    public Ray() 
     {
+        
     }
 
     public Ray(Point3f o, Vector3f d)

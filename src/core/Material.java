@@ -23,7 +23,7 @@ public class Material {
     private final Random random = new Random();
     
     private Color emission = new Color();
-    private float power = 10f;
+    private float power = 2f;
     
     public Material()
     {

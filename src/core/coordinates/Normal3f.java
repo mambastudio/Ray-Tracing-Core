@@ -9,7 +9,7 @@ package core.coordinates;
  *
  * @author user
  */
-public class Normal3f extends Vector3<Normal3f>
+public class Normal3f extends Vector3f
 {
     public Normal3f() {
         super();
@@ -19,12 +19,25 @@ public class Normal3f extends Vector3<Normal3f>
         super(x,y,z);
     }
 
-    public Normal3f(Vector3 v) {
+    public Normal3f(Vector3f v) {
         super(v);
     }
     
-    public void set(Vector3 v)
+    @Override
+    public Normal3f normalize()
     {
-        x = v.x; y = v.y; z = v.z;
+        return (Normal3f) super.normalize();
+    }
+    
+    @Override
+    public Normal3f neg()
+    {
+        return (Normal3f) super.neg();
+    }
+        
+    @Override
+    public Normal3f clone()
+    {
+        return new Normal3f(x, y, z);
     }
 }

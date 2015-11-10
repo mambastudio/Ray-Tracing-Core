@@ -6,7 +6,6 @@
 package core.math;
 
 import core.coordinates.Point2f;
-import core.coordinates.Vector3;
 import core.coordinates.Vector3f;
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
@@ -21,6 +20,7 @@ public class Utility {
     public static final float TWO_PI_F = PI_F * PI_F;
     public static final float INV_PI_F = 1.f/PI_F;
     public static final float EPS_COSINE = 1e-6f;
+    public static final float EPS_RAY  =  0.000001f;
     
     public static Vector3f sphericalDirection(float theta, float phi)
     {
@@ -142,10 +142,10 @@ public class Utility {
     }
     
     public static float cosHemispherePdfW(
-        Vector3  aNormal,
-        Vector3  aDirection)
+        Vector3f  aNormal,
+        Vector3f  aDirection)
     {
-        return Math.max(0.f, Vector3.dot(aNormal, aDirection)) * INV_PI_F;
+        return Math.max(0.f, Vector3f.dot(aNormal, aDirection)) * INV_PI_F;
     }
         
     public static Vector3f samplePowerCosHemisphereW(float r1, float r2, float power, FloatValue pdfW)

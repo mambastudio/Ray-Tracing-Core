@@ -140,7 +140,9 @@ public class Triangle extends AbstractShape
     @Override
     public Point3f sampleA(float u1, float u2, Normal3f n) 
     {
-        n.set(this.n);
+        if(n != null)
+            n.set(this.n);
+        
         return uniformSampleTriangle(u1, u2, p1, p2, p3);
     }
 }

@@ -5,7 +5,6 @@
 package core.math;
 
 import core.coordinates.Normal3f;
-import core.coordinates.Vector3;
 import core.coordinates.Vector3f;
 
 
@@ -15,7 +14,7 @@ import core.coordinates.Vector3f;
  */
 public class Frame 
 {
-    public Vector3 mX, mY, mZ;
+    public Vector3f mX, mY, mZ;
     
     public Frame()
     {
@@ -24,29 +23,29 @@ public class Frame
         mZ = new Vector3f(0,0,1);
     }
     
-    public Frame(Vector3 x, Vector3 y, Vector3 z) 
+    public Frame(Vector3f x, Vector3f y, Vector3f z) 
     {
         mX = x;
         mY = y;
         mZ = z;
     }
     
-    public Frame(Vector3 z)
+    public Frame(Vector3f z)
     {
         setFromZ(z);
     }
     
-    public final void setFromZ(Vector3 z)
+    public final void setFromZ(Vector3f z)
     {
-        Vector3 tmpZ = mZ = Vector3.normalize(z);
-        Vector3 tmpX = (Math.abs(tmpZ.x) > 0.99f) ? new Vector3f(0,1,0) : new Vector3f(1,0,0);
-        mY = Vector3.normalize( Vector3.cross(tmpZ, tmpX) );
-        mX = Vector3.cross(mY, tmpZ);
+        Vector3f tmpZ = mZ = Vector3f.normalize((Vector3f)z);
+        Vector3f tmpX = (Math.abs(tmpZ.x) > 0.99f) ? new Vector3f(0,1,0) : new Vector3f(1,0,0);
+        mY = Vector3f.normalize( Vector3f.cross(tmpZ, tmpX) );
+        mX = Vector3f.cross(mY, tmpZ);
     }
     
     public Vector3f toWorld(Vector3f a)
-    {        
-        return (Vector3f) mX.mul(a.x).add(mY.mul(a.y)).add(mZ.mul(a.z));
+    {                
+        return mX.mul(a.x).add(mY.mul(a.y)).add(mZ.mul(a.z));
     }
     
     public Normal3f toWorld(Normal3f a)
@@ -72,9 +71,9 @@ public class Frame
         return v;
     }
 
-    public Vector3 binormal(){ return mX; }
-    public Vector3 tangent (){ return mY; }
-    public Vector3 normal  (){ return mZ; }
+    public Vector3f binormal(){ return mX; }
+    public Vector3f tangent (){ return mY; }
+    public Vector3f normal  (){ return mZ; }
     
     @Override
     public String toString()

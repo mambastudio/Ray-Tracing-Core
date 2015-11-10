@@ -5,6 +5,7 @@
  */
 package core;
 
+import core.coordinates.Normal3f;
 import core.math.BoundingBox;
 import core.math.BoundingSphere;
 import core.math.Ray;

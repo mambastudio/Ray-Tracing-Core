@@ -73,7 +73,7 @@ public final class CornellScene extends AbstractScene
         primitives.add(left);
         
         //right
-        Geometries right = new Geometries(rightM);        
+        Geometries right = new Geometries(emissionM);        
         right.addGeometryPrimitive(new Triangle(p5, p6, p7, new Normal3f(-1, 0, 0)));
         right.addGeometryPrimitive(new Triangle(p5, p7, p8, new Normal3f(-1, 0, 0)));
         right.init();
@@ -94,7 +94,7 @@ public final class CornellScene extends AbstractScene
         primitives.add(bottom);
         
         //back
-        Geometries back = new Geometries(emissionM);        
+        Geometries back = new Geometries(backM);        
         back.addGeometryPrimitive(new Triangle(p4, p3, p7, new Normal3f(0, 0, 1)));
         back.addGeometryPrimitive(new Triangle(p4, p8, p7, new Normal3f(0, 0, 1)));
         back.init();
@@ -105,13 +105,14 @@ public final class CornellScene extends AbstractScene
         float scale = 0.2f;
         Normal3f n = new Normal3f(0, -1, 0);
         
-        Geometries light = new Geometries(emissionM);        
+        Geometries light = new Geometries(rightM);        
         light.addGeometryPrimitive(new Triangle(new Point3f(-1 * scale, 1 - disp, 1 * scale),
                                     new Point3f(-1 * scale, 1 - disp, -1 * scale),
                                     new Point3f(1 * scale, 1 - disp, -1 * scale), n));
         light.addGeometryPrimitive(new Triangle(new Point3f(-1 * scale, 1 - disp, 1 * scale),
                                     new Point3f(1 * scale, 1 - disp, 1 * scale),
                                     new Point3f(1 * scale, 1 - disp, -1 * scale), n)); 
+        
         light.init();
         primitives.add(light);
         

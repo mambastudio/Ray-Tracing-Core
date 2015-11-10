@@ -6,8 +6,7 @@
 package core.math;
 
 import core.coordinates.Point3f;
-import core.coordinates.Vector3;
-
+import core.coordinates.Vector3f;
 /**
  *
  * @author user
@@ -28,7 +27,7 @@ public class SamplingDisk
         this.radius = radius;
     }
     
-    public SamplingDisk(Vector3 dir)
+    public SamplingDisk(Vector3f dir)
     {
         frame.setFromZ(dir);
     }

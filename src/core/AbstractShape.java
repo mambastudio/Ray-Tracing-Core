@@ -7,7 +7,6 @@ package core;
 
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
-import core.coordinates.Vector3;
 import core.coordinates.Vector3f;
 import core.math.BoundingBox;
 import core.math.DifferentialGeometry;
@@ -61,19 +60,24 @@ public abstract class AbstractShape
         return pdfA();
     }
     
+    // This should be resolved since it's yielding error accuracy on intersection
     public float pdfW(Point3f p, Vector3f w)
-    {
+    {       
         DifferentialGeometry dg = new DifferentialGeometry();
         Ray r = new Ray(p, w);
-        
+                
         if(!intersect(r, dg))
+        {    
             return 0;
-        
-        float pdfW = pdfA() * r.getDistanceSquared() / Vector3.dot(dg.n, w);
-        
+        }
+             
+        float pdfW = pdfA() * r.getDistanceSquared() / Vector3f.absDot(dg.n, w);
+         
         if (Float.isInfinite(pdfW)) 
+        {            
             pdfW = 0.f;
-        
+        }
+              
         return pdfW;
     }
 }

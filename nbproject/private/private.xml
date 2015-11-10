@@ -3,10 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/math/Matrix.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/math/Geometry.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/light/AreaLight.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/Material.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/math/Frame.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/AbstractLight.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/bsdf/Diffuse.java</file>
             <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/scene/CornellScene.java</file>
             <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/Test.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/Camera.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/AbstractBSDF.java</file>
         </group>
     </open-files>
 </project-private>

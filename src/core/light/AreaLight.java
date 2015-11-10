@@ -16,6 +16,7 @@ import core.math.BoundingSphere;
 import core.math.Color;
 import core.math.FloatValue;
 import core.math.Frame;
+import core.math.Ray;
 import core.math.Transform;
 import core.math.Utility;
 
@@ -25,8 +26,8 @@ import core.math.Utility;
  */
 public class AreaLight extends AbstractLight
 {
-    AbstractShape shape;
-    Material material;
+    public AbstractShape shape;
+    public Material material;
     
     public AreaLight(Material material, AbstractShape shape, Transform l2w)
     {
@@ -36,28 +37,33 @@ public class AreaLight extends AbstractLight
     }
     
     @Override
-    public Color illuminate(BoundingSphere sceneSphere, Point3f receivingPosition, Point2f rndTuple, Point3f emittingPosition, FloatValue directPdfW, FloatValue emissionPdfW, FloatValue cosAtLight) {
+    public Color illuminate(BoundingSphere sceneSphere, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue directPdfW, FloatValue emissionPdfW, FloatValue cosAtLight) {
+        
         Normal3f n = new Normal3f();
         Point3f p = shape.sampleA(rndTuple.x, rndTuple.y, n);
         Vector3f directionToLight = p.sub(receivingPosition).normalize();
-        
-        emittingPosition.set(p);
-        
+        float distanceToLight = receivingPosition.distanceTo(p);
+        float distSqr = distanceToLight * distanceToLight;
         float cosNormalDir = Vector3f.dot(n, directionToLight.neg());
-        
+                
         // too close to, or under, tangent
         if(cosNormalDir < Utility.EPS_COSINE)
         {
             return new Color();
         }
         
-        directPdfW.value = shape.pdfW(receivingPosition, directionToLight);
-        
+        if(directPdfW != null)
+            directPdfW.value = shape.inverseArea() * distSqr / cosNormalDir;
+              
         if(cosAtLight != null)
             cosAtLight.value = cosNormalDir;
 
         if(emissionPdfW != null)
             emissionPdfW.value = shape.inverseArea() * cosNormalDir * Utility.INV_PI_F;
+                
+        rayToLight.d = directionToLight;
+        rayToLight.o = receivingPosition;
+        rayToLight.setMax(distanceToLight);
         
         return material.getEmission();
     }
@@ -110,7 +116,7 @@ public class AreaLight extends AbstractLight
 
     @Override
     public boolean isDelta() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override

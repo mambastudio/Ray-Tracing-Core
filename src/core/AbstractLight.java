@@ -12,6 +12,7 @@ import core.coordinates.Vector3f;
 import core.math.BoundingSphere;
 import core.math.Color;
 import core.math.FloatValue;
+import core.math.Ray;
 import core.math.Transform;
 
 /**
@@ -45,7 +46,7 @@ public abstract class AbstractLight
         BoundingSphere      sceneSphere,
         Point3f             receivingPosition,
         Point2f             rndTuple,
-        Point3f             emittingPosition,
+        Ray                 rayToLight,
         FloatValue          directPdfW,
         FloatValue          emissionPdfW,
         FloatValue          cosAtLight);

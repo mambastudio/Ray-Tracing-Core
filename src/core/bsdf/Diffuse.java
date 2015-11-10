@@ -33,16 +33,18 @@ public class Diffuse extends AbstractBSDF
     {
         if(localWi.z < Utility.EPS_COSINE)
             return new Color();
-        
-        Vector3f localDirGen = frame.toWorld(Utility.sampleCosineHemisphereW(rndTuple.x, rndTuple.y, pdfWo));                
+                
+        Vector3f localDirGen = frame.toLocal(Utility.sampleCosineHemisphereW(rndTuple.x, rndTuple.y, pdfWo));       
         Color bsdfColor = color.mul(Utility.INV_PI_F);
-        
+       
         cosWo.value   = Math.abs(localDirGen.z);
         if(cosWo.value < Utility.EPS_COSINE)
             return new Color();
         
+        //Vector3f v = frame.toWorld(new Vector3f());
+         System.out.println("ks");
         worldWo.set(frame.toWorld(localDirGen));
-        
+       
         return bsdfColor;
     }
 
@@ -64,7 +66,7 @@ public class Diffuse extends AbstractBSDF
 
         if(reversePdfWo != null)
             reversePdfWo.value += Math.max(0.f, localWi.z * Utility.INV_PI_F);
-        
+                
         bsdfColor.setColor(color.mul(Utility.INV_PI_F));
         return bsdfColor;
     }

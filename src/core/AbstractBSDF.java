@@ -18,8 +18,8 @@ import core.math.Frame;
  */
 public abstract class AbstractBSDF {
     protected Color color = null;
-    protected Frame frame = null;
-    protected Vector3f localWi = null;
+    public Frame frame = null;
+    public Vector3f localWi = null;
     
     public AbstractBSDF(Color color)
     {        

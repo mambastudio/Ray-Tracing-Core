@@ -8,7 +8,6 @@ package core.shape;
 import core.AbstractShape;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
-import core.coordinates.Vector3;
 import core.coordinates.Vector3f;
 import core.math.BoundingBox;
 import core.math.DifferentialGeometry;
@@ -152,14 +151,14 @@ public class Sphere extends AbstractShape
         
         // normal
         Normal3f nhit = new Normal3f(phit.x, phit.y, phit.z).normalize();
-        if(Vector3.dot(nhit, ray.d) < 0)
+        if(Vector3f.dot(nhit, ray.d) > 0)
             nhit = nhit.neg();
         
         if(!r.isInside(thit))
             return false; 
-        
-        dg.n = nhit;
-        dg.p = phit;
+               
+        dg.n = o2w.transform(nhit);
+        dg.p = o2w.transform(phit);
         dg.u = u;
         dg.v = v;
         dg.shape = this;        
