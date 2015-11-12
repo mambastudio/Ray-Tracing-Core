@@ -46,9 +46,7 @@ public abstract class AbstractLight
         BoundingSphere      sceneSphere,
         Point3f             receivingPosition,
         Point2f             rndTuple,
-        Ray                 rayToLight,
-        FloatValue          directPdfW,
-        FloatValue          emissionPdfW,
+        Ray                 rayToLight,        
         FloatValue          cosAtLight);
     
     /* \brief Emits particle from the light.
@@ -66,11 +64,8 @@ public abstract class AbstractLight
         BoundingSphere      sceneSphere,
         Point2f             dirRndTuple,
         Point2f             posRndTuple,
-        Point3f             position,
-        Vector3f            direction,
-        FloatValue          emissionPdfW,
-        FloatValue          directPdfA,
-        FloatValue          cosThetaLight);
+        Ray                 rayFromLight,        
+        FloatValue          cosAtLight);
     
     /* \brief Returns radiance for ray randomly hitting the light
      *
@@ -80,11 +75,9 @@ public abstract class AbstractLight
      */    
     public abstract Color radiance(
         BoundingSphere      sceneSphere,
-        Vector3f            rayDirection,
-        Point3f             hitPoint,
         Normal3f            hitNormal,
-        FloatValue          directPdfA,
-        FloatValue          emissionPdfW);
+        Vector3f            direction,
+        FloatValue          cosAtLight);
     
      // Whether the light has a finite extent (area, point) or not (directional, env. map)
     public abstract boolean isFinite();
@@ -94,4 +87,8 @@ public abstract class AbstractLight
     
     // Has a primitive as a light source
     public abstract boolean isAreaLight();
+    
+    public abstract float directPdfW(Point3f p, Vector3f w);
+    public abstract float directPdfA();
+    public abstract float emissionPdfW(float cosAtLight);
 }

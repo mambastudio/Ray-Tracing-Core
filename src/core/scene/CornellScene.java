@@ -73,7 +73,7 @@ public final class CornellScene extends AbstractScene
         primitives.add(left);
         
         //right
-        Geometries right = new Geometries(emissionM);        
+        Geometries right = new Geometries(backM);        
         right.addGeometryPrimitive(new Triangle(p5, p6, p7, new Normal3f(-1, 0, 0)));
         right.addGeometryPrimitive(new Triangle(p5, p7, p8, new Normal3f(-1, 0, 0)));
         right.init();
@@ -105,7 +105,7 @@ public final class CornellScene extends AbstractScene
         float scale = 0.2f;
         Normal3f n = new Normal3f(0, -1, 0);
         
-        Geometries light = new Geometries(rightM);        
+        Geometries light = new Geometries(backM);        
         light.addGeometryPrimitive(new Triangle(new Point3f(-1 * scale, 1 - disp, 1 * scale),
                                     new Point3f(-1 * scale, 1 - disp, -1 * scale),
                                     new Point3f(1 * scale, 1 - disp, -1 * scale), n));
@@ -117,13 +117,13 @@ public final class CornellScene extends AbstractScene
         primitives.add(light);
         
         //sphere1 right
-        Geometries sphere1 = new Geometries(glassM);          
+        Geometries sphere1 = new Geometries(rightM);          
         sphere1.addGeometryPrimitive(new Sphere(new Point3f(-0.45f, 0.6f, 0.4f), 0.3f));
         sphere1.init();
         primitives.add(sphere1);
 
         //sphere2 left
-        Geometries sphere2 = new Geometries(mirrorM);              
+        Geometries sphere2 = new Geometries(emissionM);              
         sphere2.addGeometryPrimitive(new Sphere(new Point3f(-0.5f, -0.6f, -0.4f), 0.4f));
         sphere2.init();
         primitives.add(sphere2);              

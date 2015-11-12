@@ -68,6 +68,7 @@ public abstract class AbstractShape
                 
         if(!intersect(r, dg))
         {    
+            System.out.println("Kubafu");
             return 0;
         }
              

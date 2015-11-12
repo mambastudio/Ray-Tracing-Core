@@ -12,17 +12,22 @@ import core.coordinates.Vector3f;
 import core.math.BoundingBox;
 import core.math.DifferentialGeometry;
 import core.math.Frame;
-import static core.math.MonteCarlo.uniformSampleCone;
 import static core.math.MonteCarlo.uniformSampleSphere;
 import core.math.Ray;
 import core.math.Transform;
+import core.math.Utility;
 import static core.math.Utility.PI_F;
+import static core.math.Utility.acosf;
 import static core.math.Utility.clamp;
+import static core.math.Utility.cosf;
+import static core.math.Utility.pdfUniformConePdfW;
 import static core.math.Utility.quadratic;
+import static core.math.Utility.sampleUniformConeW;
 import static core.math.Utility.sqrtf;
 import static java.lang.Math.acos;
 import static java.lang.Math.atan2;
 import static java.lang.Math.max;
+import static java.lang.Math.toDegrees;
 
 /**
  *
@@ -60,6 +65,11 @@ public class Sphere extends AbstractShape
         this.radius = radius;        
     }
     
+    public Point3f getCenterWorld()
+    {
+        return o2w.transform(new Point3f());
+    }
+    
     @Override
     public BoundingBox getObjectBounds() 
     {
@@ -69,6 +79,8 @@ public class Sphere extends AbstractShape
     @Override
     public boolean intersectP(Ray r) {
         Ray ray = w2o.transform(r);
+                
+        Point3f phit;
         
         // Compute Quadratic sphere coefficients, page 100
         float A = ray.d.x * ray.d.x + ray.d.y * ray.d.y + ray.d.z * ray.d.z;
@@ -93,6 +105,15 @@ public class Sphere extends AbstractShape
                 return false;
             }
         }
+        
+         // Compute sphere hit position and phi        
+        phit = ray.getPoint(thit);
+         if (phit.x == 0.f && phit.y == 0.f) {
+            phit.x = 1e-5f * radius;
+        }
+        
+        if(!r.isInside(thit))
+            return false;
         
         return true;
     }
@@ -172,6 +193,8 @@ public class Sphere extends AbstractShape
     {
         Point3f p = Point3f.add(new Point3f(), uniformSampleSphere(u1, u2).mul(radius).asVector());
         
+        DifferentialGeometry dgSphere = new DifferentialGeometry();
+        
         if(ns != null)
         {
             Vector3f n = new Vector3f(p.x, p.y, p.z).normalize();
@@ -186,30 +209,53 @@ public class Sphere extends AbstractShape
     public Point3f sampleW(Point3f p, float u1, float u2,
             Normal3f ns) {
         
-        Point3f pcenter = o2w.transform(new Point3f());
-        Vector3f wc = pcenter.sub(p).normalize();
+        Point3f pCenter = o2w.transform(new Point3f());
+        Vector3f wc1 = pCenter.sub(p).normalize();
         
         Frame frame = new Frame();
-        frame.setFromZ(wc);
-        
-        Vector3f wcX = (Vector3f) frame.mX;
-        Vector3f wcY = (Vector3f) frame.mY;
-        
-        if(p.distanceTo(pcenter) - radius*radius < 1e-4f)
+        frame.setFromZ(wc1);
+                        
+        if(p.distanceTo(pCenter) - radius*radius < 1e-4f)
             return sampleA(u1, u2, ns);
         
         // sample sphere uniformly inside substended cone
-        float sinThetaMax2 = radius * radius / p.distanceToSquared(pcenter);
+        float sinThetaMax2 = radius * radius / p.distanceToSquared(pCenter);
         float cosThetaMax = sqrtf(max(0.f, 1.f - sinThetaMax2));
-        DifferentialGeometry dgSphere = new DifferentialGeometry();
+        float thetaMaximum = acosf(cosThetaMax);
+        Vector3f wc2 = frame.toWorld(sampleUniformConeW(u1, u2, thetaMaximum, null));
+        DifferentialGeometry dgSphere = new DifferentialGeometry();        
         Point3f ps;
-        Ray r = new Ray(p, uniformSampleCone(u1, u2, cosThetaMax, wcX, wcY, wc));
+        Ray r = new Ray(p, wc2);
+        
         if(!intersect(r, dgSphere))
-            r.setMax(Vector3f.dot(pcenter.sub(p), r.d));
+        {                 
+            r.setMax(Vector3f.dot(pCenter.sub(p), r.d));
+        }
         
         ps = r.getPoint();
-        ns.set(ps.sub(pcenter).normalize());
+        ns.set(ps.sub(pCenter).normalize());
+        
+        //System.out.println(ps);
         
         return ps;
+    }
+    
+    @Override
+    public float pdfW(Point3f p, Vector3f w)
+    {
+        Point3f pCenter = o2w.transform(new Point3f());
+        float distSqr = p.distanceToSquared(pCenter);
+        // Return uniform weight if point inside sphere
+        if (p.distanceTo(pCenter) - radius * radius < 1e-4f) {
+            return super.pdfW(p, w);
+        }
+
+        // Compute general sphere weight
+        float sinThetaMax2 = radius * radius / distSqr;
+        float cosThetaMax = sqrtf(max(0.f, 1.f - sinThetaMax2));
+        float thetaMaximum = acosf(cosThetaMax);
+        float pdfW = pdfUniformConePdfW(thetaMaximum);
+        
+        return pdfW;
     }
 }

@@ -33,7 +33,21 @@ public class Test {
     
     public static void cameraTest()
     {
-        Frame frame = new Frame();
-        System.out.println(frame.toWorld(new Vector3f()));
+        float disp = 0.05f;
+        float scale = 0.2f;
+        Normal3f n = new Normal3f(0, -1, 0);
+        
+        Triangle triangle = new Triangle(new Point3f(-1 * scale, 1 - disp, 1 * scale),
+                                    new Point3f(-1 * scale, 1 - disp, -1 * scale),
+                                    new Point3f(1 * scale, 1 - disp, -1 * scale), n);
+        
+        for(int i = 0; i<10000000; i++)
+        {
+            Point3f p = triangle.sampleA(Rng.getFloat(), Rng.getFloat(), null);
+            Vector3f v = Point3f.sub(p, new Point3f()).normalize();
+            Ray r = new Ray(new Point3f(), v);
+            
+            triangle.pdfW(r.o, r.d);
+        }
     }
 }

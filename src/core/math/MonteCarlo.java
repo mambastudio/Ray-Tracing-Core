@@ -8,15 +8,12 @@ package core.math;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import static core.math.Utility.PI_F;
-import static core.math.Utility.TWO_PI_F;
+import static core.math.Utility.acosf;
 import static core.math.Utility.cosf;
 import static core.math.Utility.lerp;
 import static core.math.Utility.sinf;
+import static core.math.Utility.sphericalDirection;
 import static core.math.Utility.sqrtf;
-import static java.lang.Math.cos;
-import static java.lang.Math.max;
-import static java.lang.Math.sin;
-import static java.lang.Math.sqrt;
 
 /**
  *
@@ -44,12 +41,12 @@ public class MonteCarlo
     }
     public final static Point3f uniformSampleSphere(float u1, float u2) 
     {
-        float z = 1.f - 2.f * u1;
-        float r = (float) sqrt(max(0.f, 1.f - z * z));
-        float phi = TWO_PI_F * u2;
-        float x = r * (float) cos(phi);
-        float y = r * (float) sin(phi);
-        return new Point3f(x, y, z);
+        float phi = 2 * PI_F * u1;
+        float theta = acosf(1 - 2 * u2);
+        
+        Vector3f dir = sphericalDirection(theta, phi);
+        
+        return new Point3f(dir.x, dir.y, dir.z);
     }
     
     public static Point3f uniformSampleTriangle(float r1, float r2, Point3f p1, Point3f p2, Point3f p3)

@@ -53,7 +53,7 @@ public class GeometryPrimitive extends AbstractPrimitive
 
     @Override
     public boolean intersectP(Ray ray) 
-    {
+    {        
         return shape.intersectP(ray);
     }
 

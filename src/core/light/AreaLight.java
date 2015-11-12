@@ -19,6 +19,7 @@ import core.math.Frame;
 import core.math.Ray;
 import core.math.Transform;
 import core.math.Utility;
+import static core.math.Utility.INV_PI_F;
 
 /**
  *
@@ -37,75 +38,63 @@ public class AreaLight extends AbstractLight
     }
     
     @Override
-    public Color illuminate(BoundingSphere sceneSphere, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue directPdfW, FloatValue emissionPdfW, FloatValue cosAtLight) {
+    public Color illuminate(BoundingSphere sceneSphere, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue cosAtLight) {
         
         Normal3f n = new Normal3f();
-        Point3f p = shape.sampleA(rndTuple.x, rndTuple.y, n);
+        Point3f  p = shape.sampleW(receivingPosition, rndTuple.x, rndTuple.y, n);
+                
         Vector3f directionToLight = p.sub(receivingPosition).normalize();
-        float distanceToLight = receivingPosition.distanceTo(p);
-        float distSqr = distanceToLight * distanceToLight;
+        float distanceToLight = receivingPosition.distanceTo(p);        
         float cosNormalDir = Vector3f.dot(n, directionToLight.neg());
                 
         // too close to, or under, tangent
         if(cosNormalDir < Utility.EPS_COSINE)
         {
             return new Color();
-        }
-        
-        if(directPdfW != null)
-            directPdfW.value = shape.inverseArea() * distSqr / cosNormalDir;
-              
+        }       
+                                      
         if(cosAtLight != null)
             cosAtLight.value = cosNormalDir;
-
-        if(emissionPdfW != null)
-            emissionPdfW.value = shape.inverseArea() * cosNormalDir * Utility.INV_PI_F;
                 
         rayToLight.d = directionToLight;
         rayToLight.o = receivingPosition;
         rayToLight.setMax(distanceToLight);
-        
+                
         return material.getEmission();
     }
 
     @Override
-    public Color emit(BoundingSphere sceneSphere, Point2f dirRndTuple, Point2f posRndTuple, Point3f position, Vector3f direction, FloatValue emissionPdfW, FloatValue directPdfA, FloatValue cosThetaLight) {
+    public Color emit(BoundingSphere sceneSphere, Point2f dirRndTuple, Point2f posRndTuple, Ray rayFromLight, FloatValue cosAtLight) {
         Normal3f n = new Normal3f();
         Point3f p = shape.sampleA(posRndTuple.x, posRndTuple.y, n);
         Frame frame = new Frame(n);
         
-        Vector3f localDirOut = Utility.sampleCosineHemisphereW(dirRndTuple.x, dirRndTuple.y, emissionPdfW);
+        Vector3f localDirOut = Utility.sampleCosineHemisphereW(dirRndTuple.x, dirRndTuple.y, null);
         
         // cannot really not emit the particle, so just bias it to the correct angle
         localDirOut.z = Math.max(localDirOut.z, Utility.EPS_COSINE);
-        direction.set(frame.toWorld(localDirOut));
         
-        if(directPdfA != null)
-            directPdfA.value = shape.inverseArea();
-
-        if(cosThetaLight != null)
-            cosThetaLight.value = localDirOut.z;
+        //Ray from light
+        rayFromLight.o = p;
+        rayFromLight.d = frame.toWorld(localDirOut);
+                
+        if(cosAtLight != null)
+            cosAtLight.value = localDirOut.z;
         
         return material.getEmission().mul(localDirOut.z);
     }
 
     @Override
-    public Color radiance(BoundingSphere sceneSphere, Vector3f rayDirection,Point3f hitPoint, Normal3f hitNormal, FloatValue directPdfA, FloatValue emissionPdfW) 
+    public Color radiance(BoundingSphere sceneSphere, Normal3f hitNormal, Vector3f direction, FloatValue cosAtLight) 
     {
-        float cosOutL = Math.max(0.f, Vector3f.dot(hitNormal, rayDirection.neg()));
+        float cosOutL = Math.max(0.f, Vector3f.dot(hitNormal, direction));
         
         if(cosOutL == 0)
             return new Color();
-
-        if(directPdfA != null)
-            directPdfA.value = shape.inverseArea();
         
-        if(emissionPdfW != null)
-        {
-            emissionPdfW.value = Utility.cosHemispherePdfW(hitNormal, rayDirection.neg());
-            emissionPdfW.value *= shape.inverseArea();
-        }
-
+        if(cosAtLight != null)
+            cosAtLight.value = cosOutL;
+        
         return material.getEmission();
     }
 
@@ -122,6 +111,22 @@ public class AreaLight extends AbstractLight
     @Override
     public boolean isAreaLight() {
         return true;
+    }        
+
+    @Override
+    public float directPdfW(Point3f p, Vector3f w) 
+    {
+        return shape.pdfW(p, w);
     }
-    
+
+    @Override
+    public float directPdfA() {
+        return shape.pdfA();
+    }
+
+    @Override
+    public float emissionPdfW(float cosAtLight) 
+    {
+        return cosAtLight * INV_PI_F;
+    }
 }

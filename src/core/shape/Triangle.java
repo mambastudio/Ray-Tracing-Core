@@ -71,7 +71,7 @@ public class Triangle extends AbstractShape
 	
 	float thit = f * Vector3f.dot(e2, q);        
         
-	if (thit > 0.0001f)
+	if (thit > 0.0000000000000001f)
         {
             if(r.isInside(thit))              
                 return true;           
@@ -89,7 +89,7 @@ public class Triangle extends AbstractShape
         h = Vector3f.cross(r.d, e2);
         a = Vector3f.dot(e1, h);
 
-        if (a > -0.00001 && a < 0.00001)
+        if (a > -0.0000000001 && a < 0.00000000001)
 		return false;
 
         f = 1/a;
@@ -108,7 +108,7 @@ public class Triangle extends AbstractShape
 	float thit = f * Vector3f.dot(e2, q);        
         Point3f phit = r.getPoint(thit);
 
-	if (thit > 0.0001f)
+	if (thit > Double.MIN_VALUE)
         {
             if(r.isInside(thit))
             {                                   

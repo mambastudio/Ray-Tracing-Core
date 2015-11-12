@@ -7,6 +7,7 @@ package core.math;
 
 import core.coordinates.Point2f;
 import core.coordinates.Vector3f;
+import static core.math.Utility.acosf;
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -243,6 +244,22 @@ public class Utility {
         res.x = (float) (r * Math.cos(phi));
         res.y = (float) (r * Math.sin(phi));
         return res;
+    }
+    
+    public static Vector3f sampleUniformConeW(float r1, float r2, float thetaMax, FloatValue pdfW)
+    {
+        float phi = 2 * PI_F * r1;
+        float theta = acosf(1 - r2 * (1 - cosf(thetaMax)));
+        
+        if(pdfW != null)
+            pdfW.value = pdfUniformConePdfW(thetaMax);
+        
+        return sphericalDirection(theta, phi);
+    }
+    
+    public static float pdfUniformConePdfW(float thetaMax)
+    {
+        return 1f/(2 * PI_F *(1 - cosf(thetaMax)));
     }
         
     // reflect vector through (0,0,1)
