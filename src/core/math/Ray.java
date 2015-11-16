@@ -18,11 +18,15 @@ public class Ray {
     
     private float tMin;
     private float tMax;
-    public static final float EPSILON = 0.0001f;// 0.01f;
+    public static final float EPSILON = 0.001f;// 0.01f;
 
     public Ray() 
     {
+        o = new Point3f();
+        d = new Vector3f();
         
+        tMin = EPSILON;
+        tMax = Float.POSITIVE_INFINITY;
     }
 
     public Ray(Point3f o, Vector3f d)

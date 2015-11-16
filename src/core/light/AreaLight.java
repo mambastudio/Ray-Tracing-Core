@@ -7,7 +7,7 @@ package core.light;
 
 import core.AbstractLight;
 import core.AbstractShape;
-import core.Material;
+import core.AbstractMaterial;
 import core.coordinates.Normal3f;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
@@ -17,9 +17,12 @@ import core.math.Color;
 import core.math.FloatValue;
 import core.math.Frame;
 import core.math.Ray;
+import core.math.Rng;
 import core.math.Transform;
 import core.math.Utility;
 import static core.math.Utility.INV_PI_F;
+import core.shape.Sphere;
+import core.shape.Triangle;
 
 /**
  *
@@ -28,9 +31,9 @@ import static core.math.Utility.INV_PI_F;
 public class AreaLight extends AbstractLight
 {
     public AbstractShape shape;
-    public Material material;
+    public AbstractMaterial material;
     
-    public AreaLight(Material material, AbstractShape shape, Transform l2w)
+    public AreaLight(AbstractMaterial material, AbstractShape shape, Transform l2w)
     {
         super(l2w);
         this.shape = shape;
@@ -43,7 +46,7 @@ public class AreaLight extends AbstractLight
         Normal3f n = new Normal3f();
         Point3f  p = shape.sampleW(receivingPosition, rndTuple.x, rndTuple.y, n);
                 
-        Vector3f directionToLight = p.sub(receivingPosition).normalize();
+        Vector3f directionToLight = p.subV(receivingPosition).normalize();
         float distanceToLight = receivingPosition.distanceTo(p);        
         float cosNormalDir = Vector3f.dot(n, directionToLight.neg());
                 
@@ -55,10 +58,10 @@ public class AreaLight extends AbstractLight
                                       
         if(cosAtLight != null)
             cosAtLight.value = cosNormalDir;
-                
-        rayToLight.d = directionToLight;
-        rayToLight.o = receivingPosition;
-        rayToLight.setMax(distanceToLight);
+                                
+        rayToLight.d.set(directionToLight);
+        rayToLight.o.set(receivingPosition);
+        rayToLight.setMax(distanceToLight - 2 * Ray.EPSILON);
                 
         return material.getEmission();
     }
@@ -85,9 +88,9 @@ public class AreaLight extends AbstractLight
     }
 
     @Override
-    public Color radiance(BoundingSphere sceneSphere, Normal3f hitNormal, Vector3f direction, FloatValue cosAtLight) 
+    public Color radiance(BoundingSphere sceneSphere, Point3f hitPoint, Vector3f direction, FloatValue cosAtLight) 
     {
-        float cosOutL = Math.max(0.f, Vector3f.dot(hitNormal, direction));
+        float cosOutL = Math.max(0.f, Vector3f.dot(shape.getNormal(hitPoint), direction.neg()));
         
         if(cosOutL == 0)
             return new Color();

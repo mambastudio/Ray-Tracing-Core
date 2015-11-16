@@ -39,6 +39,16 @@ public abstract class AbstractShape
     public abstract boolean intersectP(Ray ray);
     public abstract boolean intersect(Ray r, DifferentialGeometry dg);
     public abstract float getArea();
+    public abstract Normal3f getNormal(Point3f p);
+    
+    public Normal3f getNormal(Point3f p, Vector3f incidentVector)
+    {
+        Normal3f n = getNormal(p);
+        if(Vector3f.dot(incidentVector, n) >= 0)
+            return n.neg();
+        else
+            return n;
+    }
     
     public Point3f sampleA(float u1, float u2, Normal3f n) 
     {
@@ -68,10 +78,10 @@ public abstract class AbstractShape
                 
         if(!intersect(r, dg))
         {    
-            System.out.println("Kubafu");
+            System.out.println(dg.p);
             return 0;
         }
-             
+        
         float pdfW = pdfA() * r.getDistanceSquared() / Vector3f.absDot(dg.n, w);
          
         if (Float.isInfinite(pdfW)) 

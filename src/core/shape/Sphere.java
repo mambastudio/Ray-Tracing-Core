@@ -15,11 +15,9 @@ import core.math.Frame;
 import static core.math.MonteCarlo.uniformSampleSphere;
 import core.math.Ray;
 import core.math.Transform;
-import core.math.Utility;
 import static core.math.Utility.PI_F;
 import static core.math.Utility.acosf;
 import static core.math.Utility.clamp;
-import static core.math.Utility.cosf;
 import static core.math.Utility.pdfUniformConePdfW;
 import static core.math.Utility.quadratic;
 import static core.math.Utility.sampleUniformConeW;
@@ -27,7 +25,6 @@ import static core.math.Utility.sqrtf;
 import static java.lang.Math.acos;
 import static java.lang.Math.atan2;
 import static java.lang.Math.max;
-import static java.lang.Math.toDegrees;
 
 /**
  *
@@ -210,7 +207,7 @@ public class Sphere extends AbstractShape
             Normal3f ns) {
         
         Point3f pCenter = o2w.transform(new Point3f());
-        Vector3f wc1 = pCenter.sub(p).normalize();
+        Vector3f wc1 = pCenter.subV(p).normalize();
         
         Frame frame = new Frame();
         frame.setFromZ(wc1);
@@ -229,11 +226,11 @@ public class Sphere extends AbstractShape
         
         if(!intersect(r, dgSphere))
         {                 
-            r.setMax(Vector3f.dot(pCenter.sub(p), r.d));
+            r.setMax(Vector3f.dot(pCenter.subV(p), r.d));
         }
         
         ps = r.getPoint();
-        ns.set(ps.sub(pCenter).normalize());
+        ns.set(ps.subV(pCenter).normalize());
         
         //System.out.println(ps);
         
@@ -257,5 +254,13 @@ public class Sphere extends AbstractShape
         float pdfW = pdfUniformConePdfW(thetaMaximum);
         
         return pdfW;
+    }
+
+    @Override
+    public Normal3f getNormal(Point3f p) {
+        Point3f p1 = w2o.transform(p);
+        Normal3f n = p1.subN(new Point3f()).normalize();
+        
+        return n;
     }
 }

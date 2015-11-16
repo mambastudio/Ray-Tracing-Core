@@ -86,7 +86,8 @@ public class Point3f {
     }
     
     public Point3f add(Vector3f v) {return new Point3f(x + v.x, y + v.y, z + v.z);}
-    public Vector3f sub(Point3f a) {return new Vector3f(x - a.x, y - a.y, z - a.z);}    
+    public Vector3f subV(Point3f a) {return new Vector3f(x - a.x, y - a.y, z - a.z);}    
+    public Normal3f subN(Point3f a) {return new Normal3f(x - a.x, y - a.y, z - a.z).normalize();}
     public Point3f mul(float a) {return new Point3f(x * a, y * a, z * a);}
     //public Point3f add(float )
     

@@ -28,7 +28,9 @@ public class Test {
      */
     public static void main(String[] args) {
         
-        cameraTest();
+        Point3f p = new Point3f(1, 0, 0);
+        Normal3f n = (Normal3f)p.subV(new Point3f());
+        System.out.println(n);
     }
     
     public static void cameraTest()

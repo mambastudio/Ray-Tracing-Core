@@ -10,7 +10,7 @@ import core.AbstractBSDF;
 import core.AbstractPrimitive;
 import core.AbstractShape;
 import core.Intersection;
-import core.Material;
+import core.AbstractMaterial;
 import core.accelerator.NullAccelerator;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
@@ -27,9 +27,9 @@ public class Geometries extends AbstractPrimitive
 {
     private final AbstractAccelerator accelerator;
     private final ArrayList<AbstractPrimitive> gPrimitives;
-    private final Material material;
+    private final AbstractMaterial material;
     
-    public Geometries(Material material)
+    public Geometries(AbstractMaterial material)
     {
         this.material = material;
         this.accelerator = new NullAccelerator();
@@ -73,7 +73,7 @@ public class Geometries extends AbstractPrimitive
     }
 
     @Override
-    public Material getMaterial() {
+    public AbstractMaterial getMaterial() {
         return material;
     }
 

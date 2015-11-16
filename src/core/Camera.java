@@ -45,7 +45,7 @@ public class Camera
     
     public void setUp()
     {
-        Vector3f d = Vector3f.normalize(lookat.sub(position));
+        Vector3f d = Vector3f.normalize(lookat.subV(position));
         Vector3f r = Vector3f.normalize(Vector3f.cross(d, up));
         Vector3f u      = Vector3f.normalize(Vector3f.cross(r, d));
                 
@@ -79,7 +79,7 @@ public class Camera
     {        
         float fov = (float)Math.toRadians(horizontalFOV);
         
-        Vector3f look = lookat.sub(position);
+        Vector3f look = lookat.subV(position);
         Vector3f Du = Vector3f.cross(look, up).normalize();
         Vector3f Dv = Vector3f.cross(look, Du).normalize();
         
@@ -97,7 +97,7 @@ public class Camera
     
     public Vector3f forward()
     {
-        return lookat.sub(position).normalize();
+        return lookat.subV(position).normalize();
     }
     
     public Point3f position()

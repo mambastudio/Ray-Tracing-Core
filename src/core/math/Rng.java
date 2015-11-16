@@ -13,12 +13,7 @@ import core.coordinates.Point3f;
  * @author user
  */
 public class Rng 
-{
-    public static int getInt()
-    {
-        return (int)Math.random();
-    }
-
+{    
     public static float getFloat()
     {
         return (float)Math.random();

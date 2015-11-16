@@ -8,11 +8,12 @@ package core.scene;
 import core.AbstractScene;
 import core.Camera;
 import core.LightCache;
-import core.Material;
+import core.AbstractMaterial;
 import core.accelerator.NullAccelerator;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
+import core.material.UnitMaterial;
 import core.math.Color;
 import core.primitive.Geometries;
 import core.shape.Sphere;
@@ -48,21 +49,21 @@ public final class CornellScene extends AbstractScene
         primitives = new ArrayList<>();
         lights = new LightCache();
         
-        Material leftM = Material.createLambert(new Color(0.3f, 0.3f, 0.9f));
+        AbstractMaterial leftM = UnitMaterial.createLambert(new Color(0.3f, 0.3f, 0.9f));
         leftM.setName("Left");
-        Material rightM = Material.createLambert(new Color(0.9f, 0.3f, 0.3f));
+        AbstractMaterial rightM = UnitMaterial.createLambert(new Color(0.9f, 0.3f, 0.3f));
         rightM.setName("Right");
-        Material topM = Material.createLambert(new Color(0.9f, 0.9f, 0.9f));
+        AbstractMaterial topM = UnitMaterial.createLambert(new Color(0.9f, 0.9f, 0.9f));
         topM.setName("Top");
-        Material bottomM = Material.createLambert(new Color(0.9f, 0.9f, 0.9f));
+        AbstractMaterial bottomM = UnitMaterial.createLambert(new Color(0.9f, 0.9f, 0.9f));
         bottomM.setName("Bottom");
-        Material backM = Material.createLambert(new Color(0.9f, 0.9f, 0.9f));
+        AbstractMaterial backM = UnitMaterial.createLambert(new Color(0.9f, 0.9f, 0.9f));
         backM.setName("Back");
-        Material emissionM = Material.createEmission();
+        AbstractMaterial emissionM = UnitMaterial.createEmission();
         emissionM.setName("Emission");
-        Material glassM = Material.createLambert(new Color(0.9f, 0.9f, 0.9f));
+        AbstractMaterial glassM = UnitMaterial.createGlossy(new Color(0.0f, 0.9f, 0.0f));
         glassM.setName("Glass");
-        Material mirrorM = Material.createLambert(new Color(0.9f, 0.9f, 0.9f));
+        AbstractMaterial mirrorM = UnitMaterial.createMirror(new Color(0.9f, 0.9f, 0.9f));
         mirrorM.setName("Mirror");
         
         //left
@@ -73,7 +74,7 @@ public final class CornellScene extends AbstractScene
         primitives.add(left);
         
         //right
-        Geometries right = new Geometries(backM);        
+        Geometries right = new Geometries(rightM);        
         right.addGeometryPrimitive(new Triangle(p5, p6, p7, new Normal3f(-1, 0, 0)));
         right.addGeometryPrimitive(new Triangle(p5, p7, p8, new Normal3f(-1, 0, 0)));
         right.init();
@@ -87,7 +88,7 @@ public final class CornellScene extends AbstractScene
         primitives.add(top);
         
         //bottom        
-        Geometries bottom = new Geometries(bottomM);
+        Geometries bottom = new Geometries(glassM);
         bottom.addGeometryPrimitive(new Triangle(p1, p4, p8, new Normal3f(0, 1, 0)));
         bottom.addGeometryPrimitive(new Triangle(p1, p5, p8, new Normal3f(0, 1, 0)));
         bottom.init();
@@ -105,7 +106,7 @@ public final class CornellScene extends AbstractScene
         float scale = 0.2f;
         Normal3f n = new Normal3f(0, -1, 0);
         
-        Geometries light = new Geometries(backM);        
+        Geometries light = new Geometries(rightM);        
         light.addGeometryPrimitive(new Triangle(new Point3f(-1 * scale, 1 - disp, 1 * scale),
                                     new Point3f(-1 * scale, 1 - disp, -1 * scale),
                                     new Point3f(1 * scale, 1 - disp, -1 * scale), n));
@@ -117,13 +118,13 @@ public final class CornellScene extends AbstractScene
         primitives.add(light);
         
         //sphere1 right
-        Geometries sphere1 = new Geometries(rightM);          
+        Geometries sphere1 = new Geometries(emissionM);          
         sphere1.addGeometryPrimitive(new Sphere(new Point3f(-0.45f, 0.6f, 0.4f), 0.3f));
         sphere1.init();
         primitives.add(sphere1);
 
         //sphere2 left
-        Geometries sphere2 = new Geometries(emissionM);              
+        Geometries sphere2 = new Geometries(glassM);              
         sphere2.addGeometryPrimitive(new Sphere(new Point3f(-0.5f, -0.6f, -0.4f), 0.4f));
         sphere2.init();
         primitives.add(sphere2);              

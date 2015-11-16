@@ -9,7 +9,7 @@ import core.AbstractBSDF;
 import core.AbstractPrimitive;
 import core.AbstractShape;
 import core.Intersection;
-import core.Material;
+import core.AbstractMaterial;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
 import core.light.AreaLight;
@@ -27,9 +27,9 @@ public class GeometryPrimitive extends AbstractPrimitive
 {
     
     private final AbstractShape shape;
-    private final Material material;
+    private final AbstractMaterial material;
     
-    public GeometryPrimitive(AbstractShape shape, Material material)
+    public GeometryPrimitive(AbstractShape shape, AbstractMaterial material)
     {
         this.shape = shape;
         this.material = material;
@@ -67,7 +67,7 @@ public class GeometryPrimitive extends AbstractPrimitive
     }
 
     @Override
-    public Material getMaterial() 
+    public AbstractMaterial getMaterial() 
     {
         return material;
     }

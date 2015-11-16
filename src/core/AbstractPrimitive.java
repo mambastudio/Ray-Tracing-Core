@@ -22,7 +22,7 @@ public abstract class AbstractPrimitive
     public abstract boolean intersect(Ray ray, Intersection isect);
     public abstract boolean intersectP(Ray ray);
     public abstract AreaLight getAreaLight();
-    public abstract Material getMaterial();
+    public abstract AbstractMaterial getMaterial();
     public abstract AbstractBSDF getBSDF(Normal3f worldNormal, Vector3f worldWi);
     
     public boolean canIntersect() 

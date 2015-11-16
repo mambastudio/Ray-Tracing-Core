@@ -75,7 +75,7 @@ public abstract class AbstractLight
      */    
     public abstract Color radiance(
         BoundingSphere      sceneSphere,
-        Normal3f            hitNormal,
+        Point3f             hitPoint,
         Vector3f            direction,
         FloatValue          cosAtLight);
     

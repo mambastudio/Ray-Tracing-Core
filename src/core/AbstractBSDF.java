@@ -88,7 +88,7 @@ public abstract class AbstractBSDF {
         return type() == BSDFType.PHONG;
     }
     
-    public boolean isSpecular()
+    public boolean isDelta()
     {
         return isReflect() || isRefract();
     }

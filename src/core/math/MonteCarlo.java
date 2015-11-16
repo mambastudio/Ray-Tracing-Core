@@ -51,13 +51,15 @@ public class MonteCarlo
     
     public static Point3f uniformSampleTriangle(float r1, float r2, Point3f p1, Point3f p2, Point3f p3)
     {
-        float s = (float)(Math.sqrt(r1));
-        float t = (float)r2;
+        float term = (float) Math.sqrt(r1);
+        float u = 1.f - term;
+        float v = r2 * term;
+        
+        Vector3f e1 = p2.subV(p1);
+        Vector3f e2 = p3.subV(p1);
         
         Point3f p = new Point3f();
-        p.x = (1 - s)*p1.x + s*(1 - t)*p2.x + s*t*p3.x;
-        p.y = (1 - s)*p1.y + s*(1 - t)*p2.y + s*t*p3.y;
-        p.z = (1 - s)*p1.z + s*(1 - t)*p2.z + s*t*p3.z;
+        p.set(p1.add(e1.mul(u)).add(e2.mul(v)));
         
         return p;
     }

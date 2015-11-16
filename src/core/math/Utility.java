@@ -21,6 +21,7 @@ public class Utility {
     public static final float TWO_PI_F = PI_F * PI_F;
     public static final float INV_PI_F = 1.f/PI_F;
     public static final float EPS_COSINE = 1e-6f;
+    public static final float EPS_PHONG = 1e-3f;
     public static final float EPS_RAY  =  0.000001f;
     
     public static Vector3f sphericalDirection(float theta, float phi)
@@ -170,7 +171,10 @@ public class Utility {
         return (float) ((power + 1.f) * Math.pow(cosTheta, power) * (0.5f * INV_PI_F));
     }
     
-   
+    public static float pdfPowerCosHemisphereW(float cosTheta, float power)
+    {        
+        return (float) ((power + 1.f) * Math.pow(cosTheta, power) * (0.5f * INV_PI_F));
+    }
     
     public static Vector3f sampleUniformSphereW(Point2f sample, FloatValue pdfW)
     {
