@@ -7,9 +7,11 @@ package core.material;
 
 import core.AbstractBSDF;
 import core.AbstractMaterial;
+import core.BSDFType;
 import core.bsdf.Diffuse;
 import core.bsdf.Phong;
 import core.bsdf.Reflection;
+import core.bsdf.Refraction;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
 import core.math.Color;
@@ -28,6 +30,11 @@ public class UnitMaterial extends AbstractMaterial
         this.bsdf = bsdf;
     }
     
+    public Color getColor()
+    {
+        return bsdf.getColor();
+    }
+    
     @Override
     public AbstractBSDF getBSDF(Normal3f worldNormal, Vector3f worldWi) {
         if(isEmitter())
@@ -35,6 +42,19 @@ public class UnitMaterial extends AbstractMaterial
         
         bsdf.setUp(worldNormal, worldWi);
         return bsdf;
+    }
+    
+    public void setBSDF(AbstractBSDF bsdf)
+    {
+        this.bsdf = bsdf;
+    }
+    
+    public BSDFType getType()
+    {
+        if(bsdf == null) 
+            return null;
+        else
+            return bsdf.type();
     }
     
     public static AbstractMaterial createLambert(Color color)
@@ -52,6 +72,11 @@ public class UnitMaterial extends AbstractMaterial
     public static AbstractMaterial createMirror(Color color)
     {
         return new UnitMaterial(new Reflection(color));
+    }
+    
+    public static AbstractMaterial createGlass(Color color)
+    {
+        return new UnitMaterial(new Refraction(color));
     }
     
     public static AbstractMaterial createGlossy(Color color)

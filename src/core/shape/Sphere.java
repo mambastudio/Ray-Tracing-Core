@@ -16,6 +16,7 @@ import static core.math.MonteCarlo.uniformSampleSphere;
 import core.math.Ray;
 import core.math.Transform;
 import static core.math.Utility.PI_F;
+import static core.math.Utility.TWO_PI_F;
 import static core.math.Utility.acosf;
 import static core.math.Utility.clamp;
 import static core.math.Utility.pdfUniformConePdfW;
@@ -34,9 +35,7 @@ public class Sphere extends AbstractShape
 {
     private final float radius;
     
-    private final float phiMax = (float) Math.toRadians(360);    
-    private final float thetaMin = (float) acos(0);
-    private final float thetaMax = (float) acos(1);
+    
         
     public Sphere()
     {
@@ -47,6 +46,12 @@ public class Sphere extends AbstractShape
     public Sphere(Transform o2w, float radius)
     {
         this(o2w, o2w.inverse(), radius);
+    }
+    
+    public Sphere(float radius)
+    {
+        this(Transform.translate(0, 0, 0), radius);
+        
     }
     
     public Sphere(Point3f p, float radius)
@@ -76,9 +81,7 @@ public class Sphere extends AbstractShape
     @Override
     public boolean intersectP(Ray r) {
         Ray ray = w2o.transform(r);
-                
-        Point3f phit;
-        
+            
         // Compute Quadratic sphere coefficients, page 100
         float A = ray.d.x * ray.d.x + ray.d.y * ray.d.y + ray.d.z * ray.d.z;
         float B = 2 * (ray.d.x * ray.o.x + ray.d.y * ray.o.y + ray.d.z * ray.o.z);
@@ -103,15 +106,6 @@ public class Sphere extends AbstractShape
             }
         }
         
-         // Compute sphere hit position and phi        
-        phit = ray.getPoint(thit);
-         if (phit.x == 0.f && phit.y == 0.f) {
-            phit.x = 1e-5f * radius;
-        }
-        
-        if(!r.isInside(thit))
-            return false;
-        
         return true;
     }
 
@@ -120,7 +114,7 @@ public class Sphere extends AbstractShape
     {
         return PI_F * radius * radius;
     }
-
+    
     @Override
     public boolean intersect(Ray r, DifferentialGeometry dg) {
         Ray ray = w2o.transform(r);
@@ -163,18 +157,18 @@ public class Sphere extends AbstractShape
         }
         
         // Find parametric representation of sphere hit
-        float u = phi / phiMax;
-        float theta = (float) acos(clamp(phit.z / radius, -1.f, 1.f));
-        float v = (theta - thetaMin) / (thetaMax - thetaMin);
+        float u = phi / TWO_PI_F;
+        float theta = (float) acos(phit.z / radius);
+        float v = theta / PI_F;
         
         // normal
         Normal3f nhit = new Normal3f(phit.x, phit.y, phit.z).normalize();
+          
+        /*
         if(Vector3f.dot(nhit, ray.d) > 0)
             nhit = nhit.neg();
+        */
         
-        if(!r.isInside(thit))
-            return false; 
-               
         dg.n = o2w.transform(nhit);
         dg.p = o2w.transform(phit);
         dg.u = u;
@@ -189,8 +183,6 @@ public class Sphere extends AbstractShape
     public Point3f sampleA(float u1, float u2, Normal3f ns) 
     {
         Point3f p = Point3f.add(new Point3f(), uniformSampleSphere(u1, u2).mul(radius).asVector());
-        
-        DifferentialGeometry dgSphere = new DifferentialGeometry();
         
         if(ns != null)
         {

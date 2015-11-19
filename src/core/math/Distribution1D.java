@@ -5,6 +5,8 @@
  */
 package core.math;
 
+import java.util.Arrays;
+
 /**
  *
  * @author user
@@ -30,5 +32,31 @@ public class Distribution1D {
         funcInt = cdf[count];
         for (int i = 1; i < n+1; ++i)
             cdf[i] /= funcInt;
+    }
+    
+    public float sampleContinuous(float u, FloatValue pdf)
+    {
+        return 0;
+    }
+    
+    private int upper_bound(float[] a, int first, int last, float value) 
+    {
+        int i;
+        for (i = first; i < last; i++) {
+            if (a[i] > value) {
+                break;
+            }
+        }
+        return i;
+    }
+    
+    public String funcString()
+    {
+        return Arrays.toString(func);
+    }
+    
+    public String cdfString()
+    {
+        return Arrays.toString(cdf);
     }
 }

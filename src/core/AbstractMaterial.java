@@ -17,7 +17,7 @@ public abstract class AbstractMaterial {
    
     protected String name = null;    
     protected Color emission = new Color();
-    protected float power = 3f;
+    protected float power = 5f;
         
     public boolean isEmitter()
     {

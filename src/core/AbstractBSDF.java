@@ -63,7 +63,7 @@ public abstract class AbstractBSDF {
         return color;
     }
     
-    public void setSpectrum(Color color)
+    public void setColor(Color color)
     {
         this.color = color;
     }        

@@ -118,7 +118,10 @@ public class Transform {
         Point3f o = transform(r.o);
         Vector3f d = transform(r.d);
         
-        return new Ray(o, d);
+        Ray ray = new Ray(o, d);
+        ray.setMax(r.getMax());
+        
+        return ray;
     }
     
     public Point3f transform(Point3f aVec)

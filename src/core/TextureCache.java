@@ -5,11 +5,12 @@
  */
 package core;
 
+import java.util.HashMap;
+
 /**
  *
  * @author user
  */
-public class Texture {
-    private String filename;
-    private int loaded;
+public class TextureCache {
+    private static final HashMap<String, Texture> textures = new HashMap<>();
 }
