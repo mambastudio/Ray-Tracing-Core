@@ -5,7 +5,7 @@
  */
 package core;
 
-import core.math.Color;
+import core.image.Color;
 
 /**
  *

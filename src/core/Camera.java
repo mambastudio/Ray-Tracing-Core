@@ -26,7 +26,7 @@ public class Camera
     public float xResolution;
     public float yResolution;
     
-    public float horizontalFOV;
+    public float fov;
     
     public Transform cameraTransform;   
     
@@ -34,12 +34,12 @@ public class Camera
    
     public Camera(Point3f position, Point3f lookat, Vector3f up, float xResolution, float yResolution, float horizontalFOV)
     {
-        this.position = position;
-        this.lookat = lookat;
-        this.up = up;
+        this.position = position.clone();
+        this.lookat = lookat.clone();
+        this.up = up.clone();
         this.xResolution = xResolution;
         this.yResolution = yResolution;
-        this.horizontalFOV = horizontalFOV;        
+        this.fov = horizontalFOV;        
         this.cameraTransform = new Transform();
     }
     
@@ -71,13 +71,13 @@ public class Camera
         cameraTransform.m = mV;
         cameraTransform.mInv = mV_Inv;      
                 
-        float tanHalfAngle = (float) Math.tan(horizontalFOV * Utility.PI_F / 360.f);
+        float tanHalfAngle = (float) Math.tan(fov * Utility.PI_F / 360.f);
         mImagePlaneDist = xResolution / (2.f * tanHalfAngle);
     }
     
     public Ray getFastRay(float x, float y, float xRes, float yRes)
     {        
-        float fov = (float)Math.toRadians(horizontalFOV);
+        float fov = (float)Math.toRadians(this.fov);
         
         Vector3f look = lookat.subV(position);
         Vector3f Du = Vector3f.cross(look, up).normalize();
@@ -107,7 +107,7 @@ public class Camera
         
     public Ray generateRay(float x, float y)
     {
-        float d = (float) (1./Math.tan(Math.toRadians(horizontalFOV)/2));
+        float d = (float) (1./Math.tan(Math.toRadians(fov)/2));
         
         float a = xResolution/yResolution;
         float px = a * (2 * x/xResolution - 1);
@@ -145,7 +145,7 @@ public class Camera
     {
         Point3f cHitpoint = cameraTransform.transform(aHitpoint);
         
-        float d = (float) (1./Math.tan(Math.toRadians(horizontalFOV)/2));
+        float d = (float) (1./Math.tan(Math.toRadians(fov)/2));
         float a = xResolution/yResolution;
         
         float xndc = d*cHitpoint.x/(-a*cHitpoint.z);
@@ -155,5 +155,12 @@ public class Camera
         float ys = -yResolution/2*yndc + yResolution/2;
         
         return new Point2f(xs, ys);
+    }
+    
+    public Camera copy()
+    {
+        Camera camera = new Camera(position, lookat, up, xResolution, yResolution, fov);
+        camera.setUp();
+        return camera;
     }
 }

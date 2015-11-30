@@ -16,14 +16,23 @@ public class PoolExecutor
 {
     private static ExecutorService realtimePool = null;
     private static ExecutorService progressivePool = null;
+    private static ExecutorService queuePool = null;
     
     private static Threading rThreading = null;
     private static Threading pThreading = null;
+    
+    
     
     public static void init()
     {
         progressivePool = Executors.newSingleThreadExecutor();
         realtimePool    = Executors.newSingleThreadExecutor();
+        queuePool = Executors.newFixedThreadPool(1);
+    }
+    
+    public static void submitQueue(Runnable runnable)
+    {
+        queuePool.submit(runnable);
     }
     
     public static void submitRealtimeRender(Threading rthreading)
@@ -44,6 +53,7 @@ public class PoolExecutor
     {
         realtimePool.shutdown();
         progressivePool.shutdown();
+        queuePool.shutdown();
     }
     
     public static void stopProgressiveRender()

@@ -130,6 +130,12 @@ public class Point3f {
         float nz = edge1x * edge2y - edge1y * edge2x;
         return new Vector3f(nx, ny, nz);
     }
+    
+    @Override
+    public Point3f clone()
+    {
+        return new Point3f(x, y, z);
+    }
 
     @Override
     public final String toString() {

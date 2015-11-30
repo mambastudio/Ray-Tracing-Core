@@ -14,7 +14,7 @@ import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import core.material.UnitMaterial;
-import core.math.Color;
+import core.image.Color;
 import core.primitive.Geometries;
 import core.shape.Sphere;
 import core.shape.Triangle;

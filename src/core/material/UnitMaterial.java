@@ -14,7 +14,7 @@ import core.bsdf.Reflection;
 import core.bsdf.Refraction;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
-import core.math.Color;
+import core.image.Color;
 
 /**
  *

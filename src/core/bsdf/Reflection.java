@@ -10,7 +10,7 @@ import core.BSDFType;
 import static core.BSDFType.REFLECT;
 import core.coordinates.Point2f;
 import core.coordinates.Vector3f;
-import core.math.Color;
+import core.image.Color;
 import core.math.FloatValue;
 import core.math.Utility;
 
