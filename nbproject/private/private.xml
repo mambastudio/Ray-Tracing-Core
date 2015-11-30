@@ -3,8 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/shape/Quad.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/Camera.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/primitive/GeometryPrimitive.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/Texture.java</file>
             <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/shape/Triangle.java</file>
         </group>
     </open-files>

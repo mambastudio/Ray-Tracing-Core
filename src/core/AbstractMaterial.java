@@ -15,7 +15,9 @@ import core.image.Color;
  */
 public abstract class AbstractMaterial {
    
-    protected String name = null;    
+    protected String name = null;  
+    protected Texture texture = null;
+    
     protected Color emission = new Color();
     protected float power = 5f;
         
@@ -52,6 +54,16 @@ public abstract class AbstractMaterial {
     public void setName(String name) 
     {
         this.name = name;
+    }
+    
+    public Texture getTexture()
+    {
+        return texture;
+    }
+    
+    public void setTexture(Texture texture)
+    {
+        this.texture = texture;
     }
     
     public abstract AbstractBSDF getBSDF(Normal3f worldNormal, Vector3f worldWi);

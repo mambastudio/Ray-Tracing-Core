@@ -7,8 +7,6 @@ package core;
 
 import core.image.Bitmap;
 import core.image.Color;
-import java.io.File;
-import java.util.List;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -45,9 +43,23 @@ public class Texture
         return uri;
     }   
     
+    public Image getImage()
+    {
+        return bitmap.getImage();
+    }
+    
     public ImageView getImageView()
     {
         return bitmap.getImageView();
     }
     
+    public float getWidthF()
+    {
+        return bitmap.getWidth();
+    }
+    
+    public float getHeightF()
+    {
+        return bitmap.getHeight();
+    }
 }

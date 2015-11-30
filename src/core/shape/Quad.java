@@ -8,11 +8,15 @@ package core.shape;
 import core.AbstractShape;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
+import static core.coordinates.Point3f.sub;
 import core.coordinates.Vector3f;
+import static core.coordinates.Vector3f.cross;
+import static core.coordinates.Vector3f.dot;
 import core.math.BoundingBox;
 import core.math.DifferentialGeometry;
 import core.math.Ray;
 import core.math.Transform;
+import static core.math.Utility.sqrt;
 import static java.lang.Math.abs;
 
 /**
@@ -24,13 +28,13 @@ public class Quad extends AbstractShape
     Point3f p00, p01, p10, p11;
     Normal3f n;
     
-    public Quad(Point3f p00, Point3f p01, Point3f p10, Point3f p11, Normal3f n)
+    public Quad(Point3f p00, Point3f p10, Point3f p11, Point3f p01, Normal3f n)
     {
         super(new Transform(), new Transform());
         this.p00 = p00;
-        this.p01 = p01;
         this.p10 = p10;
         this.p11 = p11;
+        this.p01 = p01;
         this.n = n.normalize();
     }
     
@@ -91,97 +95,123 @@ public class Quad extends AbstractShape
     @Override
     public boolean intersect(Ray r, DifferentialGeometry dg) 
     {
-        // Reject rays using the barycentric coordinates of
-        // the intersection point with respect to T.        
-        Vector3f E01 = Point3f.sub(p10, p00);
-        Vector3f E03 = Point3f.sub(p01, p00);
-        Vector3f P   = Vector3f.cross(r.d, E03);
-        float det    = Vector3f.dot(E01, P);
-        if(abs(det) < 0.001f) return false;
-        Vector3f T   = Point3f.sub(r.o, p00);
-        float alpha  = Vector3f.dot(T, P)/det;
-        if(alpha < 0) return false;
-        if(alpha > 1) return false;
-        Vector3f Q   = Vector3f.cross(T, E01);
-        float beta   = Vector3f.dot(r.d, Q)/det;
-        if(beta < 0) return false;
-        if(beta > 1) return false;
-        
-        // Reject rays using the barycentric coordinates of
-        // the intersection point with respect to T'.
-        if((alpha + beta) > 1)
-        {
-            Vector3f E23 = Point3f.sub(p01, p11);
-            Vector3f E21 = Point3f.sub(p10, p11);
-            Vector3f PP  = Vector3f.cross(r.d, E21);
-            float dett   = Vector3f.dot(E23, PP); 
-            if(Math.abs(dett) < 0.001f) return false;
-            Vector3f TT  = Point3f.sub(r.o, p11);
-            float alpha_ = Vector3f.dot(TT, PP)/dett;
-            if(alpha_ < 0) return false;
-            Vector3f QQ  = Vector3f.cross(TT, E23);
-            float beta_  = Vector3f.dot(r.d, QQ)/dett;
-            if(beta_ < 0) return false;            
-        }
-        
-        // Compute the ray parameter of the intersection
-        // point.
-        
-        float t = Vector3f.dot(E03, Q)/det;
-        if( t < 0) return false;
-        
-        // Compute the barycentric coordinates of V11.
-        Vector3f E02 = Point3f.sub(p11, p00);
-        //Vector3f   N = Vector3f.cross(E01, E03);
-        Vector3f N   = n.clone();
-        float alpha11, beta11;
-        if (Math.abs(N.x) >= Math.abs(N.y)
-                && Math.abs(N.x) >= Math.abs(N.z))
-        {
-            alpha11 = (E02.y * E03.z - E02.z * E03.y)/N.x;
-            beta11  = (E01.y * E02.z - E01.z * E02.y)/N.x;
-        } 
-        else if (Math.abs(N.y) >= Math.abs(N.x)
-                && Math.abs(N.y) >= Math.abs(N.z))
-        {
-            alpha11 = (E02.z * E03.x - E02.x * E03.z)/N.y;
-            beta11 =  (E01.z * E02.x - E01.x * E02.z)/N.y;
-        } 
-        else 
-        {
-            alpha11 = (E02.x * E03.y - E02.y * E03.x)/N.z;
-            beta11  = (E01.x * E02.y - E01.y * E02.x)/N.z;
-        }
-        
-        // Compute the bilinear coordinates of the
-        // intersection point.
-        float u, v;
-        if (Math.abs(alpha11 - 1f) < 0.001f) 
-        {
-            u = alpha;
-            if (Math.abs(beta11 - 1) < 0.001f) 
-                v = beta;
-            else 
-                v = beta/(u * (beta11 - 1f) + 1f);
-        }
-        else if (Math.abs(beta11 - 1f) < 0.001f) 
-        {
-            v = beta;
-            u = alpha/(v * (alpha11 - 1f) + 1f);
-        } 
-        else 
-        {
-            float A     = -(beta11 - 1f);
-            float B     = alpha*(beta11 - 1f) - beta*(alpha11 - 1f) - 1f;
-            float C     = alpha;    
-            float delta = B*B - 4*A*C;
-            float q     = -0.5f * (B + ((B < 0f) ? -1f : 1)) * (float)Math.sqrt(delta);
+        float eps = 10e-6f, u, v;
+        // Rejects rays that are parallel to Q, and rays that intersect the plane of
+        // Q either on the left of the line V00V01 or on the right of the line V00V10.
 
-            u = q/A;
-            if ((u < 0) || (u > 1)) u = C/q;
-            v = beta/(u * (beta11 - 1f) + 1f);
+        Vector3f E_01 = sub(p10, p00);
+        Vector3f E_03 = sub(p01, p00);
+        Vector3f P = cross(r.d, E_03);
+        float det = dot(E_01, P);
+        if (abs(det) < eps) return false;
+        float inv_det = (1.0f) / det;
+        Vector3f T = sub(r.o, p00);
+        float alpha = dot(T, P) * inv_det;
+        if (alpha < (0.0f)) return false;
+        // if (alpha > real(1.0)) return false; // Uncomment if R is used.
+        Vector3f Q = cross(T, E_01);
+        float beta = dot(r.d, Q) * inv_det;
+        if (beta < (0.0f)) return false; 
+        // if (beta > real(1.0)) return false; // Uncomment if VR is used.
+        
+        if ((alpha + beta) > (1.0f)) 
+        {
+            // Rejects rays that intersect the plane of Q either on the
+            // left of the line V11V10 or on the right of the line V11V01.
+
+            Vector3f E_23 = sub(p01, p11);
+            Vector3f E_21 = sub(p10, p11);
+            Vector3f P_prime = cross(r.d, E_21);
+            float det_prime = dot(E_23, P_prime);
+            if (abs(det_prime) < eps) return false;
+            float inv_det_prime = (1.0f) / det_prime;
+            Vector3f T_prime = sub(r.o, p11);
+            float alpha_prime = dot(T_prime, P_prime) * inv_det_prime;
+            if (alpha_prime < (0.0f)) return false;
+            Vector3f Q_prime = cross(T_prime, E_23);
+            float beta_prime = dot(r.d, Q_prime) * inv_det_prime;
+            if (beta_prime < (0.0f)) return false;  
         }
-        return true;
+        
+        // Compute the ray parameter of the intersection point, and
+        // reject the ray if it does not hit Q.
+
+        float t = dot(E_03, Q) * inv_det;
+        if (t < (0.0)) return false;
+        
+        // Compute the barycentric coordinates of the fourth vertex.
+        // These do not depend on the ray, and can be precomputed
+        // and stored with the quadrilateral.  
+
+        float alpha_11, beta_11;
+        Vector3f E_02 = sub(p11, p00);
+        Vector3f n = cross(E_01, E_03);
+
+        if ((abs(n.x) >= abs(n.y))
+            && (abs(n.x) >= abs(n.z))) 
+        {
+            alpha_11 = ((E_02.y * E_03.z) - (E_02.z * E_03.y)) / n.x;
+            beta_11  = ((E_01.y * E_02.z) - (E_01.z * E_02.y)) / n.x;
+        }
+        else if ((abs(n.y) >= abs(n.x))
+            && (abs(n.y) >= abs(n.z))) 
+        {  
+            alpha_11 = ((E_02.z * E_03.x) - (E_02.x * E_03.z)) / n.y;
+            beta_11  = ((E_01.z * E_02.x) - (E_01.x * E_02.z)) / n.y;
+        }
+        else 
+        {
+            alpha_11 = ((E_02.x * E_03.y) - (E_02.y * E_03.x)) / n.z;        
+            beta_11  = ((E_01.x * E_02.y) - (E_01.y * E_02.x)) / n.z;
+        }
+        
+        // Compute the bilinear coordinates of the intersection point.
+
+        if (abs(alpha_11 - (1.0)) < eps) 
+        {  
+            // Q is a trapezium.
+            u = alpha;
+            if (abs(beta_11 - (1.0)) < eps) v = beta; // Q is a parallelogram.
+            else v = beta / ((u * (beta_11 - (1.0f))) + (1.0f)); // Q is a trapezium.
+        }
+        else if (abs(beta_11 - (1.0)) < eps) {
+
+            // Q is a trapezium.
+            v = beta;
+            u = alpha / ((v * (alpha_11 - (1.0f))) + (1.0f));
+        }
+        else 
+        {
+            float A = (1.0f) - beta_11;
+            float B = (alpha * (beta_11 - (1.0f)))
+                        - (beta * (alpha_11 - (1.0f))) - (1.0f);
+            float C = alpha;
+            float D = (B * B) - ((4.0f) * A * C);
+            float Q_ = (-0.5f) * (B + ((B < (0.0f) ? (-1.0f) : (1.0f))
+                        * sqrt(D)));
+            u = Q_ / A;
+            if ((u < (0.0f)) || (u > (1.0f))) u = C / Q_;
+            v = beta / ((u * (beta_11 - (1.0f))) + (1.0f)); 
+        }
+        
+        if((t > r.getMin()) & (t < r.getMax()))
+        {  
+            Normal3f nhit;
+            if(Vector3f.dot(n, r.d) < 0) 
+                nhit = new Normal3f(n);   
+            else
+                nhit = new Normal3f(n.neg());
+            
+            r.setMax(t);
+            dg.p = r.getPoint();       
+            dg.n = nhit;
+            dg.u = u;
+            dg.v = v;
+            //System.out.println(u+ " " +v);
+            dg.shape = this; 
+            return true;
+        }
+        return false;
     }
 
     @Override

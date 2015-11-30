@@ -73,40 +73,49 @@ public class Triangle extends AbstractShape
 
     @Override
     public boolean intersect(Ray r, DifferentialGeometry dg) {
-        Vector3f ao = p1.subV(r.o);
-        Vector3f bo = p2.subV(r.o);
-        Vector3f co = p3.subV(r.o);
-        
-        Vector3f v0 = Vector3f.cross(co, bo);
-        Vector3f v1 = Vector3f.cross(bo, ao);
-        Vector3f v2 = Vector3f.cross(ao, co);
+        Vector3f e1, e2, h, s, q;
+        double a, f, u, v;
 
-        float v0d = Vector3f.dot(v0, r.d);
-        float v1d = Vector3f.dot(v1, r.d);
-        float v2d = Vector3f.dot(v2, r.d);
-        
-        if(((v0d < 0.f)  && (v1d < 0.f)  && (v2d < 0.f)) ||
-           ((v0d >= 0.f) && (v1d >= 0.f) && (v2d >= 0.f)))
-        {
-            float distance = Vector3f.dot(n, ao) / Vector3f.dot(n, r.d);
-            
-            if((distance > r.getMin()) & (distance < r.getMax()))
-            {                
-                Normal3f nhit;
-                if(Vector3f.dot(n, r.d) < 0) 
-                    nhit = n;   
-                else
-                    nhit = n.neg();
+        e1 = Point3f.sub(p2, p1);
+        e2 = Point3f.sub(p3, p1);
+        h = Vector3f.cross(r.d, e2);
+        a = Vector3f.dot(e1, h);
+
+        if (a > -0.00000000000001 && a < 0.0000000000001)
+            return false;
+
+        f = 1/a;
+        s = Point3f.sub(r.o, p1);
+	u = f * (Vector3f.dot(s, h));
+
+        if (u < 0.0 || u > 1.0)
+            return false;
+
+        q = Vector3f.cross(s, e1);
+	v = f * Vector3f.dot(r.d, q);
+
+	if (v < 0.0 || u + v > 1.0)
+            return false;
+
+	float t = (float) (f * Vector3f.dot(e2, q));
+
+        if (r.isInside(t))
+        {   
+            Normal3f nhit;
+            if(Vector3f.dot(n, r.d) < 0) 
+                nhit = n;   
+            else
+                nhit = n.neg();
                 
-                r.setMax(distance);
-                dg.p = r.getPoint();
-                dg.n = nhit;                
-                dg.shape = this;                
-                                
-                return true;
-            }
-        }
-        
+            r.setMax(t);
+            dg.p = r.getPoint();
+            dg.n = nhit; 
+            dg.u = (float) u;
+            dg.v = (float) v;
+            dg.shape = this;
+            
+            return true;
+        }        
         return false;
     }
 

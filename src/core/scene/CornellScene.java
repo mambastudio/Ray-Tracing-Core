@@ -16,6 +16,7 @@ import core.coordinates.Vector3f;
 import core.material.UnitMaterial;
 import core.image.Color;
 import core.primitive.Geometries;
+import core.shape.Quad;
 import core.shape.Sphere;
 import core.shape.Triangle;
 import java.util.ArrayList;
@@ -66,6 +67,12 @@ public final class CornellScene extends AbstractScene
         AbstractMaterial mirrorM = UnitMaterial.createMirror(new Color(0.9f, 0.9f, 0.9f));
         mirrorM.setName("Mirror");
         
+        //back
+        Geometries geo = new Geometries(backM);        
+        geo.addGeometryPrimitive(new Quad(p4, p8, p7, p3, new Normal3f(0, 0, 1)));        
+        geo.init();
+        primitives.add(geo);
+        
         //left
         Geometries left = new Geometries(leftM);
         left.addGeometryPrimitive(new Triangle(p1, p2, p3, new Normal3f(1, 0, 0)));
@@ -94,12 +101,14 @@ public final class CornellScene extends AbstractScene
         bottom.init();
         primitives.add(bottom);
         
+        /*
         //back
         Geometries back = new Geometries(backM);        
         back.addGeometryPrimitive(new Triangle(p4, p3, p7, new Normal3f(0, 0, 1)));
         back.addGeometryPrimitive(new Triangle(p4, p8, p7, new Normal3f(0, 0, 1)));
         back.init();
         primitives.add(back);
+                */
         
         //light
         float disp = 0.05f;
