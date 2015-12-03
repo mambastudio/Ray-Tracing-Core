@@ -113,7 +113,7 @@ public class Triangle extends AbstractShape
             dg.u = (float) u;
             dg.v = (float) v;
             dg.shape = this;
-            
+                        
             return true;
         }        
         return false;

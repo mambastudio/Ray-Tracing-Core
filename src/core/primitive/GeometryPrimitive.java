@@ -51,11 +51,8 @@ public class GeometryPrimitive extends AbstractPrimitive
         
         if(material.getTexture() != null)
         {
-            Texture texture = material.getTexture();
-            float s = isect.dg.u * texture.getWidthF();
-            float t = isect.dg.v * texture.getHeightF();
-            
-            isect.bsdf.setColor(texture.getPixel(s, t));
+            Texture texture = material.getTexture();            
+            isect.bsdf.setColor(texture.getTexelUV(isect.dg.u, isect.dg.v));
         }
         
         isect.primitive = this;        

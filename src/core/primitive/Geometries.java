@@ -12,6 +12,7 @@ import core.AbstractShape;
 import core.Intersection;
 import core.AbstractMaterial;
 import core.accelerator.NullAccelerator;
+import core.accelerator.UniformGrid;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
 import core.light.AreaLight;
@@ -32,7 +33,7 @@ public class Geometries extends AbstractPrimitive
     public Geometries(AbstractMaterial material)
     {
         this.material = material;
-        this.accelerator = new NullAccelerator();
+        this.accelerator = new UniformGrid();
         this.gPrimitives = new ArrayList<>();
     }
     

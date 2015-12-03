@@ -51,45 +51,55 @@ public class Quad extends AbstractShape
 
     @Override
     public boolean intersectP(Ray r) {
-        // Reject rays using the barycentric coordinates of
-        // the intersection point with respect to T.        
-        Vector3f E01 = Point3f.sub(p10, p00);
-        Vector3f E03 = Point3f.sub(p01, p00);
-        Vector3f P   = Vector3f.cross(r.d, E03);
-        float det    = Vector3f.dot(E01, P);
-        if(abs(det) < 0.001f) return false;
-        Vector3f T   = Point3f.sub(r.o, p00);
-        float alpha  = Vector3f.dot(T, P)/det;
-        if(alpha < 0) return false;
-        if(alpha > 1) return false;
-        Vector3f Q   = Vector3f.cross(T, E01);
-        float beta   = Vector3f.dot(r.d, Q)/det;
-        if(beta < 0) return false;
-        if(beta > 1) return false;
+        float eps = 10e-6f, u, v;
+        // Rejects rays that are parallel to Q, and rays that intersect the plane of
+        // Q either on the left of the line V00V01 or on the right of the line V00V10.
+
+        Vector3f E_01 = sub(p10, p00);
+        Vector3f E_03 = sub(p01, p00);
+        Vector3f P = cross(r.d, E_03);
+        float det = dot(E_01, P);
+        if (abs(det) < eps) return false;
+        float inv_det = (1.0f) / det;
+        Vector3f T = sub(r.o, p00);
+        float alpha = dot(T, P) * inv_det;
+        if (alpha < (0.0f)) return false;
+        // if (alpha > real(1.0)) return false; // Uncomment if R is used.
+        Vector3f Q = cross(T, E_01);
+        float beta = dot(r.d, Q) * inv_det;
+        if (beta < (0.0f)) return false; 
+        // if (beta > real(1.0)) return false; // Uncomment if VR is used.
         
-        // Reject rays using the barycentric coordinates of
-        // the intersection point with respect to T'.
-        if((alpha + beta) > 1)
+        if ((alpha + beta) > (1.0f)) 
         {
-            Vector3f E23 = Point3f.sub(p01, p11);
-            Vector3f E21 = Point3f.sub(p10, p11);
-            Vector3f PP  = Vector3f.cross(r.d, E21);
-            float dett   = Vector3f.dot(E23, PP); 
-            if(Math.abs(dett) < 0.001f) return false;
-            Vector3f TT  = Point3f.sub(r.o, p11);
-            float alpha_ = Vector3f.dot(TT, PP)/dett;
-            if(alpha_ < 0) return false;
-            Vector3f QQ  = Vector3f.cross(TT, E23);
-            float beta_  = Vector3f.dot(r.d, QQ)/dett;
-            if(beta_ < 0) return false;            
+            // Rejects rays that intersect the plane of Q either on the
+            // left of the line V11V10 or on the right of the line V11V01.
+
+            Vector3f E_23 = sub(p01, p11);
+            Vector3f E_21 = sub(p10, p11);
+            Vector3f P_prime = cross(r.d, E_21);
+            float det_prime = dot(E_23, P_prime);
+            if (abs(det_prime) < eps) return false;
+            float inv_det_prime = (1.0f) / det_prime;
+            Vector3f T_prime = sub(r.o, p11);
+            float alpha_prime = dot(T_prime, P_prime) * inv_det_prime;
+            if (alpha_prime < (0.0f)) return false;
+            Vector3f Q_prime = cross(T_prime, E_23);
+            float beta_prime = dot(r.d, Q_prime) * inv_det_prime;
+            if (beta_prime < (0.0f)) return false;  
         }
         
-        // Compute the ray parameter of the intersection
-        // point.
+        // Compute the ray parameter of the intersection point, and
+        // reject the ray if it does not hit Q.
+
+        float t = dot(E_03, Q) * inv_det;
+        if (t < (0.0)) return false;
         
-        float t = Vector3f.dot(E03, Q)/det;
-        if( t < 0) return false;
-        return true;
+        if(r.isInside(t))
+        { 
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -194,20 +204,19 @@ public class Quad extends AbstractShape
             v = beta / ((u * (beta_11 - (1.0f))) + (1.0f)); 
         }
         
-        if((t > r.getMin()) & (t < r.getMax()))
+        if(r.isInside(t))
         {  
             Normal3f nhit;
             if(Vector3f.dot(n, r.d) < 0) 
-                nhit = new Normal3f(n);   
+                nhit = new Normal3f(n.normalize());   
             else
-                nhit = new Normal3f(n.neg());
+                nhit = new Normal3f(n.neg().normalize());
             
             r.setMax(t);
             dg.p = r.getPoint();       
             dg.n = nhit;
             dg.u = u;
-            dg.v = v;
-            //System.out.println(u+ " " +v);
+            dg.v = v;            
             dg.shape = this; 
             return true;
         }

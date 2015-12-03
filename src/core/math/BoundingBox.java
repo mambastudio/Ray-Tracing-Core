@@ -6,6 +6,7 @@
 package core.math;
 
 import core.coordinates.Point3f;
+import core.coordinates.Vector3f;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -48,6 +49,63 @@ public class BoundingBox implements Cloneable
     public final Point3f getCenter() 
     {
         return Point3f.mid(minimum, maximum);
+    }
+    
+    public boolean intersectP(Ray ray, float[] hitt) 
+    {
+        float t0 = ray.getMin(), t1 = ray.getMax();
+        for (int i = 0; i < 3; ++i) 
+        {
+            // Update interval for _i_th bounding box slab, page 180
+            float invRayDir = 1f / ray.d.get(i);
+            float tNear = (minimum.get(i) - ray.o.get(i)) * invRayDir;
+            float tFar = (maximum.get(i) - ray.o.get(i)) * invRayDir;
+
+            // Update parametric interval from slab intersection $t$s
+            if (tNear > tFar) 
+            {
+                float swap = tNear;
+                tNear = tFar;
+                tFar = swap;
+            }
+            if (tNear > t0) t0=tNear;
+            if (tFar < t1) t1=tFar;
+            if (t0 > t1) 
+            {
+                return false;
+            }
+        }
+        if (hitt != null) 
+        {
+            hitt[0] = t0;
+            hitt[1] = t1;
+        }
+        return true;
+    }
+        
+    public int maximumExtent() {
+        Vector3f diag = Point3f.sub(maximum, minimum);
+        if (diag.x > diag.y && diag.x > diag.z) {
+            return 0;
+        } else if (diag.y > diag.z) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+    
+    public boolean inside(Point3f pt) 
+    {
+        return pt.x >= minimum.x && pt.x <= maximum.x && //
+                pt.y >= minimum.y && pt.y <= maximum.y &&//
+                pt.z >= minimum.z && pt.z <= maximum.z;
+    }
+    
+    public Point3f bounds(int index)
+    {
+        if(index == 0) return minimum;
+        else if(index == 1) return maximum;
+        else return minimum;
     }
     
     public static BoundingBox union(BoundingBox b, Point3f p) 

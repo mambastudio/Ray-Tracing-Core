@@ -13,13 +13,12 @@ import java.util.ArrayList;
  * @author user
  */
 public class LightCache {
-    ExtendedList<AbstractLight> lightList = null;
-    
+    ExtendedList<AbstractLight> lightList = null;    
     AbstractBackground backgroundLight = null;
     
     public LightCache()
     {
-        lightList = new ExtendedList<>();       
+        lightList = new ExtendedList<>();            
     }
     
     public void clear()

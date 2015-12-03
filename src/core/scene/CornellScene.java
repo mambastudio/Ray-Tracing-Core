@@ -10,6 +10,7 @@ import core.Camera;
 import core.LightCache;
 import core.AbstractMaterial;
 import core.accelerator.NullAccelerator;
+import core.accelerator.UniformGrid;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
@@ -46,7 +47,7 @@ public final class CornellScene extends AbstractScene
     public void init() 
     {        
         camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 500, 500, 45);
-        accelerator = new NullAccelerator();
+        accelerator = new UniformGrid();
         primitives = new ArrayList<>();
         lights = new LightCache();
         
@@ -67,48 +68,37 @@ public final class CornellScene extends AbstractScene
         AbstractMaterial mirrorM = UnitMaterial.createMirror(new Color(0.9f, 0.9f, 0.9f));
         mirrorM.setName("Mirror");
         
+        
         //back
-        Geometries geo = new Geometries(backM);        
-        geo.addGeometryPrimitive(new Quad(p4, p8, p7, p3, new Normal3f(0, 0, 1)));        
-        geo.init();
-        primitives.add(geo);
+        Geometries back = new Geometries(backM); 
+        back.addGeometryPrimitive(new Quad(p4, p3, p7, p8, new Normal3f(0, 0, 1)));
+        back.init();
+        primitives.add(back);
         
         //left
         Geometries left = new Geometries(leftM);
-        left.addGeometryPrimitive(new Triangle(p1, p2, p3, new Normal3f(1, 0, 0)));
-        left.addGeometryPrimitive(new Triangle(p1, p3, p4, new Normal3f(1, 0, 0)));
+        left.addGeometryPrimitive(new Quad(p1, p2, p3, p4, new Normal3f(1, 0, 0)));        
         left.init();
         primitives.add(left);
         
         //right
-        Geometries right = new Geometries(rightM);        
-        right.addGeometryPrimitive(new Triangle(p5, p6, p7, new Normal3f(-1, 0, 0)));
-        right.addGeometryPrimitive(new Triangle(p5, p7, p8, new Normal3f(-1, 0, 0)));
+        Geometries right = new Geometries(rightM);    
+        right.addGeometryPrimitive(new Quad(p5, p6, p7, p8, new Normal3f(-1, 0, 0)));     
         right.init();
         primitives.add(right);
         
         //top
-        Geometries top = new Geometries(topM);        
-        top.addGeometryPrimitive(new Triangle(p2, p3, p7, new Normal3f(0, -1, 0)));
-        top.addGeometryPrimitive(new Triangle(p2, p6, p7, new Normal3f(0, -1, 0)));
+        Geometries top = new Geometries(topM);      
+        top.addGeometryPrimitive(new Quad(p2, p3, p7, p6, new Normal3f(0, -1, 0)));        
         top.init();
         primitives.add(top);
         
         //bottom        
         Geometries bottom = new Geometries(bottomM);
-        bottom.addGeometryPrimitive(new Triangle(p1, p4, p8, new Normal3f(0, 1, 0)));
-        bottom.addGeometryPrimitive(new Triangle(p1, p5, p8, new Normal3f(0, 1, 0)));
+        bottom.addGeometryPrimitive(new Quad(p1, p4, p8, p5, new Normal3f(0, 1, 0)));   
         bottom.init();
         primitives.add(bottom);
-        
-        /*
-        //back
-        Geometries back = new Geometries(backM);        
-        back.addGeometryPrimitive(new Triangle(p4, p3, p7, new Normal3f(0, 0, 1)));
-        back.addGeometryPrimitive(new Triangle(p4, p8, p7, new Normal3f(0, 0, 1)));
-        back.init();
-        primitives.add(back);
-                */
+                
         
         //light
         float disp = 0.05f;
@@ -139,6 +129,7 @@ public final class CornellScene extends AbstractScene
         primitives.add(sphere2);              
         
         accelerator.setPrimitives(primitives);
+        
     }
     
 }

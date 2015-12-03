@@ -16,17 +16,18 @@ public class Ray {
     public Point3f o = null;
     public Vector3f d = null;
     
+    public Vector3f inv_d = null;    
     private float tMin;
     private float tMax;
+    
+    public int[] sign;
+    
     public static final float EPSILON = 0.001f;// 0.01f;
 
     public Ray() 
     {
         o = new Point3f();
-        d = new Vector3f();
-        
-        tMin = EPSILON;
-        tMax = Float.POSITIVE_INFINITY;
+        d = new Vector3f();        
     }
 
     public Ray(Point3f o, Vector3f d)
@@ -37,10 +38,20 @@ public class Ray {
     public Ray(float ox, float oy, float oz, float dx, float dy, float dz) 
     {
         o = new Point3f(ox, oy, oz);
-        d = new Vector3f(dx, dy, dz).normalize();
-                
+        d = new Vector3f(dx, dy, dz).normalize();  
+        init();
+    }
+    
+    public final void init()
+    {
         tMin = EPSILON;
         tMax = Float.POSITIVE_INFINITY;
+        
+        inv_d = new Vector3f(1f/d.x, 1f/d.y, 1f/d.z);
+        sign = new int[3];
+        sign[0] = inv_d.x < 0 ? 1 : 0;
+        sign[1] = inv_d.y < 0 ? 1 : 0;
+        sign[2] = inv_d.z < 0 ? 1 : 0;
     }
     
     public final boolean isInside(float t) 

@@ -6,6 +6,8 @@
 package core;
 
 import core.coordinates.Normal3f;
+import core.image.Color;
+import core.light.BackgroundLight;
 import core.math.BoundingBox;
 import core.math.BoundingSphere;
 import core.math.Ray;
@@ -52,7 +54,7 @@ public abstract class AbstractScene
     }
     
     public void initLights()
-    {
+    {        
         lights.clear();
         
         for(AbstractPrimitive prim : primitives)

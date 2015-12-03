@@ -88,7 +88,7 @@ public abstract class AbstractLight
     // Has a primitive as a light source
     public abstract boolean isAreaLight();
     
-    public abstract float directPdfW(Point3f p, Vector3f w);
-    public abstract float directPdfA();
-    public abstract float emissionPdfW(float cosAtLight);
+    public abstract float directPdfW(BoundingSphere sceneSphere, Point3f p, Vector3f w);
+    public abstract float directPdfA(BoundingSphere sceneSphere);
+    public abstract float emissionPdfW(BoundingSphere sceneSphere, float cosAtLight);
 }

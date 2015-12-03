@@ -38,6 +38,14 @@ public class Texture
         return bitmap.getPixel(x, y);
     }
     
+    public Color getTexelUV(float u, float v)
+    {
+        float uu = u - (int)u;
+        float vv = v - (int)v;
+        
+        return bitmap.getPixel(uu * getWidthF(), vv * getHeightF());
+    }
+    
     public String getURI()
     {
         return uri;

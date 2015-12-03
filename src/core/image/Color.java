@@ -58,6 +58,13 @@ public class Color {
     {
         this.r = color.r; this.g = color.g; this.b = color.b;
     }
+    
+    public Color(javafx.scene.paint.Color color)
+    {
+        r = (float)color.getRed();
+        g = (float)color.getGreen();
+        b = (float)color.getBlue();
+    }
         
     public Color(int rgb)
     {

@@ -17,12 +17,9 @@ import core.image.Color;
 import core.math.FloatValue;
 import core.math.Frame;
 import core.math.Ray;
-import core.math.Rng;
 import core.math.Transform;
 import core.math.Utility;
 import static core.math.Utility.INV_PI_F;
-import core.shape.Sphere;
-import core.shape.Triangle;
 
 /**
  *
@@ -62,6 +59,7 @@ public class AreaLight extends AbstractLight
         rayToLight.d.set(directionToLight);
         rayToLight.o.set(receivingPosition);
         rayToLight.setMax(distanceToLight - 2 * Ray.EPSILON);
+        rayToLight.init();
                 
         return material.getEmission();
     }
@@ -80,6 +78,7 @@ public class AreaLight extends AbstractLight
         //Ray from light
         rayFromLight.o = p;
         rayFromLight.d = frame.toWorld(localDirOut);
+        rayFromLight.init();
                 
         if(cosAtLight != null)
             cosAtLight.value = localDirOut.z;
@@ -117,18 +116,18 @@ public class AreaLight extends AbstractLight
     }        
 
     @Override
-    public float directPdfW(Point3f p, Vector3f w) 
+    public float directPdfW(BoundingSphere sceneSphere, Point3f p, Vector3f w) 
     {
         return shape.pdfW(p, w);
     }
 
     @Override
-    public float directPdfA() {
+    public float directPdfA(BoundingSphere sceneSphere) {
         return shape.pdfA();
     }
 
     @Override
-    public float emissionPdfW(float cosAtLight) 
+    public float emissionPdfW(BoundingSphere sceneSphere, float cosAtLight) 
     {
         return cosAtLight * INV_PI_F;
     }
