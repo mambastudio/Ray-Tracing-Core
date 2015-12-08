@@ -96,4 +96,10 @@ public class Geometries extends AbstractPrimitive
     {
         return false;
     }
+    
+    @Override
+    public String toString()
+    {
+        return material.toString();
+    }
 }

@@ -11,6 +11,7 @@ import core.coordinates.Vector3f;
 import core.math.DifferentialGeometry;
 import core.math.Frame;
 import core.math.Matrix;
+import core.math.MonteCarlo;
 import core.math.Ray;
 import core.math.Rng;
 import core.math.Utility;
@@ -28,9 +29,17 @@ public class Test {
      */
     public static void main(String[] args) {
         
-        Point3f p = new Point3f(1, 0, 0);
-        Normal3f n = (Normal3f)p.subV(new Point3f());
-        System.out.println(n);
+        float r1 = Rng.getFloat();
+        float r2 = Rng.getFloat();
+        
+        Point3f v1 = new Point3f(-1, 0, 0);
+        Point3f v2 = new Point3f(0, 1, 0);
+        Point3f v3 = new Point3f(1, 0, 0);
+        
+        Point3f p1 = MonteCarlo.uniformSampleTriangle(r1, r2, v1, v2, v3);
+        Point3f p2 = v1.mul(r1).add(v2.mul(r2).asVector()).add(v3.mul(1 - r1 - r2).asVector());
+        
+        System.out.println(p1 + " " +p2);
     }
     
     public static void cameraTest()

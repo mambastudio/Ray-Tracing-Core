@@ -15,6 +15,12 @@ public class Point2f {
     public Point2f(){}
     public Point2f(float x, float y){this.x = x; this.y = y;}
     
+    public void set(Point2f p)
+    {
+        x = p.x;
+        y = p.y;
+    }
+    
     public Point2f add(Point2f a) {return new Point2f(x + a.x, y + a.y);}
     
     @Override

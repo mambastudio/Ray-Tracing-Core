@@ -23,7 +23,7 @@ import core.math.Utility;
 public class BackgroundLight extends AbstractBackground
 {
     Color backgroundColor;    
-    float scale = 1;
+    float scale = 0.3f;
     
     public BackgroundLight(Color color)
     {

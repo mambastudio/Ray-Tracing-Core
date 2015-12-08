@@ -5,9 +5,9 @@
  */
 package core;
 
-import core.coordinates.Normal3f;
-import core.image.Color;
-import core.light.BackgroundLight;
+import core.accelerator.UniformGrid;
+import core.coordinates.Point3f;
+import core.coordinates.Vector3f;
 import core.math.BoundingBox;
 import core.math.BoundingSphere;
 import core.math.Ray;
@@ -17,14 +17,28 @@ import java.util.ArrayList;
  *
  * @author user
  */
-public abstract class AbstractScene 
+public class Scene 
 {    
-    public Camera camera = null;
+    public Camera camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 500, 500, 45);
     public AbstractAccelerator accelerator = null;
     public ArrayList<AbstractPrimitive> primitives = null;
     public LightCache lights = null;    
     
-    public abstract void init();
+    public Scene()
+    {
+        lights = new LightCache();
+    }
+    
+    public void init()
+    {
+        
+    }
+    
+    public void setPrimitives(ArrayList<AbstractPrimitive> primitives)
+    {
+        this.primitives = primitives;
+        this.accelerator = new UniformGrid(primitives);
+    }
     
     public boolean intersect(Ray ray, Intersection isect)
     {

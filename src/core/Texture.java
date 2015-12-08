@@ -40,8 +40,17 @@ public class Texture
     
     public Color getTexelUV(float u, float v)
     {
-        float uu = u - (int)u;
-        float vv = v - (int)v;
+        float uu, vv;
+        
+        if(u >= 0)        
+            uu = u - (int)u;
+        else
+            uu = Math.abs(u) - (int)Math.abs(u);
+        
+        if(v >= 0)        
+            vv = v - (int)v;
+        else
+            vv = Math.abs(v) - (int)Math.abs(v);
         
         return bitmap.getPixel(uu * getWidthF(), vv * getHeightF());
     }

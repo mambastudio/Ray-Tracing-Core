@@ -27,7 +27,10 @@ public class Ray {
     public Ray() 
     {
         o = new Point3f();
-        d = new Vector3f();        
+        d = new Vector3f();  
+        
+        tMin = EPSILON;
+        tMax = Float.POSITIVE_INFINITY;        
     }
 
     public Ray(Point3f o, Vector3f d)
@@ -39,14 +42,15 @@ public class Ray {
     {
         o = new Point3f(ox, oy, oz);
         d = new Vector3f(dx, dy, dz).normalize();  
+        
+        tMin = EPSILON;
+        tMax = Float.POSITIVE_INFINITY;
+        
         init();
     }
     
     public final void init()
-    {
-        tMin = EPSILON;
-        tMax = Float.POSITIVE_INFINITY;
-        
+    {        
         inv_d = new Vector3f(1f/d.x, 1f/d.y, 1f/d.z);
         sign = new int[3];
         sign[0] = inv_d.x < 0 ? 1 : 0;

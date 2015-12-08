@@ -31,4 +31,10 @@ public abstract class AbstractPrimitive
     }
     
     public abstract void refine(ArrayList<AbstractPrimitive> refined);
+    
+    @Override
+    public String toString()
+    {
+        return "primitive";
+    }
 }

@@ -90,7 +90,7 @@ public class AreaLight extends AbstractLight
     public Color radiance(BoundingSphere sceneSphere, Point3f hitPoint, Vector3f direction, FloatValue cosAtLight) 
     {
         float cosOutL = Math.max(0.f, Vector3f.dot(shape.getNormal(hitPoint), direction.neg()));
-        
+                
         if(cosOutL == 0)
             return new Color();
         

@@ -96,7 +96,7 @@ public class Vector3f
     {
         return a.cross(b);
     }
-    
+        
     public Vector3f cross(Vector3f t)
     {
         Vector3f dest = clone();

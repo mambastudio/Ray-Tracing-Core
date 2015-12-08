@@ -5,7 +5,7 @@
  */
 package core.scene;
 
-import core.AbstractScene;
+import core.Scene;
 import core.Camera;
 import core.LightCache;
 import core.AbstractMaterial;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
  *
  * @author user
  */
-public final class CornellScene extends AbstractScene
+public final class CornellScene extends Scene
 {
     Point3f p1 = new Point3f(-1, -1, 1);
     Point3f p2 = new Point3f(-1, 1, 1);
@@ -45,8 +45,7 @@ public final class CornellScene extends AbstractScene
     
     @Override
     public void init() 
-    {        
-        camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 500, 500, 45);
+    {                
         accelerator = new UniformGrid();
         primitives = new ArrayList<>();
         lights = new LightCache();

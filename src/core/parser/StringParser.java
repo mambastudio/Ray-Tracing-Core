@@ -128,6 +128,12 @@ public class StringParser {
         }
     }
     
+    public boolean peekNextTokenNumber()
+    {
+        String str = peekNextToken();
+        return str.matches("-?\\d+(\\.\\d+)?");
+    }
+    
     private String fetchNextToken()
     {
         if (bf == null)
