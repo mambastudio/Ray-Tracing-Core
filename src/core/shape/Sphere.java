@@ -18,7 +18,6 @@ import core.math.Transform;
 import static core.math.Utility.PI_F;
 import static core.math.Utility.TWO_PI_F;
 import static core.math.Utility.acosf;
-import static core.math.Utility.clamp;
 import static core.math.Utility.pdfUniformConePdfW;
 import static core.math.Utility.quadratic;
 import static core.math.Utility.sampleUniformConeW;
@@ -175,6 +174,8 @@ public class Sphere extends AbstractShape
         dg.v = v;
         dg.shape = this;        
         r.setMax(thit);
+        
+        dg.nn = dg.n.clone();
         
         return true;
     }    

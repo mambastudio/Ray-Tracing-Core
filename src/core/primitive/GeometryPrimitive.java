@@ -10,7 +10,7 @@ import core.AbstractPrimitive;
 import core.AbstractShape;
 import core.Intersection;
 import core.AbstractMaterial;
-import core.Texture;
+import core.image.Texture;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
 import core.light.AreaLight;
@@ -48,7 +48,7 @@ public class GeometryPrimitive extends AbstractPrimitive
             return false;        
         
         isect.bsdf = material.getBSDF(isect.dg.n, ray.d);
-        
+                
         if(material.getTexture() != null)
         {
             Texture texture = material.getTexture();            

@@ -36,8 +36,10 @@ public class Scene
     
     public void setPrimitives(ArrayList<AbstractPrimitive> primitives)
     {
-        this.primitives = primitives;
-        this.accelerator = new UniformGrid(primitives);
+        this.primitives = new ArrayList<>();
+        this.primitives.clear();
+        this.primitives.addAll(primitives);
+        this.accelerator = new UniformGrid(this.primitives);
     }
     
     public boolean intersect(Ray ray, Intersection isect)

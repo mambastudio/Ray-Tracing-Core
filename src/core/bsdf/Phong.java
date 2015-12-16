@@ -10,7 +10,7 @@ import core.BSDFType;
 import static core.BSDFType.PHONG;
 import core.coordinates.Point2f;
 import core.coordinates.Vector3f;
-import core.image.Color;
+import core.color.Color;
 import core.math.FloatValue;
 import core.math.Frame;
 import core.math.Utility;

@@ -5,7 +5,7 @@
  */
 package core;
 
-import core.image.Color;
+import core.color.Color;
 
 /**
  *

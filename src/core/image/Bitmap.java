@@ -22,7 +22,7 @@ public class Bitmap
     public WritableImage wImage = null; 
     WritablePixelFormat<IntBuffer> format;
     
-    core.image.Color[] buffer = null;
+    core.color.Color[] buffer = null;
         
     public Bitmap(int width, int height)
     {        
@@ -49,10 +49,17 @@ public class Bitmap
         
         if(hdr)
         {
-            buffer = new core.image.Color[width * height];
+            buffer = new core.color.Color[width * height];
             setBufferNull();
             format = WritablePixelFormat.getIntArgbInstance();
         }
+    }
+    
+    public void setAlphaNull(float alpha)
+    {
+        for(int j = 0; j<height; j++)
+            for(int i = 0; i<width; i++)
+                wImage.getPixelWriter().setColor(i, j, Color.gray(1f, alpha)); 
     }
     
     public boolean isHDR()
@@ -67,17 +74,17 @@ public class Bitmap
         this.wImage = new WritableImage(image.getPixelReader(), width, height);
     }
     
-    public synchronized void addPixelBuffer(int x, int y, core.image.Color color)
+    public synchronized void addPixelBuffer(int x, int y, core.color.Color color)
     {
         buffer[y * width + x].addAssign(color);
     }
    
-    public core.image.Color getPixel(float x, float y)
+    public core.color.Color getPixel(float x, float y)
     {
-        return new core.image.Color(wImage.getPixelReader().getArgb((int)x, (int)y));
+        return new core.color.Color(wImage.getPixelReader().getArgb((int)x, (int)y));
     }
     
-    public synchronized core.image.Color getPixelBuffer(int x, int y)
+    public synchronized core.color.Color getPixelBuffer(int x, int y)
     {
         return buffer[y * width + x];
     }
@@ -113,7 +120,7 @@ public class Bitmap
     public final void setBufferNull()
     {
         for(int i = 0; i< buffer.length; i++)
-            buffer[i] = new core.image.Color();
+            buffer[i] = new core.color.Color();
     }
         
     public synchronized void setRGB(int x, int y, int rgb)
@@ -161,5 +168,4 @@ public class Bitmap
     {
         return wImage;
     }
-  
 }

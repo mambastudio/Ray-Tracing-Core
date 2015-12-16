@@ -14,7 +14,9 @@ import core.math.DifferentialGeometry;
 public class Intersection {
     public AbstractBSDF bsdf = null;
     public DifferentialGeometry dg = new DifferentialGeometry();
-    public AbstractPrimitive primitive;
+    public AbstractPrimitive primitive = null;
+        
+    public AbstractPrimitive topPrimitive = null;
     
     public boolean isEmitter()
     {

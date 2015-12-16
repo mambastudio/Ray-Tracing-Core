@@ -64,6 +64,14 @@ public class Utility {
         return (float)Math.atan2(a, b);
     }
     
+    public static float check(float value)
+    {
+        if(Float.isInfinite(value)||Float.isNaN(value))
+            return 0f;
+        else
+            return value;
+    }
+    
     public static float clamp(float x, float min, float max)
     {
         if (x > max)

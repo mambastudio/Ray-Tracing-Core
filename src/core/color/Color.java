@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core.image;
+package core.color;
 
 import core.math.Utility;
 import static java.lang.Math.pow;
@@ -87,6 +87,27 @@ public class Color {
                     f *= 0.5f;
             EXPONENT[i] = f;
         }
+    }
+    
+    public final boolean isBad()
+    {
+        return (Float.isNaN(this.r)) || (Float.isNaN(this.g)) || (Float.isNaN(this.b)) ||
+               (Float.isInfinite(this.r)) || (Float.isInfinite(this.g)) || (Float.isInfinite(this.b));
+    }
+    
+    public final Color simpleGamma()
+    {
+        float gamma = 2.2f;        
+        return new Color((float) Math.pow(r, 1f/gamma),
+                         (float) Math.pow(g, 1f/gamma),
+                         (float) Math.pow(b, 1f/gamma));
+    }
+
+    public final Color simpleGamma(float gamma)
+    {
+        return new Color((float) Math.pow(r, 1f/gamma),
+                         (float) Math.pow(g, 1f/gamma),
+                         (float) Math.pow(b, 1f/gamma));
     }
     
     public void setBlack()

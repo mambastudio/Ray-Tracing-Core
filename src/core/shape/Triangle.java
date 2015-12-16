@@ -185,6 +185,8 @@ public class Triangle extends AbstractShape
                 dg.v = uv.y;
             }
             dg.shape = this;
+            
+            dg.nn = n.clone();
                         
             return true;
         }        

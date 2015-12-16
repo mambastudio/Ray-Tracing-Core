@@ -8,6 +8,7 @@ package core.math;
 import core.Camera;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
+import static core.math.Utility.sqrtf;
 import static java.lang.Math.acos;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
@@ -18,9 +19,50 @@ import static java.lang.Math.sin;
  * @author user
  */
 public class Orientation {
-    private float maxExt;
+    private static float maxExt;
     
-    public void rotateY(Camera camera, float angle)
+    public static void repositionLocation(Camera camera, BoundingBox bound)
+    {
+        Point3f center = bound.getCenter();
+        float hypotenuseDist = center.distanceTo(camera.position);
+        Vector3f toCenter = Point3f.sub(center, camera.position).normalize();
+        
+        float cosTheta = Vector3f.dot(toCenter, camera.forward());
+        float adjacent = cosTheta * hypotenuseDist;
+        
+        Point3f newPoint = new Point3f();
+        newPoint.x = camera.forward().x * adjacent + camera.position.x;
+        newPoint.y = camera.forward().y * adjacent + camera.position.y;
+        newPoint.z = camera.forward().z * adjacent + camera.position.z;
+        
+        Vector3f translation = Point3f.sub(center, newPoint);
+        
+        Transform translate = Transform.translate(translation);
+        translate.transformAssign(camera.lookat);
+        translate.transformAssign(camera.position);        
+    }
+    
+    public static void reposition(Camera camera, BoundingBox bound)
+    {
+        Point3f center = bound.getCenter();
+        float distance = bound.minimum.distanceTo(bound.maximum);
+        
+        camera.position.x = center.x;
+        camera.position.y = center.y;
+        camera.position.z = center.z - 1;
+        
+        camera.lookat.x = center.x;
+        camera.lookat.y = center.y;
+        camera.lookat.z = center.z;
+        
+        camera.up.x = 0;
+        camera.up.y = 1;
+        camera.up.z = 0;
+        
+        distance(camera, distance);
+    }
+    
+    public static void rotateY(Camera camera, float angle)
     {
         Transform toOrigin = Transform.translate(camera.lookat.asVector().neg());
         
@@ -40,7 +82,7 @@ public class Orientation {
         toOrigin.inverse().transformAssign(camera.position);
     }
     
-    public void rotateX(Camera camera, float angle)
+    public static void rotateX(Camera camera, float angle)
     {           
         Transform toOrigin = Transform.translate(camera.lookat.asVector().neg()); 
                 
@@ -55,7 +97,7 @@ public class Orientation {
         toOrigin.inverse().transformAssign(camera.position);        
     }
     
-    public void distance(Camera camera, float distance)
+    public static void distance(Camera camera, float distance)
     {
         Transform toOrigin = Transform.translate(camera.lookat.asVector().neg());        
         
@@ -91,7 +133,7 @@ public class Orientation {
         //System.out.println(camera);
     }
     
-    public void translateDistance(Camera camera, float distance)
+    public static void translateDistance(Camera camera, float distance)
     {
         float jump = maxExt * 0.01f;
         jump = Math.copySign(jump, distance);

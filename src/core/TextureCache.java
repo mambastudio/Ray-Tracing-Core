@@ -5,6 +5,7 @@
  */
 package core;
 
+import core.image.Texture;
 import java.util.HashMap;
 
 /**

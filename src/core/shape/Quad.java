@@ -26,7 +26,7 @@ import static java.lang.Math.abs;
 public class Quad extends AbstractShape
 {
     Point3f p00, p01, p10, p11;
-    Normal3f n;
+    Normal3f nn;
     
     public Quad(Point3f p00, Point3f p10, Point3f p11, Point3f p01, Normal3f n)
     {
@@ -35,7 +35,7 @@ public class Quad extends AbstractShape
         this.p10 = p10;
         this.p11 = p11;
         this.p01 = p01;
-        this.n = n.normalize();
+        this.nn = n.normalize();
     }
     
     @Override
@@ -218,6 +218,9 @@ public class Quad extends AbstractShape
             dg.u = u;
             dg.v = v;            
             dg.shape = this; 
+            
+            dg.nn = nn.clone();
+            
             return true;
         }
         return false;
@@ -230,7 +233,7 @@ public class Quad extends AbstractShape
 
     @Override
     public Normal3f getNormal(Point3f p) {
-        return n.clone();
+        return nn.clone();
     }
     
 }

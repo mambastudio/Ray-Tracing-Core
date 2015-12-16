@@ -49,12 +49,15 @@ public class LightCache {
     }
     
     public void add(AbstractPrimitive primitive)
-    {
+    {       
         if(!primitive.getMaterial().isEmitter())
-            return;
+            return;        
         
         if(primitive.canIntersect())
+        {
             lightList.add(primitive.getAreaLight());
+            
+        }
         else
         {
             ArrayList<AbstractPrimitive> list = new ArrayList<>();
@@ -62,6 +65,7 @@ public class LightCache {
         
             for(AbstractPrimitive prim : list)
                 lightList.add(prim.getAreaLight());
+            
         }       
     }
     

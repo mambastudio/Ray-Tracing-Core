@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core;
+package core.image;
 
 import core.image.Bitmap;
-import core.image.Color;
+import core.color.Color;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 

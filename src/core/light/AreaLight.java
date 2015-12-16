@@ -13,7 +13,7 @@ import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import core.math.BoundingSphere;
-import core.image.Color;
+import core.color.Color;
 import core.math.FloatValue;
 import core.math.Frame;
 import core.math.Ray;

@@ -23,6 +23,8 @@ public class DifferentialGeometry
     
     public Vector3f dpdu, dpdv;
     public Normal3f dndu, dndv;
+        
+    public Normal3f nn;
     
     public DifferentialGeometry()
     {

@@ -10,7 +10,7 @@ import core.AbstractPrimitive;
 import core.coordinates.Normal3f;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
-import core.image.Color;
+import core.color.Color;
 import core.material.UnitMaterial;
 import core.primitive.Geometries;
 import core.shape.Triangle;

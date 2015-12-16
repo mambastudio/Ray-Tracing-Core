@@ -5,9 +5,10 @@
  */
 package core;
 
+import core.image.Texture;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
-import core.image.Color;
+import core.color.Color;
 
 /**
  *
@@ -34,6 +35,11 @@ public abstract class AbstractMaterial {
     public Color getEmission()
     {
         return emission.mul(power);
+    }
+    
+    public Color getEmissionColor()
+    {
+        return emission;
     }
     
     public void setPower(float power)

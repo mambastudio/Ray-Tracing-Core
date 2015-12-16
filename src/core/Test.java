@@ -6,8 +6,10 @@
 package core;
 
 import core.coordinates.Normal3f;
+import core.coordinates.Point2i;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
+import core.light.Envmap;
 import core.math.DifferentialGeometry;
 import core.math.Frame;
 import core.math.Matrix;
@@ -29,17 +31,12 @@ public class Test {
      */
     public static void main(String[] args) {
         
-        float r1 = Rng.getFloat();
-        float r2 = Rng.getFloat();
+        Envmap map = new Envmap();
+        Point2i uvSample = map.sample(null);
         
-        Point3f v1 = new Point3f(-1, 0, 0);
-        Point3f v2 = new Point3f(0, 1, 0);
-        Point3f v3 = new Point3f(1, 0, 0);
-        
-        Point3f p1 = MonteCarlo.uniformSampleTriangle(r1, r2, v1, v2, v3);
-        Point3f p2 = v1.mul(r1).add(v2.mul(r2).asVector()).add(v3.mul(1 - r1 - r2).asVector());
-        
-        System.out.println(p1 + " " +p2);
+        System.out.println(uvSample);
+        System.out.println(map.getColor(uvSample));
+        System.out.println(map.getColor(map.toDirection(uvSample)));
     }
     
     public static void cameraTest()
