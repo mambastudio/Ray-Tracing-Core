@@ -5,20 +5,16 @@
  */
 package core;
 
+import core.Test.Superthread;
 import core.coordinates.Normal3f;
 import core.coordinates.Point2i;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import core.light.Envmap;
-import core.math.DifferentialGeometry;
-import core.math.Frame;
-import core.math.Matrix;
-import core.math.MonteCarlo;
 import core.math.Ray;
 import core.math.Rng;
-import core.math.Utility;
-import core.shape.Sphere;
 import core.shape.Triangle;
+import java.util.Arrays;
 
 /**
  *
@@ -29,14 +25,40 @@ public class Test {
     /**
      * @param args the command line arguments
      */
+    static boolean kwenda = false;
+    
     public static void main(String[] args) {
+        float[] values = {3, 4, 1, 9};
         
+        int offset = 0;
+        
+        System.out.println(values[offset++]);
+        System.out.println(offset);
+    }
+    
+    public static class Superthread
+    {
+        public void execute(Joe joe)
+        {
+            joe.run();
+        }
+    }
+    
+    public static interface Joe
+    {
+        
+        public void run();
+    }
+    
+    public static void testEnvMap()
+    {
         Envmap map = new Envmap();
-        Point2i uvSample = map.sample(null);
         
-        System.out.println(uvSample);
-        System.out.println(map.getColor(uvSample));
-        System.out.println(map.getColor(map.toDirection(uvSample)));
+        Point2i uv = map.sampleUV(null);
+        System.out.println(map.getColor(uv));
+        Vector3f dir = map.toDirection(uv);
+        System.out.println(map.getColor(dir));
+        
     }
     
     public static void cameraTest()

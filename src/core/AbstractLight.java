@@ -89,6 +89,6 @@ public abstract class AbstractLight
     public abstract boolean isAreaLight();
     
     public abstract float directPdfW(BoundingSphere sceneSphere, Point3f p, Vector3f w);
-    public abstract float directPdfA(BoundingSphere sceneSphere);
-    public abstract float emissionPdfW(BoundingSphere sceneSphere, float cosAtLight);
+    public abstract float directPdfA(BoundingSphere sceneSphere, Vector3f w);
+    public abstract float emissionPdfW(BoundingSphere sceneSphere, Vector3f w, float cosAtLight);
 }

@@ -9,6 +9,7 @@ import core.color.Color;
 import core.coordinates.Point2f;
 import core.coordinates.Point2i;
 import core.coordinates.Vector3f;
+import static core.math.Utility.PI_F;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -209,7 +210,11 @@ public class HDR
     {
         if ((x >= 0) && (x < width) && (y >= 0) && (y < height))
             return new Color().setRGBE(pixels[(y * width) + x]);
-        return Color.BLACK;
+        else
+        {
+            //System.out.println(x+ " " +y+ " " +width+ " " +height);
+            return Color.BLACK;
+        }
     }
     
     public Color getColor(Point2i uv)
@@ -265,8 +270,8 @@ public class HDR
         phi = Math.acos(d.y);
         theta = Math.atan2(d.z, d.x);
         
-        u = (int) ((0.5 - 0.5 * theta / Math.PI) * width);
-        v = (int) ((phi / Math.PI) * height);
+        u = (int) ((0.5 - theta / (2 * PI_F)) * width);
+        v = (int) ((phi / PI_F) * height);
         
         return getColor(u, v);
     }

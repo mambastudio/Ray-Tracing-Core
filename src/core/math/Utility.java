@@ -18,11 +18,22 @@ import static java.lang.Math.sin;
  */
 public class Utility {
     public static final float PI_F = (float)Math.PI;
-    public static final float TWO_PI_F = PI_F * PI_F;
+    public static final float PI_F_TWO = PI_F * PI_F;
+    public static final float TWO_PI_F = 2 * PI_F;
     public static final float INV_PI_F = 1.f/PI_F;
+    public static final float INV_TWO_PI_F = 1.f/ (2 * PI_F);
     public static final float EPS_COSINE = 1e-6f;
     public static final float EPS_PHONG = 1e-3f;
     public static final float EPS_RAY  =  0.000001f;
+    
+    public static Vector3f sphericalDirectionY(float theta, float phi)
+    {
+        float x = (float) (cos(phi) * sin(theta));
+        float y = (float) sin(phi);
+        float z = (float) (-cos(phi) * cos(theta));
+              
+        return new Vector3f(x, y, z);
+    }
     
     public static Vector3f sphericalDirection(float theta, float phi)
     {
@@ -107,6 +118,29 @@ public class Utility {
             a = c;
         return a;
     }
+    
+    public static void debugValue(float value)
+    {
+        if(Float.isInfinite(value))
+            System.out.println("Infinite value detected");
+        if(Float.isNaN(value))
+            System.out.println("Nan value detected");
+    }
+    
+    public static void debugArray(float... array)
+    {
+        for(float value : array)
+        {
+            debugValue(value);
+        }
+    }
+    
+    public static void debugArray(float[][] array)
+    {
+        for(int i = 0; i<array[i].length; i++)
+            debugArray(array[i]);
+    }
+    
     
     public static float sqr(float value)
     {
@@ -366,6 +400,7 @@ public class Utility {
     {
         return (float)Math.sin(f);
     }
+    
     
     public static float powf(float a, float b)
     {

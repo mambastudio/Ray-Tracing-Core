@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core.thread;
+package core;
 
+import core.thread.CallableOnceExecution;
+import core.thread.LoopExecution;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,8 +21,8 @@ public class PoolExecutor
     private static ExecutorService progressivePool = null;
     private static ExecutorService queuePool = null;
     
-    private static Threading rThreading = null;
-    private static Threading pThreading = null;
+    private static LoopExecution rThreading = null;
+    private static LoopExecution pThreading = null;
     
     
     
@@ -30,19 +33,24 @@ public class PoolExecutor
         queuePool = Executors.newFixedThreadPool(1);
     }
     
+    public static void submitCallable(Callable callable)
+    {
+        queuePool.submit(new CallableOnceExecution(callable));
+    }
+    
     public static void submitQueue(Runnable runnable)
     {
         queuePool.submit(runnable);
     }
     
-    public static void submitRealtimeRender(Threading rthreading)
+    public static void submitRealtimeRender(LoopExecution rthreading)
     {
         if(rthreading == null) return;
         rThreading = rthreading;
         realtimePool.submit(rthreading);
     }
     
-    public static void submitProgressiveRender(Threading pthreading)
+    public static void submitProgressiveRender(LoopExecution pthreading)
     {
         if(pthreading == null) return;
         pThreading = pthreading;
@@ -61,26 +69,16 @@ public class PoolExecutor
         pThreading.finish();
     }
     
-    public static void pause1Realtime()
+    public static void pauseRealtime()
     {
-        if(rThreading != null) rThreading.pause1();
+        if(rThreading != null) rThreading.pause();
     }
-    
-    public static void pause2Realtime()
+        
+    public static void resumeRealtime()
     {
-        if(rThreading != null) rThreading.pause2();
+        if(rThreading != null) rThreading.resume();
     }
-    
-    public static void resume1Realtime()
-    {
-        if(rThreading != null) rThreading.resume1();
-    }
-    
-    public static void resume2Realtime()
-    {
-        if(rThreading != null) rThreading.resume2();
-    }
-    
+        
     public static boolean isRealtimeNull()
     {
         return rThreading == null;

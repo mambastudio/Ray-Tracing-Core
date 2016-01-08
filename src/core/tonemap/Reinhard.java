@@ -37,7 +37,8 @@ public class Reinhard extends AbstractTonemap
         xyzColor.setY(Y);
         xyzColor.xyYtoXYZ();
 
-        Color c2 = RGBSpace.convertXYZtoRGB(xyzColor);     
+        Color c2 = RGBSpace.convertXYZtoRGB(xyzColor);  
+        
         return c2.mul(postscale);
     }
 }

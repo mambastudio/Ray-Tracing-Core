@@ -16,7 +16,7 @@ import static core.math.MonteCarlo.uniformSampleSphere;
 import core.math.Ray;
 import core.math.Transform;
 import static core.math.Utility.PI_F;
-import static core.math.Utility.TWO_PI_F;
+import static core.math.Utility.PI_F_TWO;
 import static core.math.Utility.acosf;
 import static core.math.Utility.pdfUniformConePdfW;
 import static core.math.Utility.quadratic;
@@ -156,7 +156,7 @@ public class Sphere extends AbstractShape
         }
         
         // Find parametric representation of sphere hit
-        float u = phi / TWO_PI_F;
+        float u = phi / PI_F_TWO;
         float theta = (float) acos(phit.z / radius);
         float v = theta / PI_F;
         

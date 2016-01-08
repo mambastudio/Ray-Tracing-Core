@@ -25,6 +25,14 @@ public class XYZ {
         this.Z = Z;
         xyz();
     }
+    
+    public XYZ(double X, double Y, double Z)
+    {
+        this.X = (float) X;
+        this.Y = (float) Y;
+        this.Z = (float) Z;
+        xyz();
+    }
 
     public final void setY(float Y)
     {

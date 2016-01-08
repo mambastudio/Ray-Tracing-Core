@@ -46,6 +46,7 @@ public class RGBSpace {
         return new XYZ(X, Y, Z);
     }
 
+    //FIX ME: Giving out negative values
     public static Color convertXYZtoRGB(XYZ xyzColor)
     {
         float r, g, b;
@@ -57,6 +58,10 @@ public class RGBSpace {
         r =  1.967f * X - 0.548f * Y - 0.297f * Z;
         g = -0.955f * X + 1.938f * Y - 0.027f * Z;
         b =  0.064f * X - 0.130f * Y + 0.982f * Z;
+        
+        r = Utility.clamp(r, 0, Math.abs(r));
+        g = Utility.clamp(g, 0, Math.abs(g));
+        b = Utility.clamp(b, 0, Math.abs(b));
 
         return new Color(r, g, b);
     }
@@ -223,7 +228,7 @@ public class RGBSpace {
         System.out.println("Temperature       x      y      z       R     G     B\n");
         System.out.println("-----------    ------ ------ ------   ----- ----- -----\n");
 
-        for (t = 1000; t <= 10000; t+= 500)
+        for (t = 1000; t <= 10000; t+= 1000f)
         {
             Chromaticity chromaticity = new Chromaticity();
             Color c = new Color();

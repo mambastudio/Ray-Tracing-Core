@@ -128,7 +128,6 @@ public final class CornellScene extends Scene
         primitives.add(sphere2);              
         
         accelerator.setPrimitives(primitives);
-        
     }
     
 }

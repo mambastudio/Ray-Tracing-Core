@@ -122,12 +122,12 @@ public class AreaLight extends AbstractLight
     }
 
     @Override
-    public float directPdfA(BoundingSphere sceneSphere) {
+    public float directPdfA(BoundingSphere sceneSphere, Vector3f w) {
         return shape.pdfA();
     }
 
     @Override
-    public float emissionPdfW(BoundingSphere sceneSphere, float cosAtLight) 
+    public float emissionPdfW(BoundingSphere sceneSphere, Vector3f w, float cosAtLight) 
     {
         return cosAtLight * INV_PI_F;
     }

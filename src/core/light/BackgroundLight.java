@@ -109,12 +109,12 @@ public class BackgroundLight extends AbstractBackground
     }
 
     @Override
-    public float directPdfA(BoundingSphere sceneSphere) {
+    public float directPdfA(BoundingSphere sceneSphere, Vector3f w) {
         return Utility.uniformSpherePdfW();
     }
 
     @Override
-    public float emissionPdfW(BoundingSphere sceneSphere, float cosAtLight) 
+    public float emissionPdfW(BoundingSphere sceneSphere, Vector3f w, float cosAtLight) 
     {
         float directPdf = Utility.uniformSpherePdfW();
         float positionPdf = Utility.concentricDiscPdfA() /

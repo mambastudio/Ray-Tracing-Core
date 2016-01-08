@@ -7,6 +7,7 @@ package core.image;
 
 import core.image.Bitmap;
 import core.color.Color;
+import java.io.File;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -19,6 +20,11 @@ public class Texture
     private final String uri;
     private Bitmap bitmap;
         
+    public Texture(File file)
+    {
+        this(file.toURI().toString());
+    }
+    
     public Texture(String uri)
     {
         //load file

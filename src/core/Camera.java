@@ -82,7 +82,7 @@ public class Camera
         Vector3f look = lookat.subV(position);
         Vector3f Du = Vector3f.cross(look, up).normalize();
         Vector3f Dv = Vector3f.cross(look, Du).normalize();
-        
+       
         float fl = xRes / (2.0F * (float)Math.tan(0.5F * fov));
         
         Vector3f vp = look.normalize();

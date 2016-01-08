@@ -5,38 +5,37 @@
  */
 package core.thread;
 
+import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author user
  */
-public class Threading implements Runnable
+public class CallableOnceExecution implements Runnable
 {
-    boolean suspend1 = false;
-    boolean suspend2 = false;
+    boolean suspend = false;    
     boolean finish  = false;
     
-    public void pause1()
+    Callable callable = null;
+    
+    public CallableOnceExecution(Callable callable)
     {
-        suspend1 = true;
-    }
-
-    public synchronized void resume1()
-    {
-        suspend1 = false;
-        notify();
+        this.callable = callable;
     }
     
-    public void pause2()
+    public void pause()
     {
-        suspend2 = true;
+        suspend = true;
     }
 
-    public synchronized void resume2()
+    public synchronized void resume()
     {
-        suspend2 = false;
+        suspend = false;
         notify();
     }
-    
+  
     public void finish()
     {
         finish = true;
@@ -61,7 +60,7 @@ public class Threading implements Runnable
     
     private synchronized void waitForNotificationToResume() throws InterruptedException
     {
-        while(suspend1 || suspend2)
+        while(suspend)
         {           
             wait();
         }         
@@ -70,15 +69,11 @@ public class Threading implements Runnable
     @Override
     public void run()
     {
-        while(true)
-        {
-            execute();
-            if(terminated()) return;
+        try {
+            callable.call();
+        } catch (Exception ex) {
+            Logger.getLogger(CallableOnceExecution.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    public void execute()
-    {
-
-    }
+        finish();
+    }    
 }
