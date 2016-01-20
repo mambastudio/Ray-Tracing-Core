@@ -20,4 +20,14 @@ public class BitmapReader {
     {        
         return uri.toLowerCase().endsWith(".jpg") || uri.toLowerCase().endsWith(".png");
     }
+    
+    public static boolean isHighDynamic(File file)
+    {
+        return isHighDynamic(file.toURI().toString());
+    }
+    
+    public static boolean isHighDynamic(String uri)
+    {
+        return uri.toLowerCase().endsWith(".hdr");
+    }
 }

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core.image;
+package core.image.film;
 
 import core.color.Color;
-import core.tonemap.Reinhard;
+import core.image.tonemap.Reinhard;
 import java.nio.IntBuffer;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -20,7 +20,7 @@ public class Film {
     private final int w, h;
     
     private Color[] colorAccum = null;
-    private Color[] tonePixels = null;
+    public  Color[] tonePixels = null;
     
     private final int size;
     

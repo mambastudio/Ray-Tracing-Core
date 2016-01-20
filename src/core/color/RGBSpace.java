@@ -59,10 +59,10 @@ public class RGBSpace {
         g = -0.955f * X + 1.938f * Y - 0.027f * Z;
         b =  0.064f * X - 0.130f * Y + 0.982f * Z;
         
-        r = Utility.clamp(r, 0, Math.abs(r));
-        g = Utility.clamp(g, 0, Math.abs(g));
-        b = Utility.clamp(b, 0, Math.abs(b));
-
+        Color color = new Color(r, g, b);
+        
+        constrain_rgb(color);
+        
         return new Color(r, g, b);
     }
 

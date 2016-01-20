@@ -33,6 +33,11 @@ public class Vector3f
         return this;
     }
     
+    public Vector3f add(float a)
+    {
+        return new Vector3f(x + a, y + a, z + a);
+    }
+    
     public Vector3f add(Vector3f a) 
     {
         Vector3f dest = clone();
@@ -66,6 +71,13 @@ public class Vector3f
         v.y *= a;
         v.z *= a;
         return v;
+    }
+    
+    public void mulAssign(Vector3f a)
+    {
+        x *= a.x;
+        y *= a.y;
+        z *= a.z;
     }
     
     public void mulAssign(float a) 

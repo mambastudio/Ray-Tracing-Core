@@ -5,7 +5,7 @@
  */
 package core.image.reader;
 
-import core.image.HighDynamicImage;
+import core.image.HDR;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,7 +21,12 @@ import java.util.logging.Logger;
  */
 public class HDRBitmapReader 
 {
-    public static final HighDynamicImage load(URI uri)
+    public static final HDR load(File file)
+    {
+        return load(file.toURI());
+    }
+    
+    public static final HDR load(URI uri)
     {
         if(!isHDRFile(uri.toString())) return null;
         
@@ -89,7 +94,7 @@ public class HDRBitmapReader
         {
             // run length encoding is not allowed so read flat
             readFlatRGBE(f, pixels, 0, width * height);
-            return new HighDynamicImage(width, height, pixels);
+            return new HDR(width, height, pixels);
         }
         int rasterPos = 0;
         int numScanlines = height;
@@ -105,13 +110,13 @@ public class HDRBitmapReader
                 // this file is not run length encoded
                 pixels[rasterPos] = (r << 24) | (g << 16) | (b << 8) | e;
                 readFlatRGBE(f, pixels, rasterPos + 1, width * numScanlines - 1);
-                return new HighDynamicImage(width, height, pixels);
+                return new HDR(width, height, pixels);
             }
 
             if (((b << 8) | e) != width) 
             {
                 System.out.println("Invalid scanline width");
-                return new HighDynamicImage(width, height, pixels);
+                return new HDR(width, height, pixels);
             }
             int p = 0;
             // read each of the four channels for the scanline into
@@ -132,7 +137,7 @@ public class HDRBitmapReader
                         if ((count == 0) || (count > (end - p))) 
                         {
                             System.out.println("Bad scanline data - invalid RLE run");
-                            return new HighDynamicImage(width, height, pixels);
+                            return new HDR(width, height, pixels);
                         }
                         while (count-- > 0)
                         {
@@ -147,7 +152,7 @@ public class HDRBitmapReader
                         if ((count == 0) || (count > (end - p)))
                         {
                             System.out.println("Bad scanline data - invalid count");
-                            return new HighDynamicImage(width, height, pixels);
+                            return new HDR(width, height, pixels);
                         }
                         scanlineBuffer[p] = b1;
                         p++;
@@ -173,11 +178,15 @@ public class HDRBitmapReader
             }
             numScanlines--;
         }  
-        
-        return new HighDynamicImage(width, height, pixels);
+        try {
+            f.close();
+        } catch (IOException ex) {
+            Logger.getLogger(HDRBitmapReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new HDR(width, height, pixels);
     }
     
-    public static final HighDynamicImage load(String uri)
+    public static final HDR load(String uri)
     {
         if(!isHDRFile(uri)) return null;
         
@@ -245,7 +254,7 @@ public class HDRBitmapReader
         {
             // run length encoding is not allowed so read flat
             readFlatRGBE(f, pixels, 0, width * height);
-            return new HighDynamicImage(width, height, pixels);
+            return new HDR(width, height, pixels);
         }
         int rasterPos = 0;
         int numScanlines = height;
@@ -261,13 +270,13 @@ public class HDRBitmapReader
                 // this file is not run length encoded
                 pixels[rasterPos] = (r << 24) | (g << 16) | (b << 8) | e;
                 readFlatRGBE(f, pixels, rasterPos + 1, width * numScanlines - 1);
-                return new HighDynamicImage(width, height, pixels);
+                return new HDR(width, height, pixels);
             }
 
             if (((b << 8) | e) != width) 
             {
                 System.out.println("Invalid scanline width");
-                return new HighDynamicImage(width, height, pixels);
+                return new HDR(width, height, pixels);
             }
             int p = 0;
             // read each of the four channels for the scanline into
@@ -288,7 +297,7 @@ public class HDRBitmapReader
                         if ((count == 0) || (count > (end - p))) 
                         {
                             System.out.println("Bad scanline data - invalid RLE run");
-                            return new HighDynamicImage(width, height, pixels);
+                            return new HDR(width, height, pixels);
                         }
                         while (count-- > 0)
                         {
@@ -303,7 +312,7 @@ public class HDRBitmapReader
                         if ((count == 0) || (count > (end - p)))
                         {
                             System.out.println("Bad scanline data - invalid count");
-                            return new HighDynamicImage(width, height, pixels);
+                            return new HDR(width, height, pixels);
                         }
                         scanlineBuffer[p] = b1;
                         p++;
@@ -330,7 +339,7 @@ public class HDRBitmapReader
             numScanlines--;
         }  
         
-        return new HighDynamicImage(width, height, pixels);
+        return new HDR(width, height, pixels);
     }
     
     public static int read(FileInputStream f)

@@ -14,6 +14,7 @@ import static core.math.Utility.lerp;
 import static core.math.Utility.sinf;
 import static core.math.Utility.sphericalDirection;
 import static core.math.Utility.sqrtf;
+import core.shape.Quad;
 
 /**
  *
@@ -47,6 +48,20 @@ public class MonteCarlo
         Vector3f dir = sphericalDirection(theta, phi);
         
         return new Point3f(dir.x, dir.y, dir.z);
+    }
+    
+    public static Point3f uniformSampleQuad(float r1, float r2, Quad quad)
+    {
+        float prob1 = quad.getSideOneProbability();
+        
+        if(Rng.getFloat() < prob1)
+        {
+            return quad.sampleSideOne(r1, r2);
+        }
+        else
+        {
+            return quad.sampleSideTwo(r1, r2);
+        }        
     }
     
     public static Point3f uniformSampleTriangle(float r1, float r2, Point3f p1, Point3f p2, Point3f p3)

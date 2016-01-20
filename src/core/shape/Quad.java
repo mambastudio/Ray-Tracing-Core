@@ -14,6 +14,8 @@ import static core.coordinates.Vector3f.cross;
 import static core.coordinates.Vector3f.dot;
 import core.math.BoundingBox;
 import core.math.DifferentialGeometry;
+import core.math.MonteCarlo;
+import static core.math.MonteCarlo.uniformSampleTriangle;
 import core.math.Ray;
 import core.math.Transform;
 import static core.math.Utility.sqrt;
@@ -47,6 +49,58 @@ public class Quad extends AbstractShape
         bound.include(p10);
         bound.include(p11);
         return bound;
+    }
+    
+    public Point3f sampleSideOne(float r1, float r2)
+    {
+        Point3f p1 = new Point3f(), p2 = new Point3f(), p3 = new Point3f();
+        getSideOne(p1, p2, p3);
+        return MonteCarlo.uniformSampleTriangle(r1, r2, p1, p2, p3);
+    }
+    
+    public Point3f sampleSideTwo(float r1, float r2)
+    {
+        Point3f p1 = new Point3f(), p2 = new Point3f(), p3 = new Point3f();
+        getSideTwo(p1, p2, p3);
+        return MonteCarlo.uniformSampleTriangle(r1, r2, p1, p2, p3);
+    }
+    
+    public void getSideOne(Point3f p1, Point3f p2, Point3f p3)
+    {
+        p1.set(p00);
+        p2.set(p10);
+        p3.set(p01);
+    }
+    
+    public void getSideTwo(Point3f p1, Point3f p2, Point3f p3)
+    {
+        p1.set(p11);
+        p2.set(p10);
+        p3.set(p01);
+    }
+    
+    public float getSideOneArea()
+    {
+        Point3f p1 = new Point3f(), p2 = new Point3f(), p3 = new Point3f();
+        getSideOne(p1, p2, p3);
+        return MonteCarlo.areaTriangle(p1, p2, p3);
+    }
+    
+    public float getSideTwoArea()
+    {
+        Point3f p1 = new Point3f(), p2 = new Point3f(), p3 = new Point3f();
+        getSideTwo(p1, p2, p3);
+        return MonteCarlo.areaTriangle(p1, p2, p3);
+    }
+    
+    public float getSideOneProbability()
+    {
+        return getSideOneArea()/(getSideOneArea() + getSideTwoArea());
+    }
+    
+    public float getSideTwoProbability()
+    {
+        return getSideTwoArea()/(getSideOneArea() + getSideTwoArea());
     }
 
     @Override
@@ -228,7 +282,7 @@ public class Quad extends AbstractShape
 
     @Override
     public float getArea() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getSideOneArea() + getSideTwoArea();
     }
 
     @Override
@@ -236,4 +290,12 @@ public class Quad extends AbstractShape
         return nn.clone();
     }
     
+    @Override
+    public Point3f sampleA(float u1, float u2, Normal3f n) 
+    {
+        if(nn != null)
+            n.set(this.nn);
+        
+        return MonteCarlo.uniformSampleQuad(u1, u2, this);
+    }
 }

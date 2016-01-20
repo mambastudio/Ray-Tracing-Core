@@ -7,6 +7,7 @@ package core.color;
 
 import core.math.Utility;
 import static java.lang.Math.pow;
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -133,6 +134,11 @@ public class Color {
         return this;
     }
     
+    public final Color add(Color c)
+    {
+        return new Color(r + c.r, g + c.g, b + c.b);
+    }
+    
     public final void addAssign(Color c)
     {
         r += c.r;
@@ -163,6 +169,15 @@ public class Color {
         c.b = Utility.clamp(b, 0, 1);
 
         return c;
+    }
+    
+    public float max()
+    {        
+        if (r < g)
+            r = g;
+        if (r < b)
+            r = b;
+        return r;    
     }
     
     public final Color mul(float s)
@@ -243,6 +258,24 @@ public class Color {
         g = f * ((rgbe >> 16) & 0xFF);
         b = f * ((rgbe >> 8)& 0xFF);
         return this;
+    }
+    
+    public final byte[] toByteBGRA_Pre()
+    {
+        int ia = (int) (255 + 0.5);
+        int ir = (int) (r * 255 + 0.5);
+        int ig = (int) (g * 255 + 0.5);
+        int ib = (int) (b * 255 + 0.5);
+        ir = Utility.clamp(ir, 0, 255);
+        ig = Utility.clamp(ig, 0, 255);
+        ib = Utility.clamp(ib, 0, 255);
+        ia = Utility.clamp(ia, 0, 255);
+        
+        int rgba = (ib << 24) | (ig << 16) | (ir << 8) | ia;
+        
+        ByteBuffer bb = ByteBuffer.allocate(4);
+        bb.putInt(rgba);
+        return bb.array();
     }
 
     public final int toRGB()

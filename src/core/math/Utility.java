@@ -65,6 +65,11 @@ public class Utility {
         return (float)Math.asin(a);
     }
     
+    public static float tanf(float a)
+    {
+        return (float)Math.tan(a);
+    }
+    
     public static float atanf(float a)
     {
         return (float)Math.atan(a);
@@ -73,6 +78,11 @@ public class Utility {
     public static float atan2f(float a, float b)
     {
         return (float)Math.atan2(a, b);
+    }
+    
+    public static float expf(float a)
+    {
+        return (float)Math.exp(a);
     }
     
     public static float check(float value)
@@ -119,6 +129,7 @@ public class Utility {
         return a;
     }
     
+    
     public static void debugValue(float value)
     {
         if(Float.isInfinite(value))
@@ -152,8 +163,42 @@ public class Utility {
         return (float)Math.sqrt(value);
     }
     
-    public static float fresnelSchlick(float n1, float n2, float cosThetaI, float cosThetaT)
+    public static float fresnelDielectric(float cosIncident,
+                                            float ior)
     {
+        if(ior < 0)
+            return 1.f;
+        
+        float etaIncOverEtaTrans;
+        
+        if(cosIncident < 0.f)
+        {
+            cosIncident = -cosIncident;
+            etaIncOverEtaTrans = ior;
+        }
+        else
+        {
+            etaIncOverEtaTrans = 1.f / ior;
+        }
+        
+        float sinTrans2 = sqr(etaIncOverEtaTrans * etaIncOverEtaTrans) * (1.f - sqr(cosIncident));
+        float cosTrans = (float) Math.sqrt(Math.max(0.f, 1.f - sinTrans2));
+
+        float term1 = etaIncOverEtaTrans * cosTrans;
+        float rParallel =
+            (cosIncident - term1) / (cosIncident + term1);
+
+        float term2 = etaIncOverEtaTrans * cosIncident;
+        float rPerpendicular =
+            (term2 - cosTrans) / (term2 + cosTrans);
+
+        return 0.5f * (sqr(rParallel) + sqr(rPerpendicular));
+    }
+    
+    public static float fresnelSchlick(float n1, float n2, float cosThetaI)
+    {
+        if(n2 < 0) return 1f;
+        
         float r0 = (n1 - n2)/(n1 + n2);
         r0 *= r0;
         float cosX = cosThetaI;

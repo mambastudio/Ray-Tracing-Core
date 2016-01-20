@@ -61,8 +61,6 @@ public class SphereScene extends Scene
         primitives.add(sphere1);
         
         accelerator.setPrimitives(primitives);
-        Envmap map = new Envmap();
-
-        lights.setBackgroundLight(map);
+       
     }
 }

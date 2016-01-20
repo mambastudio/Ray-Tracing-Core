@@ -5,16 +5,20 @@
  */
 package core;
 
-import core.Test.Superthread;
 import core.coordinates.Normal3f;
+import core.coordinates.Point2f;
 import core.coordinates.Point2i;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import core.light.Envmap;
+import core.light.sky.Sunsky;
+import core.math.Distribution2D;
+import core.math.FloatValue;
 import core.math.Ray;
 import core.math.Rng;
+import core.math.Utility;
+import core.shape.Quad;
 import core.shape.Triangle;
-import java.util.Arrays;
 
 /**
  *
@@ -27,13 +31,14 @@ public class Test {
      */
     static boolean kwenda = false;
     
-    public static void main(String[] args) {
-        float[] values = {3, 4, 1, 9};
+    public static void main(String[] args) 
+    {
+        Sunsky sunsky = new Sunsky();
         
-        int offset = 0;
-        
-        System.out.println(values[offset++]);
-        System.out.println(offset);
+        for(int i = 0; i<100; i++)
+        {
+           
+        }
     }
     
     public static class Superthread
@@ -51,13 +56,14 @@ public class Test {
     }
     
     public static void testEnvMap()
-    {
+    {       
         Envmap map = new Envmap();
         
         Point2i uv = map.sampleUV(null);
         System.out.println(map.getColor(uv));
         Vector3f dir = map.toDirection(uv);
         System.out.println(map.getColor(dir));
+                
         
     }
     

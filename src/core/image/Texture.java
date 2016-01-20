@@ -5,7 +5,6 @@
  */
 package core.image;
 
-import core.image.Bitmap;
 import core.color.Color;
 import java.io.File;
 import javafx.scene.image.Image;
@@ -41,7 +40,7 @@ public class Texture
     
     public Color getPixel(float x, float y) 
     {
-        return bitmap.getPixel(x, y);
+        return bitmap.getColor(x, y);
     }
     
     public Color getTexelUV(float u, float v)
@@ -58,7 +57,7 @@ public class Texture
         else
             vv = Math.abs(v) - (int)Math.abs(v);
         
-        return bitmap.getPixel(uu * getWidthF(), vv * getHeightF());
+        return bitmap.getColor(uu * getWidthF(), vv * getHeightF());
     }
     
     public String getURI()

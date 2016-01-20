@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core.tonemap;
+package core.image.tonemap;
 
 import core.AbstractTonemap;
 import core.color.Color;
