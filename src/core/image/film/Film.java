@@ -40,6 +40,15 @@ public class Film {
         }
     }
     
+    public void clear()            
+    {
+        for(int i = 0; i<size; i++)
+        {
+            colorAccum[i].setBlack();
+            tonePixels[i].setBlack();
+        }
+    }
+    
     public void add(Color color, int x, int y)
     {       
         if(!color.isBad())

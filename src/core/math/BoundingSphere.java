@@ -6,6 +6,7 @@
 package core.math;
 
 import core.coordinates.Point3f;
+import static core.math.Utility.PI_F;
 
 /**
  *
@@ -26,5 +27,15 @@ public class BoundingSphere
     public BoundingSphere(Point3f c, float r)
     {
         this.c = c; this.r = r; rSqr = r * r;
+    }
+    
+    public float getAreaProbability()
+    {
+        return 1f/getArea();
+    }
+    
+    public float getArea()
+    {
+        return 4 * PI_F * rSqr;
     }
 }

@@ -11,6 +11,7 @@ import core.AbstractPrimitive;
 import core.AbstractShape;
 import core.Intersection;
 import core.AbstractMaterial;
+import core.accelerator.BoundingVolume;
 import core.accelerator.NullAccelerator;
 import core.accelerator.UniformGrid;
 import core.coordinates.Normal3f;
@@ -33,7 +34,7 @@ public class Geometries extends AbstractPrimitive
     public Geometries(AbstractMaterial material)
     {
         this.material = material;
-        this.accelerator = new UniformGrid();
+        this.accelerator = new BoundingVolume();
         this.gPrimitives = new ArrayList<>();
     }
     

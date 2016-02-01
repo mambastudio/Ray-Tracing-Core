@@ -18,6 +18,7 @@ import static java.lang.Math.sin;
  */
 public class Utility {
     public static final float PI_F = (float)Math.PI;
+    public static final float HALF_PI_F = (float)PI_F/2f;
     public static final float PI_F_TWO = PI_F * PI_F;
     public static final float TWO_PI_F = 2 * PI_F;
     public static final float INV_PI_F = 1.f/PI_F;
@@ -54,7 +55,17 @@ public class Utility {
         float p = atan2f(v.y, v.x);
         return (p < 0.f) ? p + 2.f * PI_F : p;
     }
-        
+    
+    public static float toDegrees(double radians)
+    {
+        return (float)Math.toDegrees(radians);
+    }
+    
+    public static float toRadians(double degrees)
+    {
+        return (float)Math.toRadians(degrees);
+    }
+    
     public static float acosf(float a)
     {
         return (float)Math.acos(a);

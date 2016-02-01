@@ -155,6 +155,17 @@ public class BoundingBox implements Cloneable
         }
     }
     
+    public static BoundingBox union(BoundingBox b1, BoundingBox b2) {
+        BoundingBox ret = new BoundingBox();
+        ret.minimum.x = min(b1.minimum.x, b2.minimum.x);
+        ret.minimum.y = min(b1.minimum.y, b2.minimum.y);
+        ret.minimum.z = min(b1.minimum.z, b2.minimum.z);
+        ret.maximum.x = max(b1.maximum.x, b2.maximum.x);
+        ret.maximum.y = max(b1.maximum.y, b2.maximum.y);
+        ret.maximum.z = max(b1.maximum.z, b2.maximum.z);
+        return ret;
+    }
+    
     public BoundingSphere getBoundingSphere()
     {
         Point3f c = getCenter();

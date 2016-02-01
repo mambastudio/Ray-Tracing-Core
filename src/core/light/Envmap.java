@@ -19,6 +19,7 @@ import core.math.FloatValue;
 import core.math.Frame;
 import core.math.Ray;
 import core.math.Rng;
+import core.math.SphericalCoordinate;
 import core.math.Utility;
 import static core.math.Utility.INV_PI_F;
 import static core.math.Utility.PI_F;
@@ -39,9 +40,10 @@ import java.net.URI;
 public class Envmap extends AbstractBackground
 {    
     public HDR hdr;
+    public SphericalCoordinate coordinate;
     public Distribution2D distribution2D;
     
-    float power = 100;
+    public float power = 1f;
     
     public Envmap(URI uri)
     {
@@ -53,7 +55,7 @@ public class Envmap extends AbstractBackground
     public Envmap(File file)
     {
         super();
-        hdr = HDRBitmapReader.load(file.toURI());
+        hdr = HDRBitmapReader.load(file.toURI()).bestResizeFit(2000);
         init();
     }
     

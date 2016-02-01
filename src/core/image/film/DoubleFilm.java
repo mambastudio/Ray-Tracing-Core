@@ -37,6 +37,15 @@ public class DoubleFilm {
         }
     }
     
+    public void clear()
+    {
+        layer1.clear();
+        layer2.clear();
+        
+        for(int i = 0; i<size; i++)
+            tonePixels[i].setBlack();
+    }
+    
     public void add(Color color, int x, int y, int layer)
     {
         if(layer == 0)
@@ -61,7 +70,15 @@ public class DoubleFilm {
         layer2.updatePixels(scale);
         
         for(int i = 0; i<size; i++)
-            tonePixels[i] = ((layer1.tonePixels[i].add(layer2.tonePixels[i])));
+        {
+            Color color1 = layer1.tonePixels[i];
+            Color color2 = layer2.tonePixels[i];
+            
+            if(!color1.isBlack() && !color2.isBlack())
+                tonePixels[i] = color1.add(color2).mul(0.5f);
+            else
+                tonePixels[i] = color1.add(color2);                
+        }
     }
     
     public Image getImage()
@@ -88,10 +105,5 @@ public class DoubleFilm {
                 wImage.getPixelWriter().setColor(i, j, javafx.scene.paint.Color.BLACK);
         
         return wImage;
-    }
-    
-    private int index(int x, int y)
-    {
-        return w * y + x;
-    }
+    }    
 }

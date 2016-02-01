@@ -27,8 +27,10 @@ public class Reinhard extends AbstractTonemap
         float L = c1.luminance();
         float Lscaled = a * (L/aveL);
         
-        float Y = (Lscaled * (1 + Lscaled / (Lwhite * Lwhite)))/
-                  (1 + Lscaled);
+        //float Y = (Lscaled * (1 + Lscaled / (Lwhite * Lwhite)))/
+        //          (1 + Lscaled);
+        
+        float Y = Lscaled;
         
         Y = Utility.check(Y);
         

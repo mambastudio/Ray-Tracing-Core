@@ -5,7 +5,6 @@
  */
 package core;
 
-import core.coordinates.Normal3f;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;

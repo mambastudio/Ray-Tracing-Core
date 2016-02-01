@@ -20,7 +20,7 @@ public abstract class AbstractMaterial {
     protected Texture texture = null;
     
     protected Color emission = new Color();
-    protected float power = 5f;
+    protected float power = 500f;
         
     public boolean isEmitter()
     {

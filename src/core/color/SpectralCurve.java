@@ -51,6 +51,21 @@ public class SpectralCurve {
         {0.0002,0.0001,0.0000}, {0.0002,0.0001,0.0000}, {0.0001,0.0000,0.0000},
         {0.0001,0.0000,0.0000}, {0.0001,0.0000,0.0000}, {0.0000,0.0000,0.0000}
     };
+    
+    public float xBar(int lambda)
+    {
+        return (float) cie_colour_match[(lambda - 380) / 5][0];
+    }
+    
+    public float yBar(int lambda)
+    {
+        return (float) cie_colour_match[(lambda - 380) / 5][1];
+    }
+    
+    public float zBar(int lambda)
+    {
+        return (float) cie_colour_match[(lambda - 380) / 5][2];
+    }
 
     public static void spectrum_to_xyz(BlackBody bb_spectrum,
                      Chromaticity chromaticity)

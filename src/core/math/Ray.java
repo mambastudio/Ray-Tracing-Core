@@ -58,9 +58,20 @@ public class Ray {
         sign[2] = inv_d.z < 0 ? 1 : 0;
     }
     
+    public int[] dirIsNeg()
+    {
+        int[] dirIsNeg = {sign[0], sign[1], sign[2]};
+        return dirIsNeg;
+    }
+    
     public final boolean isInside(float t) 
     {
         return (tMin < t) && (t < tMax);
+    }
+    
+    public Vector3f getInvDir()
+    {
+        return new Vector3f(inv_d);
     }
     
     public final Point3f getPoint() 

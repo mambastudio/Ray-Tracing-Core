@@ -5,21 +5,19 @@
  */
 package core.light.sky;
 
-import core.color.Color;
-import core.coordinates.Point2f;
-import core.coordinates.Vector3f;
-import core.math.Utility;
-import static core.math.Utility.acosf;
-import static core.math.Utility.cosf;
-import static core.math.Utility.expf;
-import static core.math.Utility.powf;
-import static core.math.Utility.sinf;
-import static java.lang.Math.max;
-
 /**
  *
  * @author user
  */
-public class Sunsky {
+public class Sunsky 
+{
+    public float Yp(float theta, float gamma, float thetaZenith)
+    {
+        return 1f;
+    }
     
+    public float perezFunction(float A, float B, float C, float D, float gamma, float theta)
+    {
+        return 1f;
+    }
 }
