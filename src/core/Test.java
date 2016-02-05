@@ -7,8 +7,11 @@ package core;
 
 import core.coordinates.Vector3f;
 import core.math.FloatValue;
+import core.math.SphericalCoordinate;
+import static core.math.Utility.INV_PI_F;
 import static core.math.Utility.acosf;
 import static core.math.Utility.asinf;
+import static core.math.Utility.atan2f;
 import static core.math.Utility.toDegrees;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -21,11 +24,9 @@ public class Test {
 
     public static void main(String[] args) 
     {
-        Vector3f zenith = new Vector3f(0, 1, 0);
-        Vector3f v = new Vector3f(0.3f, 0.5f, 0.9f).normalize();
-        
-        System.out.println(toDegrees(acosf(Vector3f.dot(zenith, v))));
-        System.out.println(toDegrees(acosf(v.y)));
+        Vector3f sunPosition = new Vector3f(0, 0.26f, -0.97f).normalize();
+        //System.out.println(SphericalCoordinate.directionDegrees(75, 0));
+        System.out.println(sunPosition);
     }
     
     static class FloatSort implements Comparator<Float>

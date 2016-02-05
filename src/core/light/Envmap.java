@@ -21,11 +21,8 @@ import core.math.Ray;
 import core.math.Rng;
 import core.math.SphericalCoordinate;
 import core.math.Utility;
-import static core.math.Utility.INV_PI_F;
 import static core.math.Utility.PI_F;
 import static core.math.Utility.PI_F_TWO;
-import static core.math.Utility.acosf;
-import static core.math.Utility.atan2f;
 import static core.math.Utility.cosf;
 import static core.math.Utility.sinf;
 import static core.math.Utility.sqrtf;
@@ -39,8 +36,7 @@ import java.net.URI;
  */
 public class Envmap extends AbstractBackground
 {    
-    public HDR hdr;
-    public SphericalCoordinate coordinate;
+    public HDR hdr;    
     public Distribution2D distribution2D;
     
     public float power = 1f;
@@ -192,17 +188,7 @@ public class Envmap extends AbstractBackground
             
     public Point2i getUV(Vector3f d)
     {
-        float u, v;
-                
-        // assume lon/lat format, here the y coordinate is up        
-        u = (0.5f  + 0.5f*INV_PI_F * atan2f(d.x, -d.z));
-        v = (INV_PI_F * acosf(d.y));
-        
-        // scale to image space
-        u *= hdr.getWidth();
-        v *= hdr.getHeight();
-       
-        return new Point2i((int)u, (int)v);
+        return SphericalCoordinate.getRange2i(d, hdr.getWidth(), hdr.getHeight());        
     }
     
     public Color getColor(Vector3f d)

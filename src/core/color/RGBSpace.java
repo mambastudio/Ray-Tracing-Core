@@ -45,8 +45,7 @@ public class RGBSpace {
 
         return new XYZ(X, Y, Z);
     }
-
-    //FIX ME: Giving out negative values
+    
     public static Color convertXYZtoRGB(XYZ xyzColor)
     {
         float r, g, b;
@@ -58,6 +57,27 @@ public class RGBSpace {
         r =  1.967f * X - 0.548f * Y - 0.297f * Z;
         g = -0.955f * X + 1.938f * Y - 0.027f * Z;
         b =  0.064f * X - 0.130f * Y + 0.982f * Z;
+        
+        Color color = new Color(r, g, b);
+        
+        constrain_rgb(color);
+        
+        return new Color(r, g, b);
+    }
+    
+    public static Color xyYtoRGB(float x, float y, float Y)
+    {
+        float r, g, b;
+        
+        XYZ xyz = new XYZ();
+        xyz.x = x;
+        xyz.y = y;
+        xyz.Y = Y;
+        xyz.xyYtoXYZ();
+        
+        r =  1.967f * xyz.X - 0.548f * xyz.Y - 0.297f * xyz.Z;
+        g = -0.955f * xyz.X + 1.938f * xyz.Y - 0.027f * xyz.Z;
+        b =  0.064f * xyz.X - 0.130f * xyz.Y + 0.982f * xyz.Z;
         
         Color color = new Color(r, g, b);
         
