@@ -141,6 +141,13 @@ public class Utility {
     }
     
     
+    public static boolean isBad(float value)
+    {
+        if(Float.isInfinite(value))
+            return true;
+        else return Float.isNaN(value);
+    }
+    
     public static void debugValue(float value)
     {
         if(Float.isInfinite(value))

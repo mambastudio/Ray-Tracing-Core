@@ -5,7 +5,7 @@
  */
 package core;
 
-import core.thread.LoopExecution;
+import core.thread.KernelExecution;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,7 +18,7 @@ public class PoolExecutor
     private static ExecutorService progressivePool = null;
     private static ExecutorService queuePool = null;
     
-    private static LoopExecution pThreading = null;
+    private static KernelExecution pThreading = null;
     
     
     
@@ -34,7 +34,7 @@ public class PoolExecutor
         queuePool.submit(runnable);
     }
     
-    public static void submitProgressiveRender(LoopExecution pthreading)
+    public static void submitProgressiveRender(KernelExecution pthreading)
     {
         if(pthreading == null) return;
         pThreading = pthreading;
@@ -51,4 +51,13 @@ public class PoolExecutor
     {
         pThreading.finish();
     }    
+    
+    //Useful for executing small processes in separate thread, once submitted
+    //user has no control over it, hence care must be taken care of in terms
+    //of executing resouce consuming and long tasks
+    public static void executeThread(Runnable runnable)
+    {
+        Thread thread = new Thread(runnable);
+        thread.start();
+    }
 }

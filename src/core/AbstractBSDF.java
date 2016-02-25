@@ -39,7 +39,10 @@ public abstract class AbstractBSDF {
     }
     
     public abstract BSDFType type();       
+    
+    //Calculates f(reflectance) * color. 
     public abstract Color sample(Point2f rndTuple, Vector3f worldWo, FloatValue pdfWo, FloatValue cosWo);
+    //Calculates f(reflectance) * color. 
     public abstract Color evaluate(Vector3f worldWo, FloatValue cosWo, FloatValue directPdfWo, FloatValue reversePdfWo);
         
     public Vector3f getWi()

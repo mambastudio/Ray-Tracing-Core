@@ -6,6 +6,7 @@
 package core.color;
 
 import core.coordinates.Vector3f;
+import core.image.HDR;
 import core.math.SphericalCoordinate;
 import static core.math.Utility.PI_F;
 import static core.math.Utility.cosf;
@@ -33,12 +34,27 @@ public final class Preetham
     
     public Preetham()
     {
+        this.sunPosition = SphericalCoordinate.directionDegrees(-90, 0);
         calculateZenithAbsolutes();
         calculateCoefficients();
     }
     
     public Preetham(Vector3f sunPosition)
     {        
+        this.sunPosition = sunPosition;
+        calculateZenithAbsolutes();
+        calculateCoefficients();
+    }
+    
+    public void setTurbidity(float turbidity)
+    {
+        this.turbidity = turbidity;
+        calculateZenithAbsolutes();
+        calculateCoefficients();
+    }
+    
+    public void setSunPosition(Vector3f sunPosition)
+    {
         this.sunPosition = sunPosition;
         calculateZenithAbsolutes();
         calculateCoefficients();
@@ -119,7 +135,8 @@ public final class Preetham
         float zenith        = zenith(v);
         float solar_zenith  = solarZenith();
         
-        zenith = min(zenith, toRadians(89.9));
+        if(Math.toDegrees(zenith) > 90)
+            return new Color();
         
         float Yp = Yabsolute * perez(zenith, gamma, coeffsY) / perez(0, solar_zenith, coeffsY);
         float xp = xabsolute * perez(zenith, gamma, coeffsx) / perez(0, solar_zenith, coeffsx);
@@ -130,6 +147,20 @@ public final class Preetham
         Color color =  RGBSpace.xyYtoRGB(xp, yp, Yp);
         //System.out.println(toDegrees(zenith)+ " " +toDegrees(gamma));
         return color;
+    }
+    
+    public HDR getHDR(int size)
+    {
+        HDR hdr = new HDR(size, size);
+        
+        for(int j = 0; j<size; j++)
+            for(int i = 0; i<size; i++)
+            {
+                Color color = getColor(SphericalCoordinate.sphericalDirection(i, j, size, size));
+                hdr.setColor(i, j, color);
+            }
+                
+        return hdr;
     }
     
     public static Preetham TIME_6_AM()

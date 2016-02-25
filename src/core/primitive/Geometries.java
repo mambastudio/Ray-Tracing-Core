@@ -12,8 +12,6 @@ import core.AbstractShape;
 import core.Intersection;
 import core.AbstractMaterial;
 import core.accelerator.BoundingVolume;
-import core.accelerator.NullAccelerator;
-import core.accelerator.UniformGrid;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
 import core.light.AreaLight;

@@ -12,7 +12,6 @@ import core.accelerator.UniformGrid;
 import core.color.Color;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
-import core.light.Envmap;
 import core.material.UnitMaterial;
 import core.primitive.Geometries;
 import core.shape.Quad;

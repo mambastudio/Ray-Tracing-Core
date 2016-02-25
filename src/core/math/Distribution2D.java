@@ -7,7 +7,6 @@ package core.math;
 
 import core.coordinates.Point2f;
 import core.coordinates.Point2i;
-import static core.math.Utility.clamp;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +32,7 @@ public class Distribution2D
         for (int v = 0; v < nv; ++v) {
             marginalFunc[v] = pConditionalV.get(v).funcInt;
         }        
-        pMarginal = new Distribution1D(marginalFunc, 0, nv);
+        pMarginal = new Distribution1D(marginalFunc, 0, nv);        
     }
     
     public Point2f sampleContinous(float u0, float u1)
@@ -125,7 +124,7 @@ public class Distribution2D
     {       
         float pdfU = pConditionalV.get(v).pdfDiscrete(u);
         float pdfV = pMarginal.pdfDiscrete(v);
-        
+                
         return pdfU * pdfV;        
     }
     

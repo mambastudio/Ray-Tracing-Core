@@ -6,12 +6,16 @@
 package core;
 
 import core.accelerator.BoundingVolume;
-import core.accelerator.UniformGrid;
+import core.color.Color;
+import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import core.math.BoundingBox;
 import core.math.BoundingSphere;
+import core.math.FloatValue;
+import static core.math.Geometry.mis2;
 import core.math.Ray;
+import core.math.Rng;
 import java.util.ArrayList;
 
 /**
@@ -20,7 +24,7 @@ import java.util.ArrayList;
  */
 public class Scene 
 {    
-    public Camera camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 500, 500, 45);
+    public Camera camera = null;
     public AbstractAccelerator accelerator = null;
     public ArrayList<AbstractPrimitive> primitives = null;
     public LightCache lights = null;    
@@ -28,6 +32,19 @@ public class Scene
     public Scene()
     {
         lights = new LightCache();
+        camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 500, 500, 45);
+    }
+    
+    public Scene(int width, int height)
+    {
+        lights = new LightCache();
+        camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), width, height, 45);
+    }
+    
+    public void prepareToRender()
+    {
+        camera.setUp();
+        initLights();
     }
     
     public void init()
@@ -69,7 +86,8 @@ public class Scene
     {
         return getWorldBounds().getBoundingSphere();
     }
-    
+        
+    //invoke this when lighting has changed
     public void initLights()
     {        
         lights.clear();
@@ -78,5 +96,90 @@ public class Scene
            lights.add(prim);
         
         lights.addBackgroundLight();
+    }    
+    
+    public Color directLightSampling(Intersection isect, FloatValue misWeight)
+    {
+        // We sample lights uniformly
+        int   lightCount    = lights.getSize();
+        float lightPickProb = 1.f / lightCount;
+        
+        // Bsdf should not be delta
+        if(isect.bsdf.isDelta())
+            return new Color();
+        
+        //Sample light
+        AbstractLight light = lights.getRandomLight();
+        Ray rayToLight = new Ray();
+        Color radiance = light.illuminate(this, isect.dg.p, Rng.getPoint2f(), rayToLight, null);        
+        if(radiance.isBlack())
+            return new Color();
+        
+        //Calculate bsdf factor
+        FloatValue bsdfPdfW = new FloatValue();
+        FloatValue cosThetaOut = new FloatValue();
+        Color bsdfFactor = isect.bsdf.evaluate(rayToLight.d, cosThetaOut, bsdfPdfW, null);         
+        if(bsdfFactor.isBlack())
+            return new Color();
+        
+        //Calculate direct Pdf with respect to receiving point
+        float directPdfW = light.directPdfW(this, isect.dg.p, rayToLight.d);               
+        if(directPdfW < Float.MIN_VALUE)
+            return new Color();
+        
+        //Calculate MIS
+        float weight = 1.f;
+        if(!isect.bsdf.isDelta())        
+            weight = mis2(directPdfW * lightPickProb, bsdfPdfW.value);
+        if(misWeight != null)
+            misWeight.value = weight;
+        
+        
+        //Calculate final color contribution
+        Color contrib = radiance.mul(cosThetaOut.value / (lightPickProb * directPdfW))
+                                    .mul(bsdfFactor);                              
+        return contrib;
+    }
+    
+    public Color brdfLightSampling(Intersection isect, FloatValue misWeight)
+    {
+        // We sample lights uniformly
+        int   lightCount    = lights.getSize();
+        float lightPickProb = 1.f / lightCount;
+        
+        // Sample brdf
+        Vector3f brdfWo = new Vector3f();
+        FloatValue bsdfPdfW = new FloatValue(); 
+        FloatValue cosWo = new FloatValue();          
+        Color bsdfFactor = isect.bsdf.sample(Rng.getPoint2f(), brdfWo, bsdfPdfW, cosWo);                                 
+        if(bsdfFactor.isBlack())
+            return new Color();      
+        
+        // Intersect emitter first
+        Intersection lsect = new Intersection();
+        Ray rayToLight = new Ray(isect.dg.p, brdfWo);
+        if(!(intersect(rayToLight, lsect) && lsect.isEmitter()))
+            return new Color();
+        
+        // Deal with the direct light hit
+        AbstractLight light = lsect.primitive.getAreaLight();      
+        Color radiance = light.radiance(this, lsect.dg.p, rayToLight.d, null);        
+        if(radiance.isBlack())
+            return new Color();
+        
+        //Calculate directPdW
+        float directPdfW = light.directPdfW(this, isect.dg.p, rayToLight.d);
+        if(directPdfW < Float.MIN_VALUE)
+            return new Color();
+        
+        //Calculate mis weight
+        float weight = 1.f;
+        if(!isect.bsdf.isDelta())                   
+            weight = mis2(bsdfPdfW.value, directPdfW * lightPickProb);               
+        misWeight.value = weight;
+        
+        //Calculate total power output        
+        Color color = radiance.mul(bsdfFactor.mul(cosWo.value / bsdfPdfW.value));           
+        return color;        
     }
 }

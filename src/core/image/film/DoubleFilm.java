@@ -74,10 +74,15 @@ public class DoubleFilm {
             Color color1 = layer1.tonePixels[i];
             Color color2 = layer2.tonePixels[i];
             
-            if(!color1.isBlack() && !color2.isBlack())
-                tonePixels[i] = color1.add(color2).mul(0.5f);
-            else
-                tonePixels[i] = color1.add(color2);                
+            
+            if(!color2.isBlack())
+                tonePixels[i] = color2;    
+            
+            if(!color1.isBlack())                
+                tonePixels[i] = color1;  
+            
+              
+            
         }
     }
     

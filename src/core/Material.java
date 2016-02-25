@@ -13,38 +13,50 @@ import core.math.Utility;
  * @author user
  */
 public class Material {
-    // diffuse is simply added to the others
-    public Color diffuse;
-    // Phong is simply added to the others
-    public Color phong;
-    public float phongExponent;
-
-    // mirror can be either simply added, or mixed using Fresnel term
-    // this is governed by mIOR, if it is >= 0, fresnel is used, otherwise
-    // it is not
-    public Color mirrorReflectance;
+   
+    public Color diffuseReflectance;    
+    public Color phongReflectance;
+    public Color specularReflectance;
+    public Color emission;
     
+    public float power;
+    public float phongExponent;
     public float ior;
     
+    public String name;
     
+    public Material()
+    {
+        diffuseReflectance = new Color(0.9, 0.9453, 0.9);
+        phongReflectance = new Color();
+        specularReflectance = new Color();
+        emission = new Color();
+        
+        power = 1;
+        phongExponent = 20;
+        ior = -1;
+        
+        name = "diffuse surface";
+    }
+   
     public float albedoDiffuse()
     {
-        return diffuse.luminance();
+        return diffuseReflectance.luminance();
     }
     
     public float albedoPhong()
     {
-        return phong.luminance();
+        return phongReflectance.luminance();
     }
     
     public float albedoReflect()
     {
-        return mirrorReflectance.luminance();
+        return specularReflectance.luminance();
     }
     
     public float albedoRefract()
     {
-        return 1f;
+        return specularReflectance.luminance();
     }
     
     public void componentProbabilities(AbstractBSDF bsdf)
@@ -77,9 +89,7 @@ public class Material {
             // That way the weight of sample will never rise.
             // Luminance is another very valid option.
             bsdf.continuationProbability =
-                     diffuse.add(
-                     phong.add(
-                     mirrorReflectance.mul(reflectCoeff))).max() + (1.f - reflectCoeff);
+                     diffuseReflectance.add(phongReflectance.add(specularReflectance.mul(reflectCoeff))).max() + (1.f - reflectCoeff);
                 
             bsdf.continuationProbability = Math.min(1.f, Math.max(0.f, bsdf.continuationProbability));
         }

@@ -37,7 +37,7 @@ public class Distribution1D {
         {
             for (int i = 1; i < n+1; ++i)
                 cdf[i] /= funcInt;
-        }
+        }        
     }
     
     public float sampleContinuous(float u, FloatValue pdf, int[] off)

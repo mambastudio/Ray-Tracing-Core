@@ -86,7 +86,7 @@ public class Film {
             if(color.luminance() > maxLum)
                     maxLum = color.luminance();
             
-            if(color.luminance() > 0f)
+            if(color.luminance() > -1f)
             {
                 aveLum += Math.log(0.01 + color.luminance());
                 N++;

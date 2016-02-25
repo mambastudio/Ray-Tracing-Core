@@ -52,4 +52,16 @@ public class Geometry
     {
         return aPdfA * sqr(aDist) / Math.abs(aCosThere);
     }  
+    
+    // Mis power (1 for balance heuristic)
+    public static float mis(float aPdf)
+    {
+        return aPdf;
+    }
+
+    // Mis weight for 2 pdfs
+    public static float mis2(float aSamplePdf, float aOtherPdf) 
+    {
+        return mis(aSamplePdf) / (mis(aSamplePdf) + mis(aOtherPdf));
+    }
 }

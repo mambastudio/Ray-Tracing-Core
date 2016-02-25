@@ -6,6 +6,7 @@
 package core.light;
 
 import core.AbstractBackground;
+import core.Scene;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
@@ -44,7 +45,7 @@ public class Envmap extends AbstractBackground
     public Envmap(URI uri)
     {
         super();
-        hdr = HDRBitmapReader.load(uri.toString());
+        hdr = HDRBitmapReader.load(uri.toString()).bestResizeFit(2000);
         init();
     }
     
@@ -55,6 +56,13 @@ public class Envmap extends AbstractBackground
         init();
     }
     
+    public Envmap(HDR hdr)
+    {
+        super();
+        this.hdr = hdr;
+        init();
+    }
+    
     public Envmap()
     {
         //super();
@@ -62,7 +70,7 @@ public class Envmap extends AbstractBackground
         String filePath = "C:\\Users\\user\\Documents\\hdr\\";
         String file = filePath+fileName;
         
-        hdr = HDRBitmapReader.load(file).bestResizeFit(2000);
+        hdr = HDRBitmapReader.load(file).bestResizeFit(2000).tonemap();
         init();
     }
     
@@ -75,7 +83,7 @@ public class Envmap extends AbstractBackground
     }
     
     @Override
-    public Color illuminate(BoundingSphere sceneSphere, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue cosAtLight) {
+    public Color illuminate(Scene scene, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue cosAtLight) {
        
         Vector3f directionToLight = sampleDirection(null);
            
@@ -94,7 +102,7 @@ public class Envmap extends AbstractBackground
 
     //Please FIX ME: Sampling is wrong
     @Override
-    public Color emit(BoundingSphere sceneSphere, Point2f dirRndTuple, Point2f posRndTuple, Ray rayFromLight, FloatValue cosAtLight) {
+    public Color emit(Scene scene, Point2f dirRndTuple, Point2f posRndTuple, Ray rayFromLight, FloatValue cosAtLight) {
         //direction from light
         Vector3f direction = sampleDirection(null);
         
@@ -110,7 +118,7 @@ public class Envmap extends AbstractBackground
         Vector3f a = direction.neg().add(frame.binormal().mul(xy.x)).add(frame.tangent().mul(xy.y));
         
         //Position from light
-        Point3f position = sceneSphere.c.add(a.mul(sceneSphere.r));
+        Point3f position = scene.getBoundingSphere().c.add(a.mul(scene.getBoundingSphere().r));
         
         rayFromLight.d.set(direction);
         rayFromLight.o.set(position);
@@ -124,10 +132,10 @@ public class Envmap extends AbstractBackground
     }
 
     @Override
-    public Color radiance(BoundingSphere sceneSphere, Point3f hitPoint, Vector3f direction, FloatValue cosAtLight) {
+    public Color radiance(Scene scene, Point3f hitPoint, Vector3f direction, FloatValue cosAtLight) {
         
         //System.out.println("bu");
-        return getColor(direction);
+        return getColor(direction).mul(power);
     }
 
     @Override
@@ -146,20 +154,20 @@ public class Envmap extends AbstractBackground
     }
 
     @Override
-    public float directPdfW(BoundingSphere sceneSphere, Point3f p, Vector3f w) {
+    public float directPdfW(Scene scene, Point3f p, Vector3f w) {
         return pdfW(w);
     }
 
     @Override
-    public float directPdfA(BoundingSphere sceneSphere, Vector3f w) {
+    public float directPdfA(Scene scene, Vector3f w) {
         return pdfW(w);
     }
 
     @Override
-    public float emissionPdfW(BoundingSphere sceneSphere, Vector3f w, float cosAtLight) {
+    public float emissionPdfW(Scene scene, Vector3f w, float cosAtLight) {
         float directPdf = pdfW(w);
         float positionPdf = Utility.concentricDiscPdfA() /
-            sceneSphere.rSqr;
+            scene.getBoundingSphere().rSqr;
         
         return directPdf * positionPdf;
     }
@@ -171,7 +179,11 @@ public class Envmap extends AbstractBackground
             return 0;
         
         Point2i uv = getUV(d);
-        return distribution2D.pdfDiscrete(uv) / (2f * PI_F_TWO * sinTheta);                
+        Point2f uv_f = new Point2f(uv.x / hdr.getWidth(), uv.y / hdr.getHeight());
+        
+        float pdfW =  distribution2D.pdfContinuous(uv_f) / (2f * PI_F_TWO * sinTheta);   
+        
+        return pdfW;
     }
     
     private float sinTheta(Vector3f v)

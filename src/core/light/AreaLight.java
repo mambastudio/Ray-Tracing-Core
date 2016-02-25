@@ -8,6 +8,7 @@ package core.light;
 import core.AbstractLight;
 import core.AbstractShape;
 import core.AbstractMaterial;
+import core.Scene;
 import core.coordinates.Normal3f;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
@@ -38,7 +39,7 @@ public class AreaLight extends AbstractLight
     }
     
     @Override
-    public Color illuminate(BoundingSphere sceneSphere, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue cosAtLight) {
+    public Color illuminate(Scene scene, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue cosAtLight) {
         
         Normal3f n = new Normal3f();
         Point3f  p = shape.sampleW(receivingPosition, rndTuple.x, rndTuple.y, n);
@@ -65,7 +66,7 @@ public class AreaLight extends AbstractLight
     }
 
     @Override
-    public Color emit(BoundingSphere sceneSphere, Point2f dirRndTuple, Point2f posRndTuple, Ray rayFromLight, FloatValue cosAtLight) {
+    public Color emit(Scene scene, Point2f dirRndTuple, Point2f posRndTuple, Ray rayFromLight, FloatValue cosAtLight) {
         Normal3f n = new Normal3f();
         Point3f p = shape.sampleA(posRndTuple.x, posRndTuple.y, n);
         Frame frame = new Frame(n);
@@ -87,7 +88,7 @@ public class AreaLight extends AbstractLight
     }
 
     @Override
-    public Color radiance(BoundingSphere sceneSphere, Point3f hitPoint, Vector3f direction, FloatValue cosAtLight) 
+    public Color radiance(Scene scene, Point3f hitPoint, Vector3f direction, FloatValue cosAtLight) 
     {
         float cosOutL = Math.max(0.f, Vector3f.dot(shape.getNormal(hitPoint), direction.neg()));
                 
@@ -116,18 +117,18 @@ public class AreaLight extends AbstractLight
     }        
 
     @Override
-    public float directPdfW(BoundingSphere sceneSphere, Point3f p, Vector3f w) 
+    public float directPdfW(Scene scene, Point3f p, Vector3f w) 
     {
         return shape.pdfW(p, w);
     }
 
     @Override
-    public float directPdfA(BoundingSphere sceneSphere, Vector3f w) {
+    public float directPdfA(Scene scene, Vector3f w) {
         return shape.pdfA();
     }
 
     @Override
-    public float emissionPdfW(BoundingSphere sceneSphere, Vector3f w, float cosAtLight) 
+    public float emissionPdfW(Scene scene, Vector3f w, float cosAtLight) 
     {
         return cosAtLight * INV_PI_F;
     }

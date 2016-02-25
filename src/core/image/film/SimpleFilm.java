@@ -6,7 +6,6 @@
 package core.image.film;
 
 import core.color.Color;
-import core.image.tonemap.Reinhard;
 import java.nio.IntBuffer;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -39,13 +38,27 @@ public class SimpleFilm {
             tonePixels[i] = new Color();
         }
     }
+        
+    public void clear()            
+    {
+        for(int i = 0; i<size; i++)
+        {
+            colorAccum[i].setBlack();
+            tonePixels[i].setBlack();
+        }
+    }
     
     public void add(Color color, int x, int y)
     {       
         if(!color.isBad())
             colorAccum[index(x, y)].addAssign(color);
         else
-            System.out.println("Color is bad");
+            System.out.println("Color is bad" +color);
+    }
+    
+    public void add(Color color, float x, float y)
+    {
+        add(color, (int)x, (int)y);
     }
     
     public int getWidth()

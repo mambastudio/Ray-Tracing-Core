@@ -21,25 +21,24 @@ public class Reinhard extends AbstractTonemap
     float postscale = 1.0f;
     
     public Color toneMap(float a, float aveL, float Lwhite, Color c)
-    {
-        Color c1 = c.mul(prescale);
-        
-        float L = c1.luminance();
+    {        
+        float L = c.luminance();
         float Lscaled = a * (L/aveL);
         
-        //float Y = (Lscaled * (1 + Lscaled / (Lwhite * Lwhite)))/
-        //          (1 + Lscaled);
+       float Y = (Lscaled * (1 + Lscaled / (Lwhite * Lwhite)))/
+                 (1 + Lscaled);
         
-        float Y = Lscaled;
+        //float Y = Lscaled;
         
         Y = Utility.check(Y);
         
-        XYZ xyzColor = RGBSpace.convertRGBtoXYZ(c1);
+        XYZ xyzColor = RGBSpace.convertRGBtoXYZ(c);
         xyzColor.xyz();
-        xyzColor.setY(Y);
+        xyzColor.Y = Y;
         xyzColor.xyYtoXYZ();
 
         Color c2 = RGBSpace.convertXYZtoRGB(xyzColor);  
+        
         
         return c2.mul(postscale);
     }

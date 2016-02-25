@@ -9,7 +9,7 @@ package core.thread;
  *
  * @author user
  */
-public class LoopExecution implements Runnable
+public class KernelExecution implements Runnable
 {
     boolean suspend = false;    
     boolean finish  = false;
@@ -30,11 +30,12 @@ public class LoopExecution implements Runnable
         finish = true;
     }
     
-    protected boolean terminated()
+    private boolean terminated()
     {
         return finish;
     }
     
+    //use this in a method in order to execute the thread state such pause & resume
     public synchronized void chill()
     {
         try
@@ -60,6 +61,7 @@ public class LoopExecution implements Runnable
     {
         while(true)
         {
+            chill(); //useful in start_&_pause state of thread;
             execute();
             if(terminated()) return;
         }

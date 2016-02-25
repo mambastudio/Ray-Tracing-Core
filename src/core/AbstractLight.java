@@ -42,7 +42,7 @@ public abstract class AbstractLight
      */
     
     public abstract Color illuminate(
-        BoundingSphere      sceneSphere,
+        Scene               scene,
         Point3f             receivingPosition,
         Point2f             rndTuple,
         Ray                 rayToLight,        
@@ -60,7 +60,7 @@ public abstract class AbstractLight
      * Returns "energy" that particle carries
      */
     public abstract Color emit(
-        BoundingSphere      sceneSphere,
+        Scene               scene,
         Point2f             dirRndTuple,
         Point2f             posRndTuple,
         Ray                 rayFromLight,        
@@ -73,7 +73,7 @@ public abstract class AbstractLight
      * and of emitting particle along the ray (in opposite direction).
      */    
     public abstract Color radiance(
-        BoundingSphere      sceneSphere,
+        Scene               scene,
         Point3f             hitPoint,
         Vector3f            direction,
         FloatValue          cosAtLight);
@@ -84,10 +84,10 @@ public abstract class AbstractLight
     // Whether the light has delta function (point, directional) or not (area)
     public abstract boolean isDelta();
     
-    // Has a primitive as a light source
+    // Is a primitive as a light source
     public abstract boolean isAreaLight();
     
-    public abstract float directPdfW(BoundingSphere sceneSphere, Point3f p, Vector3f w);
-    public abstract float directPdfA(BoundingSphere sceneSphere, Vector3f w);
-    public abstract float emissionPdfW(BoundingSphere sceneSphere, Vector3f w, float cosAtLight);
+    public abstract float directPdfW(Scene scene, Point3f p, Vector3f w);
+    public abstract float directPdfA(Scene scene, Vector3f w);
+    public abstract float emissionPdfW(Scene scene, Vector3f w, float cosAtLight);
 }

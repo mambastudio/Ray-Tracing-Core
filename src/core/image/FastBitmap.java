@@ -46,6 +46,11 @@ public class FastBitmap
             }
     }
     
+    public void setColor(float x, float y, Color color)
+    {
+        setColor((int)x, (int)y, color);
+    }
+    
     public void setColor(int x, int y, Color color)
     {
         pixels.setColor(x, y, color);

@@ -6,6 +6,7 @@
 package core.light;
 
 import core.AbstractBackground;
+import core.Scene;
 import core.color.Color;
 import core.color.Preetham;
 import core.coordinates.Point2f;
@@ -35,17 +36,17 @@ public final class Sunsky extends AbstractBackground
     }
     
     @Override
-    public Color illuminate(BoundingSphere sceneSphere, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue cosAtLight) {
+    public Color illuminate(Scene scene, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue cosAtLight) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Color emit(BoundingSphere sceneSphere, Point2f dirRndTuple, Point2f posRndTuple, Ray rayFromLight, FloatValue cosAtLight) {
+    public Color emit(Scene scene, Point2f dirRndTuple, Point2f posRndTuple, Ray rayFromLight, FloatValue cosAtLight) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Color radiance(BoundingSphere sceneSphere, Point3f hitPoint, Vector3f direction, FloatValue cosAtLight) {
+    public Color radiance(Scene scene, Point3f hitPoint, Vector3f direction, FloatValue cosAtLight) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -65,17 +66,17 @@ public final class Sunsky extends AbstractBackground
     }
 
     @Override
-    public float directPdfW(BoundingSphere sceneSphere, Point3f p, Vector3f w) {
+    public float directPdfW(Scene scene, Point3f p, Vector3f w) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public float directPdfA(BoundingSphere sceneSphere, Vector3f w) {
+    public float directPdfA(Scene scene, Vector3f w) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public float emissionPdfW(BoundingSphere sceneSphere, Vector3f w, float cosAtLight) {
+    public float emissionPdfW(Scene scene, Vector3f w, float cosAtLight) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

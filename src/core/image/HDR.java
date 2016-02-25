@@ -10,15 +10,20 @@ import core.coordinates.Point2f;
 import core.coordinates.Point2i;
 import core.image.tonemap.Reinhard;
 import core.math.Utility;
+import java.util.Arrays;
 
 /**
  *
  * @author user
  */
-public class HDR {
+public final class HDR {
     float[] r, g, b;
     float width, height;
     private static final float[] EXPONENT = new float[256];
+    
+    float maxLum = 0f;
+    float aveLum = 0f;
+    float N = 0f;
     
     static {
         EXPONENT[0] = 0;
@@ -53,8 +58,26 @@ public class HDR {
             for(int i = 0; i<width; i++)
             {
                 int index = getIndex(i, j);
-                setRGBE(i, j, rgbe[index]);
+                setRGBE(i, j, rgbe[index]);                
             }
+        
+        for(int j = 0; j < height; j++)
+            for(int i = 0; i < width; i++)
+            {
+                Color color = getColor(i, j);
+            
+                if(color.luminance() > maxLum)
+                    maxLum = color.luminance();
+            
+                if(color.luminance() > 0f)
+                {
+                    aveLum += Math.log(0.01 + color.luminance());
+                    N++;
+                }
+            }
+        
+        aveLum /= N;
+        aveLum = (float)Math.exp(aveLum);
     }
     
     public HDR(int width, int height, float[] r, float[] g, float[] b)
@@ -64,6 +87,24 @@ public class HDR {
         this.r = r;
         this.g = g;
         this.b = b;
+        
+        for(int j = 0; j < height; j++)
+            for(int i = 0; i < width; i++)
+            {
+                Color color = getColor(i, j);
+            
+                if(color.luminance() > maxLum)
+                    maxLum = color.luminance();
+            
+                if(color.luminance() > 0f)
+                {
+                    aveLum += Math.log(0.01 + color.luminance());
+                    N++;
+                }
+            }
+        
+        aveLum /= N;
+        aveLum = (float)Math.exp(aveLum);
     }
     
     public float[] getLuminanceArray()
@@ -73,9 +114,9 @@ public class HDR {
         for(int j = 0; j<height; j++)
             for(int i = 0; i<width; i++)
             {
-                int index = getIndex(i, j);
-                lumArray[index] = luminance(i, j);
-            }
+                int index = getIndex(i, j);                
+                lumArray[index] = luminance(i, j);                     
+            }        
         return lumArray;
     }
     
@@ -216,11 +257,11 @@ public class HDR {
     public final void setRGBE(float x, float y, int rgbe)
     {
         int index = getIndex(x, y);
-        
-        float f = EXPONENT[rgbe & 0xFF]*2;
-        r[index] = f * ((rgbe >> 24) & 0xFF);
-        g[index] = f * ((rgbe >> 16) & 0xFF);
-        b[index] = f * ((rgbe >> 8)& 0xFF);        
+                
+        float f = EXPONENT[rgbe & 0xFF];
+        r[index] = f * ((rgbe >>> 24) + 0.5f);
+        g[index] = f * (((rgbe >> 16) & 0xFF) + 0.5f);
+        b[index] = f * (((rgbe >> 8) & 0xFF) + 0.5f);        
     }
     
     public final int toRGBE(float x, float y) 
@@ -327,43 +368,41 @@ public class HDR {
     public HDR tonemap()
     {
         Reinhard tonemap = new Reinhard();
-        float maxLum = 0f;
-        float aveLum = 0f;
-        float N = 0f;
-        
-        for(int j = 0; j < height; j++)
-            for(int i = 0; i < width; i++)
-            {
-                Color color = getColor(i, j);
-            
-                if(color.luminance() > maxLum)
-                    maxLum = color.luminance();
-            
-                if(color.luminance() > 0f)
-                {
-                    aveLum += Math.log(0.01 + color.luminance());
-                    N++;
-                }
-            }
-        
-        aveLum /= N;
-        aveLum = (float)Math.exp(aveLum);
-        
+       
         float[] r1 = new float[r.length], g1 = new float[g.length], b1 = new float[b.length];
         
         for(int j = 0; j < height; j++)
             for(int i = 0; i < width; i++)
             {
                 Color color = getColor(i, j);
-                Color color1 = tonemap.toneMap(0.18f, aveLum, maxLum, color).simpleGamma();
-                     
+                Color toned = tonemap.toneMap(0.18f, aveLum, maxLum, color).simpleGamma();
+                
                 int index = getIndex(i, j);
                 
-                r1[index] = color1.r;
-                g1[index] = color1.g;
-                b1[index] = color1.b;
+                r1[index] = toned.r;
+                g1[index] = toned.g;
+                b1[index] = toned.b;
             }
         
+        return new HDR((int)width, (int)height, r1, g1, b1);
+    }
+    
+    public HDR scalebyMaxLum()
+    {
+        float[] r1 = new float[r.length], g1 = new float[g.length], b1 = new float[b.length];
+        
+        for(int j = 0; j < height; j++)
+            for(int i = 0; i < width; i++)
+            {
+                Color color = getColor(i, j);
+                Color toned = color.mul(1f/maxLum);
+                
+                int index = getIndex(i, j);
+                
+                r1[index] = toned.r;
+                g1[index] = toned.g;
+                b1[index] = toned.b;
+            }
         return new HDR((int)width, (int)height, r1, g1, b1);
     }
     

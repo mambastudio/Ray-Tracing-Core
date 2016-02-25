@@ -13,7 +13,7 @@ import java.nio.ByteBuffer;
  *
  * @author user
  */
-public class Color {
+public final class Color {
     public float r, g, b;
     
     public static final Color BLACK = new Color(0, 0, 0);
@@ -53,11 +53,26 @@ public class Color {
         this.r = r;
         this.g = g;
         this.b = b;
+        
+        this.r = zeroCeiling(r);
+        this.g = zeroCeiling(g);
+        this.b = zeroCeiling(b);
+    }
+    
+    public Color(double r, double g, double b)
+    {
+        this((float)r, (float)g, (float)b);
     }
     
     public Color(Color color)
     {
         this.r = color.r; this.g = color.g; this.b = color.b;
+    }
+    
+    public float zeroCeiling(float value)
+    {
+        if(value < 0) return 0;
+        else return value;
     }
     
     public Color(javafx.scene.paint.Color color)
@@ -99,9 +114,14 @@ public class Color {
     public final Color simpleGamma()
     {
         float gamma = 2.2f;        
-        return new Color((float) Math.pow(r, 1f/gamma),
+        Color color = new Color((float) Math.pow(r, 1f/gamma),
                          (float) Math.pow(g, 1f/gamma),
                          (float) Math.pow(b, 1f/gamma));
+        
+        if(color.isBad())
+            System.out.println(r+ " " +g+ " " +b);
+        
+        return color;
     }
 
     public final Color simpleGamma(float gamma)

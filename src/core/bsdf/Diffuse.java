@@ -27,7 +27,7 @@ public class Diffuse extends AbstractBSDF
     public BSDFType type() {
         return BSDFType.DIFFUSE;
     }
-
+    
     @Override
     public Color sample(Point2f rndTuple, Vector3f worldWo, FloatValue pdfWo, FloatValue cosWo) 
     {
