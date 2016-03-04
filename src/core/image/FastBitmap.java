@@ -63,6 +63,14 @@ public class FastBitmap
                 pixels.setColor(i, j, Color.BLACK);
     }
     
+    
+    public final void setAlphaNull()
+    {
+        for(int j = 0; j<height; j++)
+            for(int i = 0; i<width; i++)
+                pixels.setColorNullAlpha(i, j);
+    }
+    
     public Image getImage()
     {        
         image.getPixelWriter().setPixels(0, 0, width, height, format, pixels.getByteArray(), 0, width * 4);

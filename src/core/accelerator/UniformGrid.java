@@ -271,8 +271,7 @@ public class UniformGrid extends AbstractAccelerator
             boolean hasIntersected = false;
             for(AbstractPrimitive prim: primitives)
             {
-                boolean intersected = prim.intersect(r, isect);
-                if(intersected) isect.topPrimitive = prim;
+                boolean intersected = prim.intersect(r, isect);                
                 hasIntersected |= intersected;
             }        
             return hasIntersected;

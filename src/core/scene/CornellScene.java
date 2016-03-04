@@ -6,15 +6,11 @@
 package core.scene;
 
 import core.Scene;
-import core.Camera;
 import core.LightCache;
-import core.AbstractMaterial;
-import core.accelerator.NullAccelerator;
+import core.Material;
 import core.accelerator.UniformGrid;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
-import core.coordinates.Vector3f;
-import core.material.UnitMaterial;
 import core.color.Color;
 import core.primitive.Geometries;
 import core.shape.Quad;
@@ -38,6 +34,8 @@ public final class CornellScene extends Scene
     Point3f p8 = new Point3f(1, -1, -1);
     
     
+    Geometries bottom = null;
+    
     public CornellScene()
     {
         init();
@@ -50,22 +48,22 @@ public final class CornellScene extends Scene
         primitives = new ArrayList<>();
         lights = new LightCache();
         
-        AbstractMaterial leftM = UnitMaterial.createLambert(new Color(0.3f, 0.3f, 0.9f));
-        leftM.setName("Left");
-        AbstractMaterial rightM = UnitMaterial.createLambert(new Color(0.9f, 0.3f, 0.3f));
-        rightM.setName("Right");
-        AbstractMaterial topM = UnitMaterial.createLambert(new Color(0.9f, 0.9f, 0.9f));
-        topM.setName("Top");
-        AbstractMaterial bottomM = UnitMaterial.createLambert(new Color(0.9f, 0.9f, 0.9f));
-        bottomM.setName("Bottom");
-        AbstractMaterial backM = UnitMaterial.createLambert(new Color(0.9f, 0.9f, 0.9f));
-        backM.setName("Back");
-        AbstractMaterial emissionM = UnitMaterial.createEmission();
-        emissionM.setName("Emission");
-        AbstractMaterial glassM = UnitMaterial.createGlass(new Color(0.9f, 0.9f, 0.9f));
-        glassM.setName("Glass");
-        AbstractMaterial mirrorM = UnitMaterial.createMirror(new Color(0.9f, 0.9f, 0.9f));
-        mirrorM.setName("Mirror");
+        Material leftM = Material.createLambert(new Color(0.3f, 0.3f, 0.9f));
+        leftM.name = "Left";
+        Material rightM = Material.createLambert(new Color(0.9f, 0.3f, 0.3f));
+        rightM.name = "Right";
+        Material topM = Material.createLambert(new Color(0.9f, 0.9f, 0.9f));
+        topM.name = "Top";
+        Material bottomM = Material.createLambert(new Color(0.9f, 0.9f, 0.9f));
+        bottomM.name = "Bottom";
+        Material backM = Material.createLambert(new Color(0.9f, 0.9f, 0.9f));
+        backM.name = "Back";
+        Material emissionM = Material.createEmission();
+        emissionM.name = "Emission";
+        Material glassM = Material.createGlass(new Color(0.9f, 0.9f, 0.9f));
+        glassM.name = "Glass";
+        Material mirrorM = Material.createMirror(new Color(0.9f, 0.9f, 0.9f));
+        mirrorM.name = "Mirror";
         
         
         //back
@@ -93,12 +91,11 @@ public final class CornellScene extends Scene
         primitives.add(top);
         
         //bottom        
-        Geometries bottom = new Geometries(bottomM);
+        bottom = new Geometries(bottomM);
         bottom.addGeometryPrimitive(new Quad(p1, p4, p8, p5, new Normal3f(0, 1, 0)));   
         bottom.init();
         primitives.add(bottom);
-                
-        
+                        
         //light
         float disp = 0.05f;
         float scale = 0.2f;

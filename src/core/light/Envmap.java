@@ -59,7 +59,7 @@ public class Envmap extends AbstractBackground
     public Envmap(HDR hdr)
     {
         super();
-        this.hdr = hdr;
+        this.hdr = hdr.tonemap();
         init();
     }
     

@@ -20,6 +20,13 @@ public abstract class AbstractRenderer extends KernelExecution
     protected AbstractDisplay display;
     protected Scene scene;
     
+    protected int   maxPathLength = 8;
+    protected int   minPathLength = 0;
+    protected int   iterations = 0;
+    
+    protected boolean inner = false;    
+    protected boolean triggerClearRender = false;
+    
     public AbstractRenderer(AbstractDisplay display, Scene scene)
     {
         this.display = display; this.scene = scene;
@@ -39,6 +46,7 @@ public abstract class AbstractRenderer extends KernelExecution
         {
             this.thread = new Thread(this);
             this.thread.start();
+            this.scene.prepareToRender();
         }
     }
     public void startRenderAndPause()
@@ -47,13 +55,15 @@ public abstract class AbstractRenderer extends KernelExecution
         if(thread == null)
         {
             this.thread = new Thread(this);
-            this.thread.start();            
+            this.thread.start(); 
+            this.scene.prepareToRender();
         }        
     }
     
     public void stopRender()
     {
-        finish();
+        resume();        
+        finish();        
     }
     
     public void pauseRender()
@@ -64,5 +74,16 @@ public abstract class AbstractRenderer extends KernelExecution
     public void resumeRender()
     {
         resume();
+    }
+    
+    public void clearRender()
+    {       
+        display.imageClear();
+        iterations = 1;        
+    }
+    
+    public void triggerClearRender()
+    {
+        
     }
 }

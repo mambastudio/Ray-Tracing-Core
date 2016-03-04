@@ -47,6 +47,12 @@ public class Scene
         initLights();
     }
     
+    public void setCameraSize(int width, int height)
+    {
+        camera.xResolution = width;
+        camera.yResolution = height;
+    }
+    
     public void init()
     {
         
@@ -133,7 +139,9 @@ public class Scene
             weight = mis2(directPdfW * lightPickProb, bsdfPdfW.value);
         if(misWeight != null)
             misWeight.value = weight;
-        
+                
+        if(occluded(rayToLight))
+            return new Color();
         
         //Calculate final color contribution
         Color contrib = radiance.mul(cosThetaOut.value / (lightPickProb * directPdfW))
@@ -175,8 +183,12 @@ public class Scene
         //Calculate mis weight
         float weight = 1.f;
         if(!isect.bsdf.isDelta())                   
-            weight = mis2(bsdfPdfW.value, directPdfW * lightPickProb);               
-        misWeight.value = weight;
+            weight = mis2(bsdfPdfW.value, directPdfW * lightPickProb);   
+        if(misWeight != null)
+            misWeight.value = weight;
+                
+        if(occluded(rayToLight))
+            return new Color();
         
         //Calculate total power output        
         Color color = radiance.mul(bsdfFactor.mul(cosWo.value / bsdfPdfW.value));           

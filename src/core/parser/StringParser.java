@@ -25,6 +25,13 @@ public class StringParser {
     private String lineTokens[];
     private int index;
     
+    public StringParser(BufferedReader bf)
+    {
+        this.bf = bf;
+        this.lineTokens = new String[0];
+        this.index = 0;
+    }
+    
     public StringParser(String directory, String file)
     {
         Path path = FileSystems.getDefault().getPath(directory, file);
@@ -113,6 +120,15 @@ public class StringParser {
         return peekNextToken() != null;
     }
     
+    public boolean peekNextToken(String string)
+    {
+        String nextToken = peekNextToken();
+        if(nextToken != null && string != null)
+            if(nextToken.equals(string))
+                return true;
+        return false;
+    }
+    
     public String peekNextToken()
     {
         while(true)
@@ -172,5 +188,39 @@ public class StringParser {
             index = 0;
             return true;
         }
+    }
+    
+    public static void writeString(File file, String string)
+    {        
+        try
+        {
+            if(!file.exists())
+                file.createNewFile();
+            else           
+                Files.write(file.toPath(), string.getBytes());            
+        } 
+        catch (IOException ex) 
+        {
+            Logger.getLogger(StringParser.class.getName()).log(Level.SEVERE, null, ex);
+        }       
+    }
+    
+    public static StringParser getStringParser(File file)
+    {
+        try
+        {
+            if(!file.exists())
+                file.createNewFile();
+            else   
+            {
+                StringParser parser = new StringParser(Files.newBufferedReader(file.toPath(), Charset.defaultCharset()));
+                return parser;
+            }
+        }
+        catch (IOException ex) 
+        {
+            Logger.getLogger(StringParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

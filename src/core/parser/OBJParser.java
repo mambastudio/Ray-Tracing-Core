@@ -5,13 +5,12 @@
  */
 package core.parser;
 
-import core.AbstractMaterial;
 import core.AbstractPrimitive;
+import core.Material;
 import core.coordinates.Normal3f;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.color.Color;
-import core.material.UnitMaterial;
 import core.primitive.Geometries;
 import core.shape.Triangle;
 import java.net.URI;
@@ -56,8 +55,8 @@ public class OBJParser
                 case "o":                
                     String name = parser.getNextToken();
                     System.out.println("object: " +name);
-                    AbstractMaterial material = UnitMaterial.createLambert(Color.WHITE);
-                    material.setName(name);
+                    Material material = Material.createLambert(Color.WHITE);
+                    material.name = name;
                     geometries = new Geometries(material);
                     geometriesList.add(geometries);
                     break;
@@ -149,8 +148,8 @@ public class OBJParser
                 case "o":                
                     String name = parser.getNextToken();
                     System.out.println("object: " +name);
-                    AbstractMaterial material = UnitMaterial.createLambert(Color.WHITE);
-                    material.setName(name);
+                    Material material = Material.createLambert(Color.WHITE);
+                    material.name = name;
                     geometries = new Geometries(material);
                     geometriesList.add(geometries);
                     break;

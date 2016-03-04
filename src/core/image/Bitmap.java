@@ -5,13 +5,10 @@
  */
 package core.image;
 
-import java.nio.ByteBuffer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
 
 /**
@@ -40,6 +37,19 @@ public class Bitmap {
         this.wImage = new WritableImage(image.getPixelReader(), width, height);
     }
     
+    @Override
+    public Bitmap clone()
+    {
+        return new Bitmap(wImage);
+    }
+    
+    public void setBitmap(Bitmap bitmap)
+    {
+        this.width = (int) bitmap.getWidth();
+        this.height = (int) bitmap.getHeight();
+        this.wImage = new WritableImage(bitmap.getImage().getPixelReader(), width, height);
+    }
+    
     public core.color.Color getColor(float x, float y)
     {
         return getColor((int)x, (int)y);
@@ -61,7 +71,7 @@ public class Bitmap {
             for(int i = 0; i<width; i++)
                 pw.setColor(i, j, Color.BLACK);               
     }
-    
+        
     public synchronized void setRGB(int x, int y, int w, int h, core.color.Color color)
     {
         int w1 = (int) (wImage.getWidth() - 1);
@@ -94,4 +104,5 @@ public class Bitmap {
     {
         return wImage;
     }
+
 }

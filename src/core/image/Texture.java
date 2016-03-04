@@ -16,7 +16,7 @@ import javafx.scene.image.ImageView;
  */
 public class Texture 
 {
-    private final String uri;
+    private String uri;
     private Bitmap bitmap;
         
     public Texture(File file)
@@ -31,6 +31,32 @@ public class Texture
         load(uri);         
     }
     
+    public Texture(Bitmap bitmap, String uri)
+    {
+        this.bitmap = bitmap;
+        this.uri = uri;
+    }
+    
+    @Override
+    public Texture clone()
+    {
+        return new Texture(bitmap, uri);
+    }
+    
+    public void setTexture(Texture texture)
+    {
+        if(texture != null)
+        {
+            bitmap = texture.getBitmap();
+            uri = texture.getURI();
+        }
+    }
+    
+    public Bitmap getBitmap()
+    {
+        return bitmap;
+    }
+         
     public final void load(String uri)
     {
         // regular image, load using javafx api

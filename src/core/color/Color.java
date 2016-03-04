@@ -47,6 +47,11 @@ public final class Color {
     {
         r = g = b = 0;
     }
+    
+    public Color(float value)
+    {
+        r = g = b = value;
+    }
 
     public Color(float r, float g, float b)
     {
@@ -286,6 +291,24 @@ public final class Color {
         int ir = (int) (r * 255 + 0.5);
         int ig = (int) (g * 255 + 0.5);
         int ib = (int) (b * 255 + 0.5);
+        ir = Utility.clamp(ir, 0, 255);
+        ig = Utility.clamp(ig, 0, 255);
+        ib = Utility.clamp(ib, 0, 255);
+        ia = Utility.clamp(ia, 0, 255);
+        
+        int rgba = (ib << 24) | (ig << 16) | (ir << 8) | ia;
+        
+        ByteBuffer bb = ByteBuffer.allocate(4);
+        bb.putInt(rgba);
+        return bb.array();
+    }
+    
+    public static byte[] getByteBGRA_Pre_NullAlpha()
+    {
+        int ia = (int) (0);
+        int ir = (int) (0);
+        int ig = (int) (0);
+        int ib = (int) (0);
         ir = Utility.clamp(ir, 0, 255);
         ig = Utility.clamp(ig, 0, 255);
         ib = Utility.clamp(ib, 0, 255);

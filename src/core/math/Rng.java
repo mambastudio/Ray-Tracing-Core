@@ -18,7 +18,15 @@ public class Rng
     {
         return (float)Math.random();
     }
-
+    
+    public static boolean isRndBelow(double value)
+    {
+        if(getFloat()<value)
+            return true;
+        else
+            return false;
+    }
+    
     public static Point2f getPoint2f()
     {
         float a = getFloat();

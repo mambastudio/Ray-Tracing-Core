@@ -27,7 +27,7 @@ public class KernelExecution implements Runnable
   
     public void finish()
     {
-        finish = true;
+        finish = true;        
     }
     
     private boolean terminated()

@@ -9,7 +9,7 @@ import core.AbstractBSDF;
 import core.AbstractPrimitive;
 import core.AbstractShape;
 import core.Intersection;
-import core.AbstractMaterial;
+import core.Material;
 import core.image.Texture;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
@@ -28,9 +28,9 @@ public class GeometryPrimitive extends AbstractPrimitive
 {
     
     private final AbstractShape shape;
-    private final AbstractMaterial material;
+    private final Material material;
     
-    public GeometryPrimitive(AbstractShape shape, AbstractMaterial material)
+    public GeometryPrimitive(AbstractShape shape, Material material)
     {
         this.shape = shape;
         this.material = material;
@@ -43,16 +43,22 @@ public class GeometryPrimitive extends AbstractPrimitive
 
     @Override
     public boolean intersect(Ray ray, Intersection isect) 
-    {        
+    {   
+        //No intersection
         if(!shape.intersect(ray, isect.dg))
             return false;        
         
+        //skyportal material false intersection
+        if(material.skyportal)
+            return false;
+                    
         isect.bsdf = material.getBSDF(isect.dg.n, ray.d);
                 
-        if(material.getTexture() != null)
+        //has texture, set texture color to bsdf
+        if(material.hasTexture())
         {
             Texture texture = material.getTexture();            
-            isect.bsdf.setColor(texture.getTexelUV(isect.dg.u, isect.dg.v));
+            isect.bsdf.setColor(texture.getTexelUV(isect.dg.u, isect.dg.v));            
         }
         
         isect.primitive = this;        
@@ -75,7 +81,7 @@ public class GeometryPrimitive extends AbstractPrimitive
     }
 
     @Override
-    public AbstractMaterial getMaterial() 
+    public Material getMaterial() 
     {
         return material;
     }

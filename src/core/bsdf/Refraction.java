@@ -12,6 +12,7 @@ import core.coordinates.Point2f;
 import core.coordinates.Vector3f;
 import core.color.Color;
 import core.math.FloatValue;
+import core.math.Frame;
 import core.math.Utility;
 
 /**
@@ -25,6 +26,12 @@ public class Refraction extends AbstractBSDF
     public Refraction(Color color)
     {
         super(color);
+    }
+    
+    public Refraction(Color color, Frame frame, Vector3f localWi, float n2)
+    {
+        super(color, frame, localWi);
+        this.n2 = n2;
     }
     
     @Override
@@ -64,6 +71,8 @@ public class Refraction extends AbstractBSDF
         pdfWo.value = 1f;
         
         worldWo.set(frame.toWorld(localWo).normalize());
+        
+        //System.out.println(worldWo);
         
         return color.div(Math.abs(localWo.z));
     }

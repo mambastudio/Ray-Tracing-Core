@@ -7,13 +7,12 @@ package core.light;
 
 import core.AbstractLight;
 import core.AbstractShape;
-import core.AbstractMaterial;
+import core.Material;
 import core.Scene;
 import core.coordinates.Normal3f;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
-import core.math.BoundingSphere;
 import core.color.Color;
 import core.math.FloatValue;
 import core.math.Frame;
@@ -29,9 +28,9 @@ import static core.math.Utility.INV_PI_F;
 public class AreaLight extends AbstractLight
 {
     public AbstractShape shape;
-    public AbstractMaterial material;
+    public Material material;
     
-    public AreaLight(AbstractMaterial material, AbstractShape shape, Transform l2w)
+    public AreaLight(Material material, AbstractShape shape, Transform l2w)
     {
         super(l2w);
         this.shape = shape;
@@ -62,7 +61,7 @@ public class AreaLight extends AbstractLight
         rayToLight.setMax(distanceToLight - 2 * Ray.EPSILON);
         rayToLight.init();
                 
-        return material.getEmission();
+        return material.getPoweredEmission();
     }
 
     @Override
@@ -84,7 +83,7 @@ public class AreaLight extends AbstractLight
         if(cosAtLight != null)
             cosAtLight.value = localDirOut.z;
         
-        return material.getEmission().mul(localDirOut.z);
+        return material.getPoweredEmission().mul(localDirOut.z);
     }
 
     @Override
@@ -98,7 +97,7 @@ public class AreaLight extends AbstractLight
         if(cosAtLight != null)
             cosAtLight.value = cosOutL;
         
-        return material.getEmission();
+        return material.getPoweredEmission();
     }
 
     @Override

@@ -12,6 +12,7 @@ import core.coordinates.Point2f;
 import core.coordinates.Vector3f;
 import core.color.Color;
 import core.math.FloatValue;
+import core.math.Frame;
 import core.math.Utility;
 
 /**
@@ -23,6 +24,11 @@ public class Reflection extends AbstractBSDF
     public Reflection(Color color)
     {
         super(color);
+    }
+    
+    public Reflection(Color color, Frame frame, Vector3f localWi)
+    {
+        super(color, frame, localWi);
     }
 
     @Override

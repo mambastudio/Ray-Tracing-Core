@@ -10,7 +10,7 @@ import core.AbstractBSDF;
 import core.AbstractPrimitive;
 import core.AbstractShape;
 import core.Intersection;
-import core.AbstractMaterial;
+import core.Material;
 import core.accelerator.BoundingVolume;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
@@ -27,9 +27,9 @@ public class Geometries extends AbstractPrimitive
 {
     private final AbstractAccelerator accelerator;
     private final ArrayList<AbstractPrimitive> gPrimitives;
-    private final AbstractMaterial material;
+    private final Material material;
     
-    public Geometries(AbstractMaterial material)
+    public Geometries(Material material)
     {
         this.material = material;
         this.accelerator = new BoundingVolume();
@@ -59,7 +59,13 @@ public class Geometries extends AbstractPrimitive
     @Override
     public boolean intersect(Ray ray, Intersection isect) 
     {
-        return accelerator.intersect(ray, isect);
+        if(accelerator.intersect(ray, isect))
+        {
+            isect.topPrimitive = this;
+            return true;
+        }
+        else
+            return false;        
     }
 
     @Override
@@ -73,7 +79,7 @@ public class Geometries extends AbstractPrimitive
     }
 
     @Override
-    public AbstractMaterial getMaterial() {
+    public Material getMaterial() {
         return material;
     }
 

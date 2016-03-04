@@ -19,16 +19,21 @@ import core.math.Frame;
 public abstract class AbstractBSDF {
     protected Color color = null;
     public Frame frame = null;
-    public Vector3f localWi = null;
+    public Vector3f localWi = null; //Vector is always facing away from surface (negated incident ray)
     
     public float continuationProbability;
-    public ComponentProbabilities probabilities;
-    
+        
     public AbstractBSDF(Color color)
-    {        
-        this.probabilities = new ComponentProbabilities();
+    {                
         this.color = color;        
         this.frame = new Frame();             
+    }
+    
+    public AbstractBSDF(Color color, Frame frame, Vector3f localWi)
+    {
+        this.color = color;
+        this.frame = frame;
+        this.localWi = localWi;
     }
     
     public void setUp(Normal3f worldNorm, Vector3f worldWi)
@@ -98,26 +103,5 @@ public abstract class AbstractBSDF {
     public boolean isDelta()
     {
         return isReflect() || isRefract();
-    }
-    
-    public static class ComponentProbabilities
-    {
-        float diffProb;
-        float phongProb;
-        float reflProb;
-        float refrProb;
-        
-        @Override
-        public String toString()
-        {
-            StringBuilder builder = new StringBuilder();
-        
-            builder.append("diffProb  : ").append(diffProb).append("\n");
-            builder.append("phongProb : ").append(phongProb).append("\n");
-            builder.append("reflProb  : ").append(reflProb).append("\n");
-            builder.append("refrProb  : ").append(refrProb).append("\n");
-            
-            return builder.toString();
-        }
-    }
+    }    
 }

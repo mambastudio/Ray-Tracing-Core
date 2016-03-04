@@ -40,6 +40,16 @@ public class ByteImagePixels
         bgraArray[index + 3] = bgra_pre[3];
     }
     
+    public void setColorNullAlpha(int x, int y)
+    {
+        byte[] bgra_pre = Color.getByteBGRA_Pre_NullAlpha();
+        int index = index(x, y);
+        bgraArray[index    ] = bgra_pre[0];
+        bgraArray[index + 1] = bgra_pre[1];
+        bgraArray[index + 2] = bgra_pre[2];
+        bgraArray[index + 3] = bgra_pre[3];
+    }
+    
     public ByteBuffer getByteBuffer()
     {
          ByteBuffer bb = ByteBuffer.allocate(bgraArray.length);

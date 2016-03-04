@@ -18,6 +18,7 @@ public interface AbstractDisplay {
     public void imageFill(float x, float y, Color c);
     public void imagePaint();
     public void imageFill(Color[] c);
+    public void imageClear();
     
     public int getImageWidth();
     public int getImageHeight();

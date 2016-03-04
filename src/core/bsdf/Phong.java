@@ -24,13 +24,18 @@ import static core.math.Utility.powf;
  * @author user
  */
 public class Phong extends AbstractBSDF
-{    
-    float ks = 1;
-    float n = 50;
+{        
+    float n = 100;
     
     public Phong(Color color)
     {
         super(color);
+    }
+    
+    public Phong(Color color, float n, Frame frame, Vector3f localWi)
+    {
+        super(color, frame, localWi);
+        this.n = n;
     }
     
     @Override
@@ -47,9 +52,9 @@ public class Phong extends AbstractBSDF
         // exactly the same way all the time!!!
         Vector3f reflLocalDirFixed = Utility.reflectLocal(localWi);
         {
-            Frame frame = new Frame();
-            frame.setFromZ(reflLocalDirFixed);
-            localWo.set(frame.toWorld(localWo));
+            Frame tempFrame = new Frame();
+            tempFrame.setFromZ(reflLocalDirFixed);
+            localWo.set(tempFrame.toWorld(localWo));
         }
 
         float dot_R_Wi = Vector3f.dot(reflLocalDirFixed, localWo);
@@ -61,7 +66,8 @@ public class Phong extends AbstractBSDF
         
         cosWo.value = localWo.z;
                 
-        float brdf = ks * (n + 2) / (2 * PI_F) * powf(dot_R_Wi, n);        
+        float brdf = (n + 2) / (2 * PI_F) * powf(dot_R_Wi, n);      
+        
         return color.mul(brdf);
     }
 
@@ -93,7 +99,7 @@ public class Phong extends AbstractBSDF
         
         cosWo.value = aLocalDirGen.z;
         
-        float brdf = ks * (n + 2) / (2 * PI_F) * powf(dot_R_Wi, n);
+        float brdf = (n + 2) / (2 * PI_F) * powf(dot_R_Wi, n);
         return color.mul(brdf);
     }
     
