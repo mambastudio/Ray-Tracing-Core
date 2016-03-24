@@ -53,7 +53,7 @@ public class SimpleFilm {
         if(!color.isBad())
             colorAccum[index(x, y)].addAssign(color);
         else
-            System.out.println("Color is bad" +color);
+            System.out.println("Color is bad " +color);
     }
     
     public void add(Color color, float x, float y)

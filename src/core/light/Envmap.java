@@ -59,7 +59,7 @@ public class Envmap extends AbstractBackground
     public Envmap(HDR hdr)
     {
         super();
-        this.hdr = hdr.tonemap();
+        this.hdr = hdr;
         init();
     }
     
@@ -181,9 +181,12 @@ public class Envmap extends AbstractBackground
         Point2i uv = getUV(d);
         Point2f uv_f = new Point2f(uv.x / hdr.getWidth(), uv.y / hdr.getHeight());
         
-        float pdfW =  distribution2D.pdfContinuous(uv_f) / (2f * PI_F_TWO * sinTheta);   
+        float pdfW =  distribution2D.pdfContinuous(uv_f) / (2f * PI_F_TWO * sinTheta );   
+        
+        //System.out.println(pdfW);
         
         return pdfW;
+        //return 1f;
     }
     
     private float sinTheta(Vector3f v)

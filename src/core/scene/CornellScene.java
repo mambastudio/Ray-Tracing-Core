@@ -12,7 +12,7 @@ import core.accelerator.UniformGrid;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
 import core.color.Color;
-import core.primitive.Geometries;
+import core.primitive.Geometry;
 import core.shape.Quad;
 import core.shape.Sphere;
 import core.shape.Triangle;
@@ -34,7 +34,7 @@ public final class CornellScene extends Scene
     Point3f p8 = new Point3f(1, -1, -1);
     
     
-    Geometries bottom = null;
+    Geometry bottom = null;
     
     public CornellScene()
     {
@@ -67,31 +67,31 @@ public final class CornellScene extends Scene
         
         
         //back
-        Geometries back = new Geometries(backM); 
+        Geometry back = new Geometry(backM); 
         back.addGeometryPrimitive(new Quad(p4, p3, p7, p8, new Normal3f(0, 0, 1)));
         back.init();
         primitives.add(back);
         
         //left
-        Geometries left = new Geometries(leftM);
+        Geometry left = new Geometry(leftM);
         left.addGeometryPrimitive(new Quad(p1, p2, p3, p4, new Normal3f(1, 0, 0)));        
         left.init();
         primitives.add(left);
         
         //right
-        Geometries right = new Geometries(rightM);    
+        Geometry right = new Geometry(rightM);    
         right.addGeometryPrimitive(new Quad(p5, p6, p7, p8, new Normal3f(-1, 0, 0)));     
         right.init();
         primitives.add(right);
         
         //top
-        Geometries top = new Geometries(topM);      
+        Geometry top = new Geometry(topM);      
         top.addGeometryPrimitive(new Quad(p2, p3, p7, p6, new Normal3f(0, -1, 0)));        
         top.init();
         primitives.add(top);
         
         //bottom        
-        bottom = new Geometries(bottomM);
+        bottom = new Geometry(bottomM);
         bottom.addGeometryPrimitive(new Quad(p1, p4, p8, p5, new Normal3f(0, 1, 0)));   
         bottom.init();
         primitives.add(bottom);
@@ -101,7 +101,7 @@ public final class CornellScene extends Scene
         float scale = 0.2f;
         Normal3f n = new Normal3f(0, -1, 0);
         
-        Geometries light = new Geometries(emissionM);        
+        Geometry light = new Geometry(emissionM);        
         light.addGeometryPrimitive(new Triangle(new Point3f(-1 * scale, 1 - disp, 1 * scale),
                                     new Point3f(-1 * scale, 1 - disp, -1 * scale),
                                     new Point3f(1 * scale, 1 - disp, -1 * scale), n));
@@ -113,13 +113,13 @@ public final class CornellScene extends Scene
         primitives.add(light);
         
         //sphere1 right
-        Geometries sphere1 = new Geometries(glassM);          
+        Geometry sphere1 = new Geometry(glassM);          
         sphere1.addGeometryPrimitive(new Sphere(new Point3f(-0.45f, 0.6f, 0.4f), 0.3f));
         sphere1.init();
         primitives.add(sphere1);
 
         //sphere2 left
-        Geometries sphere2 = new Geometries(glassM);              
+        Geometry sphere2 = new Geometry(glassM);              
         sphere2.addGeometryPrimitive(new Sphere(new Point3f(-0.5f, -0.6f, -0.4f), 0.4f));
         sphere2.init();
         primitives.add(sphere2);              

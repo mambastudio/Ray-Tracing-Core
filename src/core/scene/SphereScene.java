@@ -12,7 +12,7 @@ import core.accelerator.UniformGrid;
 import core.color.Color;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
-import core.primitive.Geometries;
+import core.primitive.Geometry;
 import core.shape.Quad;
 import core.shape.Sphere;
 import core.shape.Triangle;
@@ -77,31 +77,31 @@ public class SphereScene extends Scene
         backM.name = "Back";       
         
         //back
-        Geometries back = new Geometries(backM); 
+        Geometry back = new Geometry(backM); 
         back.addGeometryPrimitive(new Quad(p4, p3, p7, p8, new Normal3f(0, 0, 1)));
         back.init();
         primitives.add(back);
         
         //left
-        Geometries left = new Geometries(leftM);
+        Geometry left = new Geometry(leftM);
         left.addGeometryPrimitive(new Quad(p1, p2, p3, p4, new Normal3f(1, 0, 0)));        
         left.init();
         primitives.add(left);
         
         //right
-        Geometries right = new Geometries(rightM);    
+        Geometry right = new Geometry(rightM);    
         right.addGeometryPrimitive(new Quad(p5, p6, p7, p8, new Normal3f(-1, 0, 0)));     
         right.init();
         primitives.add(right);
                 
         //bottom        
-        Geometries bottom = new Geometries(bottomM);
+        Geometry bottom = new Geometry(bottomM);
         bottom.addGeometryPrimitive(new Quad(p1, p4, p8, p5, new Normal3f(0, 1, 0)));   
         bottom.init();
         primitives.add(bottom);
         
         //sphere 
-        Geometries sphere1 = new Geometries(sphereM);          
+        Geometry sphere1 = new Geometry(sphereM);          
         sphere1.addGeometryPrimitive(new Sphere(new Point3f(0f, -0.5f, 0f), 0.5f));
         sphere1.init();
         primitives.add(sphere1);
@@ -111,7 +111,7 @@ public class SphereScene extends Scene
         float scale = 0.9f;
         Normal3f n = new Normal3f(0, -1, 0);
         
-        Geometries light = new Geometries(emissionM);        
+        Geometry light = new Geometry(emissionM);        
         light.addGeometryPrimitive(new Triangle(new Point3f(-1 * scale, 1 - disp, 1 * scale),
                                     new Point3f(-1 * scale, 1 - disp, -1 * scale),
                                     new Point3f(1 * scale, 1 - disp, -1 * scale), n));

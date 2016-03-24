@@ -11,10 +11,16 @@ import core.coordinates.Normal3f;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.color.Color;
-import core.primitive.Geometries;
+import core.math.FloatArray;
+import core.math.IntArray;
+import static core.parser.OBJParser2.readFaces;
+import static core.parser.OBJParser2.readNormal;
+import static core.parser.OBJParser2.readUseMtl;
+import core.primitive.Geometry;
 import core.shape.Triangle;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -30,8 +36,7 @@ public class OBJParser
     
     public static void main(String[] args)
     {
-        run2();
-        
+        //run();        
     }
     
     public static void clear()
@@ -42,11 +47,11 @@ public class OBJParser
         geometriesList.clear();
     }
     
-    public static ArrayList<AbstractPrimitive> read(URI uri)
+    public static ArrayList<AbstractPrimitive> read1(URI uri)
     {
         StringParser parser = new StringParser(uri);
         
-        Geometries geometries = null;
+        Geometry geometries = null;
         
         while(parser.hasNext())
         {
@@ -57,7 +62,7 @@ public class OBJParser
                     System.out.println("object: " +name);
                     Material material = Material.createLambert(Color.WHITE);
                     material.name = name;
-                    geometries = new Geometries(material);
+                    geometries = new Geometry(material);
                     geometriesList.add(geometries);
                     break;
                 case "v":
@@ -129,104 +134,169 @@ public class OBJParser
         for(AbstractPrimitive primitive : geometriesList)
         {
             System.out.println("init object");
-            ((Geometries)primitive).init();
+            ((Geometry)primitive).init();
         }
         
         return geometriesList;
     }
     
-    public static void run2()
+    public static ArrayList<AbstractPrimitive> read(URI uri)
     {
-        StringParser parser = new StringParser("C:\\Users\\user\\Documents\\Scene3d\\simplebox", "mitsuba.obj");
-        
-        Geometries geometries = null;
+        StringParser parser = new StringParser(uri);
         
         while(parser.hasNext())
-        {
-            String nextToken = parser.getNextToken();
-            switch (nextToken) {
-                case "o":                
-                    String name = parser.getNextToken();
-                    System.out.println("object: " +name);
-                    Material material = Material.createLambert(Color.WHITE);
-                    material.name = name;
-                    geometries = new Geometries(material);
-                    geometriesList.add(geometries);
+        {           
+            String peekToken = parser.peekNextToken();            
+            switch (peekToken) {
+                case "o":
+                    readObject(parser);
+                    break;
+                case "g":
+                    readGroup(parser);
+                    break;
+                case "vn":                    
+                    readNormal(parser);
                     break;
                 case "v":
-                    Point3f v = new Point3f();
-                    v.x = parser.getNextFloat();
-                    v.y = parser.getNextFloat();
-                    v.z = parser.getNextFloat();   
-                    vertices.add(v);
-                    //System.out.println(v);
-                    break;
-                case "vn":
-                    Normal3f n = new Normal3f();
-                    n.x = parser.getNextFloat();
-                    n.y = parser.getNextFloat();
-                    n.z = parser.getNextFloat();
-                    normals.add(n);
-                    //System.out.println(n);
-                    break;
-                case "vt":
-                    Point2f p = new Point2f();
-                    p.x = parser.getNextFloat();
-                    p.y = parser.getNextFloat();
-                    if(parser.peekNextTokenNumber())
-                        parser.skipTokens(1);
-                    uvs.add(p);
-                    //System.out.println(p);
+                    readVertex(parser);
                     break;
                 case "f":
-                    if(parser.peekNextToken().contains("//"))
-                    {                        
-                        Point3f  p1 = new Point3f();
-                        Normal3f n1 = new Normal3f();
-                        get(parser.getNextToken(), p1, n1);
-                        
-                        Point3f  p2 = new Point3f();
-                        Normal3f n2 = new Normal3f();
-                        get(parser.getNextToken(), p2, n2);
-                        
-                        Point3f  p3 = new Point3f();
-                        Normal3f n3 = new Normal3f();
-                        get(parser.getNextToken(), p3, n3);
-                        
-                        Triangle triangle = new Triangle(p1, p2, p3, n1, n2, n3);
-                        geometries.addGeometryPrimitive(triangle);                        
-                    }   
-                    else if(parser.peekNextToken().contains("/"))
-                    {
-                        Point3f  p1 = new Point3f();
-                        Point2f uv1  = new Point2f();
-                        Normal3f n1 = new Normal3f();
-                        get(parser.getNextToken(), p1, uv1, n1);
-                        
-                        Point3f  p2 = new Point3f();
-                        Point2f uv2  = new Point2f();
-                        Normal3f n2 = new Normal3f();
-                        get(parser.getNextToken(), p2, uv2, n2);
-                        
-                        Point3f  p3 = new Point3f();
-                        Point2f uv3  = new Point2f();
-                        Normal3f n3 = new Normal3f();
-                        get(parser.getNextToken(), p3, uv3, n3);
-                        
-                        Triangle triangle = new Triangle(p1, p2, p3, n1, n2, n3);
-                        geometries.addGeometryPrimitive(triangle);
-                    }
-                    break;                    
+                    readFaces(parser);
+                    break;
+                case "usemtl":
+                    readUseMtl(parser);
+                    break;
+                case "vt":
+                    readUV(parser);
+                    break;
+                default:
+                    parser.getNextToken();
+                    break;
             }
         }
         for(AbstractPrimitive primitive : geometriesList)
         {
             System.out.println("init object");
-            ((Geometries)primitive).init();
+            ((Geometry)primitive).init();
+        }
+        
+        return geometriesList;
+    }
+    
+    public static void readObject(StringParser parser)
+    {
+        if(parser.getNextToken().equals("o"))
+        {
+            String name = parser.getNextToken();
+            System.out.println("object: " +name);
+            Material material = Material.createLambert(Color.WHITE);
+            material.name = name;
+            Geometry geometries = new Geometry(material);
+            geometriesList.add(geometries);
         }
     }
     
-   
+    public static void readGroup(StringParser parser)
+    {
+        if(parser.getNextToken().equals("g"))
+        {
+            String name = parser.getNextToken();
+            System.out.println("group: " +name);
+            Material material = Material.createLambert(Color.WHITE);
+            material.name = name;
+            Geometry geometries = new Geometry(material);
+            geometriesList.add(geometries);
+        }
+    }
+        
+    public static void readVertex(StringParser parser)
+    {           
+        if(parser.getNextToken().equals("v"))        
+            vertices.add(new Point3f(parser.getNextFloat(), parser.getNextFloat(), parser.getNextFloat()));             
+    }
+    
+    public static void readNormal(StringParser parser)
+    {
+        if(parser.getNextToken().equals("vn"))        
+            normals.add(new Normal3f(parser.getNextFloat(), parser.getNextFloat(), parser.getNextFloat()));         
+    }
+    
+    public static void readUV(StringParser parser)
+    {
+        if(parser.getNextToken().equals("vt"))
+            uvs.add(new Point2f(parser.getNextFloat(), parser.getNextFloat()));
+    }
+    
+    public static void readFaces(StringParser parser)
+    {
+        IntArray intArray = new IntArray();
+        
+        if(parser.getNextToken().equals("f"))        
+            while(parser.hasNext() && parser.peekNextTokenNumber())            
+                intArray.add(parser.getNextInt());
+            
+        if(intArray.getSize() == 3)
+        {
+            
+        }
+        else if(intArray.getSize() == 6)
+        {
+            int[] array = intArray.trim();
+            Geometry geometries = (Geometry) geometriesList.get(geometriesList.size()-1);
+                        
+            Point3f  p1 = vertices.get(array[0]-1);
+            Point3f  p2 = vertices.get(array[2]-1);
+            Point3f  p3 = vertices.get(array[4]-1);
+            
+            Normal3f  n1 = normals.get(array[1]-1);
+            Normal3f  n2 = normals.get(array[3]-1);
+            Normal3f  n3 = normals.get(array[5]-1);
+            
+            geometries.addGeometryPrimitive(new Triangle(p1, p2, p3, n1, n2, n3));
+        }
+        else if(intArray.getSize() == 8)
+        {
+            int[] array = intArray.trim();
+            Geometry geometries = (Geometry) geometriesList.get(geometriesList.size()-1);
+                        
+            Point3f  p1 = vertices.get(array[0]-1);
+            Point3f  p2 = vertices.get(array[2]-1);
+            Point3f  p3 = vertices.get(array[4]-1);
+            Point3f  p4 = vertices.get(array[6]-1);
+            
+            Normal3f  n1 = normals.get(array[1]-1);
+            Normal3f  n2 = normals.get(array[3]-1);
+            Normal3f  n3 = normals.get(array[5]-1);
+            Normal3f  n4 = normals.get(array[7]-1);
+            
+            geometries.addGeometryPrimitive(new Triangle(p1, p2, p3, n1, n2, n3));
+            geometries.addGeometryPrimitive(new Triangle(p1, p3, p4, n1, n3, n4));      
+        }
+        else if(intArray.getSize() == 9)
+        {
+            int[] array = intArray.trim();
+            Geometry geometries = (Geometry) geometriesList.get(geometriesList.size()-1);
+            
+            Point3f  p1 = vertices.get(array[0]-1);
+            Point3f  p2 = vertices.get(array[3]-1);
+            Point3f  p3 = vertices.get(array[6]-1);
+            
+            Point2f  uv1 = uvs.get(array[1]-1);
+            Point2f  uv2 = uvs.get(array[4]-1);
+            Point2f  uv3 = uvs.get(array[7]-1);
+            
+            Normal3f  n1 = normals.get(array[2]-1);
+            Normal3f  n2 = normals.get(array[5]-1);
+            Normal3f  n3 = normals.get(array[8]-1);
+            
+            geometries.addGeometryPrimitive(new Triangle(p1, p2, p3, n1, n2, n3, uv1, uv2, uv3));
+        }
+        else if(intArray.getSize() == 12)
+        {
+            
+        }        
+    }
+    
     public static void get(String string, Point3f p, Normal3f n)
     {
         String[] str = string.split("//");

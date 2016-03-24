@@ -6,6 +6,7 @@
 package core;
 
 import core.accelerator.BoundingVolume;
+import core.accelerator.UniformGrid;
 import core.color.Color;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
@@ -59,11 +60,12 @@ public class Scene
     }
     
     public void setPrimitives(ArrayList<AbstractPrimitive> primitives)
-    {
+    {        
         this.primitives = new ArrayList<>();
         this.primitives.clear();
         this.primitives.addAll(primitives);
         this.accelerator = new BoundingVolume(this.primitives);
+        
     }
     
     public boolean intersect(Ray ray, Intersection isect)

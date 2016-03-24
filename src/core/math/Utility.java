@@ -152,7 +152,7 @@ public class Utility {
     {
         if(Float.isInfinite(value))
             System.out.println("Infinite value detected");
-        if(Float.isNaN(value))
+        else if(Float.isNaN(value))
             System.out.println("Nan value detected");
     }
     
@@ -272,12 +272,13 @@ public class Utility {
     
     public static float pdfPowerCosHemisphereW(Vector3f n, Vector3f w, float power)
     {
-        float cosTheta = Vector3f.dot(n, w);
+        float cosTheta = Math.max(0f, Vector3f.dot(n, w));
         return (float) ((power + 1.f) * Math.pow(cosTheta, power) * (0.5f * INV_PI_F));
     }
     
-    public static float pdfPowerCosHemisphereW(float cosTheta, float power)
-    {        
+    public static float pdfPowerCosHemisphereW(float cosThetaFactor, float power)
+    {      
+        float cosTheta = Math.max(0f, cosThetaFactor);
         return (float) ((power + 1.f) * Math.pow(cosTheta, power) * (0.5f * INV_PI_F));
     }
     

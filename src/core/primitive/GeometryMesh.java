@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core;
-
-import core.image.Texture;
-import java.util.HashMap;
+package core.primitive;
 
 /**
  *
  * @author user
  */
-public class TextureCache {
-    private static final HashMap<String, Texture> textures = new HashMap<>();
+public class GeometryMesh {
+    
 }

@@ -9,34 +9,35 @@ package core.math;
  *
  * @author user
  */
-public class FloatArray {
-    private float[] array;
+public class IntArray 
+{
+    private int[] array;
     private int size;
 
-    public FloatArray()
+    public IntArray()
     {
-        array = new float[0];
+        array = new int[0];
         size = 0;
     }
 
-    public final void add(float i)
+    public final void add(int i)
     {
         if (size == array.length)
         {
-            float[] oldArray = array;
-            array = new float[(size * 3) / 2 + 1];
+            int[] oldArray = array;
+            array = new int[(size * 3) / 2 + 1];
             System.arraycopy(oldArray, 0, array, 0, size);
         }
         array[size] = i;
         size++;
     }
 
-    public final void set(int index, float value)
+    public final void set(int index, int value)
     {
         array[index] = value;
     }
 
-    public final float get(int index)
+    public final int get(int index)
     {
         return array[index];
     }
@@ -46,12 +47,12 @@ public class FloatArray {
         return size;
     }
 
-    public final float[] trim()
+    public final int[] trim()
     {
         if (size < array.length)
         {
-            float[] oldArray = array;
-            array = new float[size];
+            int[] oldArray = array;
+            array = new int[size];
             System.arraycopy(oldArray, 0, array, 0, size);            
         }
         return array;

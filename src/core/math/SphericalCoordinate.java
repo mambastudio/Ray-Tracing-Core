@@ -23,8 +23,8 @@ import static core.math.Utility.toRadians;
  */
 public class SphericalCoordinate 
 {
-    //theta values are from z-axis and covers 180 degrees to negative z-axis
-    //phi values are 360 degrees and cover a full circle horizontal surface (xy)
+    //theta values are from z-axis and covers 180 degrees to negative y-axis
+    //phi values are 360 degrees and cover a full circle horizontal surface (xz)
     //assumption here is a right hand coordinate system
     
     //http://blog.demofox.org/2013/10/12/converting-to-and-from-polar-spherical-coordinates-made-easy/

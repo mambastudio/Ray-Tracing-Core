@@ -12,6 +12,7 @@ import core.AbstractShape;
 import core.Intersection;
 import core.Material;
 import core.accelerator.BoundingVolume;
+import core.accelerator.UniformGrid;
 import core.coordinates.Normal3f;
 import core.coordinates.Vector3f;
 import core.light.AreaLight;
@@ -23,16 +24,16 @@ import java.util.ArrayList;
  *
  * @author user
  */
-public class Geometries extends AbstractPrimitive
+public class Geometry extends AbstractPrimitive
 {
     private final AbstractAccelerator accelerator;
     private final ArrayList<AbstractPrimitive> gPrimitives;
     private final Material material;
     
-    public Geometries(Material material)
+    public Geometry(Material material)
     {
         this.material = material;
-        this.accelerator = new BoundingVolume();
+        this.accelerator = new UniformGrid();
         this.gPrimitives = new ArrayList<>();
     }
     
@@ -48,7 +49,7 @@ public class Geometries extends AbstractPrimitive
         
     public void init()
     {
-        accelerator.setPrimitives(gPrimitives);
+        accelerator.setPrimitives(gPrimitives);        
     }
 
     @Override

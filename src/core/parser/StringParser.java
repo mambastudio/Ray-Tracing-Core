@@ -150,6 +150,8 @@ public class StringParser {
         return str.matches("-?\\d+(\\.\\d+)?");
     }
     
+   
+    
     private String fetchNextToken()
     {
         if (bf == null)
@@ -183,7 +185,7 @@ public class StringParser {
             if(line.isEmpty())
                 continue;
             
-            lineTokens = line.trim().split("\\s+");            
+            lineTokens = line.trim().split("[/\\s]+");            
            
             index = 0;
             return true;

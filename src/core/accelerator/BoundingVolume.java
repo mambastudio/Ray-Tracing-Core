@@ -23,7 +23,7 @@ import java.util.List;
  */
 public final class BoundingVolume extends AbstractAccelerator
 {
-    int maxPrimsInNode = 20;
+    int maxPrimsInNode = 10;
     ArrayList<AbstractPrimitive> primitives = null;
     LinearBVHNode [] nodes = null;
     BoundingBox bound = null;
@@ -34,13 +34,14 @@ public final class BoundingVolume extends AbstractAccelerator
     }
     
     public BoundingVolume(ArrayList<AbstractPrimitive> primitives)
-    {
+    {        
         setPrimitives(primitives);
     }
 
     @Override
     public void setPrimitives(ArrayList<AbstractPrimitive> primitives) {
         //Initialize buildData array for primitives
+        
         this.primitives = primitives;
         
         ArrayList<BVHPrimitiveInfo> buildData = new ArrayList<>();
@@ -100,7 +101,7 @@ public final class BoundingVolume extends AbstractAccelerator
             bbox = BoundingBox.union(bbox, buildData.get(i).bounds);
         
         int nPrimitives = end - start;
-        if(nPrimitives < 5)
+        if(nPrimitives  < 15)
         {
             //Create leaf BVHBuildNode
             int firstPrimOffset = orderedPrims.size();

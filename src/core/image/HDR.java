@@ -149,7 +149,7 @@ public final class HDR {
     public void setColor(float x, float y, Color color)
     {
         int index = getIndex(x, y);
-       
+        
         r[index] = color.r;
         g[index] = color.g;
         b[index] = color.b;

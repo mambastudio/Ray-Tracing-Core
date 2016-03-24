@@ -33,6 +33,16 @@ public class FastBitmap
         setNull();
     }
     
+    public FastBitmap(double width, double height)
+    {
+        this((int)width, (int)height);
+    }
+    
+    public FastBitmap(float width, float height)
+    {
+        this((int)width, (int)height);
+    }
+    
     public synchronized void setColor(int x, int y, int w, int h, core.color.Color color)
     {
         int w1 = (int) (image.getWidth() - 1);
