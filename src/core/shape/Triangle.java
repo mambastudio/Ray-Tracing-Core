@@ -29,6 +29,21 @@ public class Triangle extends AbstractShape
     
     public Normal3f n;
     
+    public Triangle(Point3f p1, Point3f p2, Point3f p3, Point2f uv1, Point2f uv2, Point2f uv3)
+    {
+        super(new Transform(), new Transform());
+        this.p1 = p1;
+        this.p2 = p2;
+        this.p3 = p3;  
+        
+        this.uv1 = uv1;
+        this.uv2 = uv2;
+        this.uv3 = uv3;    
+        
+        //for light sampling
+        n = arbitraryNormal();
+    }
+    
     public Triangle(Point3f p1, Point3f p2, Point3f p3, Normal3f n)
     {        
         super(new Transform(), new Transform());

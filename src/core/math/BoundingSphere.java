@@ -16,7 +16,8 @@ public class BoundingSphere
 {
     public Point3f c = null;
     public float r;
-    public float rSqr;
+    public float radiusSqr;
+    public float invRadiusSqr;
     
     public BoundingSphere()
     {
@@ -26,7 +27,7 @@ public class BoundingSphere
     
     public BoundingSphere(Point3f c, float r)
     {
-        this.c = c; this.r = r; rSqr = r * r;
+        this.c = c; this.r = r; radiusSqr = r * r;
     }
     
     public float getAreaProbability()
@@ -36,6 +37,6 @@ public class BoundingSphere
     
     public float getArea()
     {
-        return 4 * PI_F * rSqr;
+        return 4 * PI_F * radiusSqr;
     }
 }

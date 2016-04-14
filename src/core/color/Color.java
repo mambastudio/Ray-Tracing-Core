@@ -6,6 +6,7 @@
 package core.color;
 
 import core.math.Utility;
+import java.io.Serializable;
 import static java.lang.Math.pow;
 import java.nio.ByteBuffer;
 
@@ -13,8 +14,9 @@ import java.nio.ByteBuffer;
  *
  * @author user
  */
-public final class Color {
-    public float r, g, b;
+public final class Color implements Serializable
+{
+    public float r, g, b, a;
     
     public static final Color BLACK = new Color(0, 0, 0);
     public static final Color WHITE = new Color(1, 1, 1);
@@ -46,11 +48,13 @@ public final class Color {
     public Color()
     {
         r = g = b = 0;
+        a = 1;
     }
     
     public Color(float value)
     {
         r = g = b = value;
+        a = 1;
     }
 
     public Color(float r, float g, float b)
@@ -62,6 +66,19 @@ public final class Color {
         this.r = zeroCeiling(r);
         this.g = zeroCeiling(g);
         this.b = zeroCeiling(b);
+    }
+    
+    public Color(float r, float g, float b, float a)
+    {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+        
+        this.r = zeroCeiling(r);
+        this.g = zeroCeiling(g);
+        this.b = zeroCeiling(b);
+        this.a = zeroCeiling(a);
     }
     
     public Color(double r, double g, double b)
@@ -285,7 +302,7 @@ public final class Color {
         return this;
     }
     
-    public final byte[] toByteBGRA_Pre()
+    public final byte[] toByteBgraPre()
     {
         int ia = (int) (255 + 0.5);
         int ir = (int) (r * 255 + 0.5);
@@ -320,7 +337,7 @@ public final class Color {
         bb.putInt(rgba);
         return bb.array();
     }
-
+    
     public final int toRGB()
     {
         int ir = (int) (r * 255 + 0.5);

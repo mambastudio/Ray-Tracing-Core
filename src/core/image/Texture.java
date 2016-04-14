@@ -7,6 +7,7 @@ package core.image;
 
 import core.color.Color;
 import java.io.File;
+import java.io.Serializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -14,10 +15,10 @@ import javafx.scene.image.ImageView;
  *
  * @author user
  */
-public class Texture 
+public class Texture implements Serializable
 {
     private String uri;
-    private Bitmap bitmap;
+    private ByteImagePixels bitmap;
         
     public Texture(File file)
     {
@@ -31,7 +32,7 @@ public class Texture
         load(uri);         
     }
     
-    public Texture(Bitmap bitmap, String uri)
+    public Texture(ByteImagePixels bitmap, String uri)
     {
         this.bitmap = bitmap;
         this.uri = uri;
@@ -47,12 +48,12 @@ public class Texture
     {
         if(texture != null)
         {
-            bitmap = texture.getBitmap();
+            bitmap = texture.getByteImagePixels();
             uri = texture.getURI();
         }
     }
     
-    public Bitmap getBitmap()
+    public ByteImagePixels getByteImagePixels()
     {
         return bitmap;
     }
@@ -61,7 +62,7 @@ public class Texture
     {
         // regular image, load using javafx api
         Image image = new Image(uri);
-        bitmap = new Bitmap(image);
+        bitmap = ByteImagePixels.getByteImage(image);
     }
     
     public Color getPixel(float x, float y) 

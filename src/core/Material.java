@@ -16,12 +16,14 @@ import core.image.Texture;
 import core.math.Frame;
 import core.math.Rng;
 import core.math.Utility;
+import java.io.Serializable;
 
 /**
  *
  * @author user
  */
-public class Material {
+public class Material implements Serializable
+{
    
     public Color diffuseReflectance;    
     public Color phongReflectance;
@@ -65,12 +67,29 @@ public class Material {
         return material;
     }
     
+    public static Material createLambert(Color color, String name)
+    {
+        Material material = new Material();
+        material.diffuseReflectance.setColor(color);
+        material.name = name;
+        return material;
+    }    
     public static Material createEmission()
     {
         Material material = new Material();
         material.emission.setColor(Color.WHITE);
         material.power = 3;
         material.emitter = true;
+        return material;
+    }
+    
+    public static Material createEmission(Color color, float power, String name)
+    {
+        Material material = new Material();
+        material.emission.setColor(color);
+        material.power = power;
+        material.emitter = true;
+        material.name = name;
         return material;
     }
     
@@ -91,10 +110,29 @@ public class Material {
         return material;
     }
     
+    public static Material createGlass(Color color, float ior, String name)
+    {
+        Material material = new Material();
+        material.specularReflectance.setColor(color);
+        material.ior = ior;
+        material.refractive = true;
+        material.name = name;
+        return material;
+    }
+    
     public static Material createGlossy(Color color)
     {
         Material material = new Material();
         material.phongReflectance.setColor(color);
+        return material;
+    }
+    
+    public static Material createGlossy(Color color, float phongExponent, String name)
+    {
+        Material material = new Material();
+        material.phongReflectance.setColor(color);
+        material.phongExponent = phongExponent;
+        material.name = name;
         return material;
     }
         

@@ -12,6 +12,8 @@ import core.accelerator.UniformGrid;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
 import core.color.Color;
+import core.coordinates.Vector3f;
+import core.light.DirectionalLight;
 import core.primitive.Geometry;
 import core.shape.Quad;
 import core.shape.Sphere;
@@ -125,6 +127,8 @@ public final class CornellScene extends Scene
         primitives.add(sphere2);              
         
         accelerator.setPrimitives(primitives);
+        
+        lights.setDirectionalLight(new DirectionalLight(Color.WHITE, new Vector3f(0.3f, -1f, -1)));
     }
     
 }

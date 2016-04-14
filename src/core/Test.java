@@ -5,15 +5,12 @@
  */
 package core;
 
+import core.color.sun.HosekWilkie;
 import core.coordinates.Vector3f;
-import core.math.FloatValue;
 import core.math.SphericalCoordinate;
-import static core.math.Utility.INV_PI_F;
-import static core.math.Utility.acosf;
-import static core.math.Utility.asinf;
-import static core.math.Utility.atan2f;
-import static core.math.Utility.toDegrees;
-import java.util.Arrays;
+import static core.math.Utility.toRadians;
+import static java.lang.Math.PI;
+import static java.lang.Math.pow;
 import java.util.Comparator;
 
 /**
@@ -24,9 +21,30 @@ public class Test {
 
     public static void main(String[] args) 
     {
-        Vector3f sunPosition = new Vector3f(0, 0.26f, -0.97f).normalize();
-        //System.out.println(SphericalCoordinate.directionDegrees(75, 0));
-        System.out.println(sunPosition);
+        
+        Vector3f v = SphericalCoordinate.elevationDegrees(45);
+       
+        System.out.println(v);
+        System.out.println(SphericalCoordinate.elevationDegrees(v));
+        
+        /*
+        HosekWilkie sky = new HosekWilkie();
+        
+        double solarElevation = toRadians(45);
+        
+        HosekWilkie.ArHosekSkyModelState skyState = sky.arhosek_rgb_skymodelstate_alloc_init(2, 0, solarElevation); //turbidity, albedo, elevation
+        
+        double theta = toRadians(10);
+        double gamma = toRadians(80);
+        
+        double r = sky.arhosek_tristim_skymodel_radiance(skyState, theta, gamma, 0);
+        double g = sky.arhosek_tristim_skymodel_radiance(skyState, theta, gamma, 1);
+        double b = sky.arhosek_tristim_skymodel_radiance(skyState, theta, gamma, 2);
+        
+        System.out.println(skyState.configsString());
+        System.out.println(r+ " " +g+ " " +b);
+                */
+        
     }
     
     static class FloatSort implements Comparator<Float>

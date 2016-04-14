@@ -5,6 +5,7 @@
  */
 package core;
 
+import core.light.DirectionalLight;
 import core.math.ExtendedList;
 import java.util.ArrayList;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class LightCache {
     ExtendedList<AbstractLight> lightList = null;    
     AbstractBackground backgroundLight = null;
+    DirectionalLight directionalLight = null;
     
     public LightCache()
     {
@@ -33,6 +35,14 @@ public class LightCache {
                 lightList.add(backgroundLight);
                 
     }
+    
+    public void addDirectionalLight()
+    {
+        if(directionalLight != null)
+            if(!lightList.contains(directionalLight))
+                lightList.add(directionalLight);
+    }
+    
     public void setBackgroundLight(AbstractBackground background)
     {
         this.backgroundLight = background;
@@ -43,9 +53,24 @@ public class LightCache {
         return backgroundLight;
     }
     
+    public void setDirectionalLight(DirectionalLight directionalLight)
+    {
+        this.directionalLight = directionalLight;
+    }
+    
+    public DirectionalLight getDirectionalLight()
+    {
+        return directionalLight;
+    }
+    
     public boolean hasBackgroundLight()
     {
         return backgroundLight != null;
+    }
+    
+    public boolean hasDirectionalLight()
+    {
+        return directionalLight != null;
     }
     
     public void add(AbstractPrimitive primitive)

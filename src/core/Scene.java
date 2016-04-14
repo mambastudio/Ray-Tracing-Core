@@ -104,6 +104,7 @@ public class Scene
            lights.add(prim);
         
         lights.addBackgroundLight();
+        lights.addDirectionalLight();
     }    
     
     public Color directLightSampling(Intersection isect, FloatValue misWeight)

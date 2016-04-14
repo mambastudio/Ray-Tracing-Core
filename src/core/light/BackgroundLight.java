@@ -119,7 +119,7 @@ public class BackgroundLight extends AbstractBackground
     {
         float directPdf = Utility.uniformSpherePdfW();
         float positionPdf = Utility.concentricDiscPdfA() /
-            scene.getBoundingSphere().rSqr;
+            scene.getBoundingSphere().radiusSqr;
         
         return directPdf * positionPdf;
     }

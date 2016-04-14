@@ -5,6 +5,7 @@
  */
 package core.image;
 
+import java.io.Serializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
@@ -15,8 +16,10 @@ import javafx.scene.paint.Color;
  *
  * @author user
  */
-public class Bitmap {
+public class Bitmap implements Serializable
+{
     int width, height;
+    int [] pixels = null;
     public WritableImage wImage = null;
     public PixelWriter pw = null;
     

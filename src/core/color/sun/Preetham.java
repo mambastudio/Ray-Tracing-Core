@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core.color;
+package core.color.sun;
 
+import core.color.Color;
+import core.color.RGBSpace;
 import core.coordinates.Vector3f;
 import core.image.HDR;
 import core.math.SphericalCoordinate;

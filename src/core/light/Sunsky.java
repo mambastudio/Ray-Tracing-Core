@@ -8,7 +8,7 @@ package core.light;
 import core.AbstractBackground;
 import core.Scene;
 import core.color.Color;
-import core.color.Preetham;
+import core.color.sun.Preetham;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;

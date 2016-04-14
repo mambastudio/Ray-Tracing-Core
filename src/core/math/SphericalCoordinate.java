@@ -23,7 +23,7 @@ import static core.math.Utility.toRadians;
  */
 public class SphericalCoordinate 
 {
-    //theta values are from z-axis and covers 180 degrees to negative y-axis
+    //theta values are from +ve y-axis and covers 180 degrees to -ve y-axis
     //phi values are 360 degrees and cover a full circle horizontal surface (xz)
     //assumption here is a right hand coordinate system
     
@@ -154,4 +154,23 @@ public class SphericalCoordinate
         return toDegrees(getRadiansBetween(v1, v2));
     }
     
+    
+    public static float elevationRadians(Vector3f v)
+    {
+        float zenithDegrees = thetaDegrees(v);
+        float elevationDegrees = 90 - zenithDegrees;
+        return toRadians(elevationDegrees);
+    }
+    
+    public static float elevationDegrees(Vector3f v)
+    {
+        float zenithDegrees = thetaDegrees(v);
+        return 90 - zenithDegrees;        
+    }
+    
+    public static Vector3f elevationDegrees(float degrees)
+    {
+        float zenithDegrees = 90 - degrees;
+        return directionDegrees(zenithDegrees, 0); //CONFIRM whether is zero 
+    }
 }

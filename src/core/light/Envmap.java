@@ -167,7 +167,7 @@ public class Envmap extends AbstractBackground
     public float emissionPdfW(Scene scene, Vector3f w, float cosAtLight) {
         float directPdf = pdfW(w);
         float positionPdf = Utility.concentricDiscPdfA() /
-            scene.getBoundingSphere().rSqr;
+            scene.getBoundingSphere().radiusSqr;
         
         return directPdf * positionPdf;
     }
