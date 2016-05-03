@@ -21,12 +21,15 @@ import java.util.logging.Logger;
  * @author user
  */
 public class StringParser {
+    
+    private String line;         //basically used to such any specific char sequences from a specific readline if requested
     private BufferedReader bf;
     private String lineTokens[];
     private int index;
     
     public StringParser(BufferedReader bf)
     {
+        this.line = "";
         this.bf = bf;
         this.lineTokens = new String[0];
         this.index = 0;
@@ -43,6 +46,7 @@ public class StringParser {
         {
             Logger.getLogger(StringParser.class.getName()).log(Level.SEVERE, null, ex);
         }
+        line = "";
         lineTokens = new String[0];
         index = 0;
     }
@@ -60,6 +64,7 @@ public class StringParser {
         {
             Logger.getLogger(StringParser.class.getName()).log(Level.SEVERE, null, ex);
         }
+        line = "";
         lineTokens = new String[0];
         index = 0;
     }
@@ -166,8 +171,7 @@ public class StringParser {
     }
     
     private boolean getNextLine()
-    {
-        String line = null;
+    {       
         while(true)
         {
             try 
@@ -184,7 +188,7 @@ public class StringParser {
             
             if(line.isEmpty())
                 continue;
-            
+                       
             lineTokens = line.trim().split("[/\\s]+");            
            
             index = 0;

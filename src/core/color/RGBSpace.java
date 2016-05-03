@@ -30,7 +30,7 @@ public class RGBSpace {
      components so the largest nonzero component has value 1.
      *
      */
-
+    
     public static XYZ convertRGBtoXYZ(Color color)
     {
         float X, Y, Z;

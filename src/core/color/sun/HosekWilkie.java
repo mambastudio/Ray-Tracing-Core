@@ -5,18 +5,28 @@
  */
 package core.color.sun;
 
+import core.color.CIE1931;
 import core.color.Color;
+import core.color.RGBSpace;
+import core.color.XYZ;
 import core.color.sun.data.ArHosekSkyModelConfiguration;
 import static core.color.sun.data.ArHosekSkyModelData_CIEXYZ.datasetsXYZ;
 import static core.color.sun.data.ArHosekSkyModelData_CIEXYZ.datasetsXYZRad;
 import static core.color.sun.data.ArHosekSkyModelData_RGB.datasetsRGB;
 import static core.color.sun.data.ArHosekSkyModelData_RGB.datasetsRGBRad;
+import static core.color.sun.data.ArHosekSkyModelData_Spectral.datasets;
+import static core.color.sun.data.ArHosekSkyModelData_Spectral.datasetsRad;
+import static core.color.sun.data.ArHosekSkyModelData_Spectral.limbDarkeningDatasets;
+import static core.color.sun.data.ArHosekSkyModelData_Spectral.solarDatasets;
 import core.color.sun.data.ArHosekSkyModelState;
 import core.coordinates.Vector3f;
+import core.image.HDR;
+import core.light.Envmap;
 import core.math.SphericalCoordinate;
 import static java.lang.Math.cos;
 import static java.lang.Math.exp;
 import static java.lang.Math.pow;
+import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 import java.util.Arrays;
 
@@ -50,7 +60,7 @@ public final class HosekWilkie
     
     public HosekWilkie()
     {
-        init();
+        initStateRadiance();
     }
 
     public void ArHosekSkyModel_CookConfiguration(
@@ -69,8 +79,10 @@ public final class HosekWilkie
         solar_elevation = pow(solar_elevation / (MATH_PI / 2.0), (1.0 / 3.0));
         
         // alb 0 low turb
-
+        
         elev_matrix = Arrays.copyOfRange(dataset, 9 * 6 * (int_turbidity-1), dataset.length);
+        
+        
         
         for(int i = 0; i < 9; ++i )
         {
@@ -219,8 +231,9 @@ public final class HosekWilkie
         arhosekskymodelstate_alloc_init() function
         ------------------------------------------
 
-        Initialises an ArHosekSkyModelState struct for a terrestrial setting.
-
+        Initialises an ArHosekSkyModelState struct for a terrestrial setting 
+        
+        Spectral version
     ---------------------------------------------------------------------------- */
     public ArHosekSkyModelState   arhosekskymodelstate_alloc_init(
         float  solar_elevation,
@@ -228,7 +241,37 @@ public final class HosekWilkie
         float  ground_albedo
         )
     {
-        return null;
+        
+        ArHosekSkyModelState state = new ArHosekSkyModelState();
+        
+        state.solar_radius = ( 30.81 * DEGREES ) / 2.0; //repetition in code with TERRESTIAL_SOLAR_RADIUS
+        state.turbidity    = atmospheric_turbidity;
+        state.albedo       = ground_albedo;
+        state.elevation    = solar_elevation;
+        
+        for(int wl = 0; wl < 11; ++wl )
+        {
+            ArHosekSkyModel_CookConfiguration(
+                datasets[wl], 
+                state.configs[wl], 
+                atmospheric_turbidity, 
+                ground_albedo, 
+                solar_elevation
+            );
+
+            state.radiances[wl] = 
+            ArHosekSkyModel_CookRadianceConfiguration(
+                datasetsRad[wl],
+                atmospheric_turbidity,
+                ground_albedo,
+                solar_elevation
+                );
+
+            state.emission_correction_factor_sun[wl] = 1.0;
+            state.emission_correction_factor_sky[wl] = 1.0;
+        }
+
+        return state;        
     }
     
     /* ----------------------------------------------------------------------------
@@ -276,14 +319,51 @@ public final class HosekWilkie
         
     }
 
-    public float arhosekskymodel_radiance(
+    //Spectral version
+    
+    public double arhosekskymodel_radiance(
         ArHosekSkyModelState    state,
         double                  theta, 
         double                  gamma, 
         double                  wavelength
         )
     {
-        return 0;
+        int low_wl = (int) ((wavelength - 320.0 ) / 40.0);
+        
+
+        if ( low_wl < 0 || low_wl >= 11 )
+            return 0.0f;
+
+        double interp = ((wavelength - 320.0 ) / 40.0) % 1.0;
+        
+        double val_low = 
+            ArHosekSkyModel_GetRadianceInternal(
+                state.configs[low_wl],
+                theta,
+                gamma
+             )
+            *   state.radiances[low_wl]
+            *   state.emission_correction_factor_sky[low_wl];
+
+        if ( interp < 1e-6 )
+            return val_low;
+
+        double result = ( 1.0 - interp ) * val_low;
+
+        if ( low_wl+1 < 11 )
+        {
+            result +=
+                interp
+                * ArHosekSkyModel_GetRadianceInternal(
+                    state.configs[low_wl+1],
+                    theta,
+                    gamma
+                  )
+            * state.radiances[low_wl+1]
+            * state.emission_correction_factor_sky[low_wl+1];
+        }
+
+        return result;        
     }
     
     // CIE XYZ and RGB versions
@@ -368,23 +448,170 @@ public final class HosekWilkie
             * state.radiances[channel];
     }
     
-    public Color arhosek_rgb_skymodel_radiance()
+    final int pieces = 45;
+    final int order = 4;
+
+    public double arhosekskymodel_sr_internal(
+        ArHosekSkyModelState    state,
+        int                     turbidity,
+        int                     wl,
+        double                  elevation
+        )
     {
-        return null;
+        int pos =
+            (int) (pow(2.0*elevation / MATH_PI, 1.0/3.0) * pieces); // floor
+    
+        if ( pos > 44 ) pos = 44;
+    
+        final double break_x =
+            pow(((double) pos / (double) pieces), 3.0) * (MATH_PI * 0.5);
+        
+        final double [] coefs = Arrays.copyOfRange(solarDatasets[wl], 0, (order * pieces * turbidity + order * (pos+1) - 1) + 1); //add 1, to point to the last index which is exclusive (not copied)
+        int arrayIndex = coefs.length-1;
+        
+        double res = 0.0;
+        final double x = elevation - break_x;
+        double x_exp = 1.0;
+
+        for (int i = 0; i < order; ++i)
+        {
+         
+            res += x_exp * coefs[arrayIndex]; arrayIndex--;            
+            x_exp *= x;
+        }
+
+        return  res * state.emission_correction_factor_sun[wl];
+    }
+    
+    double arhosekskymodel_solar_radiance_internal2(
+        ArHosekSkyModelState    state,
+        double                  wavelength,
+        double                  elevation,
+        double                  gamma
+        )
+    {
+        assert(wavelength >= 320.0
+            && wavelength <= 720.0
+            && state.turbidity >= 1.0
+            && state.turbidity <= 10.0);
+        
+        int     turb_low  = (int) state.turbidity - 1;
+        double  turb_frac = state.turbidity - (double) (turb_low + 1);
+    
+        if ( turb_low == 9 )
+        {
+            turb_low  = 8;
+            turb_frac = 1.0;
+        }
+
+        int    wl_low  = (int) ((wavelength - 320.0) / 40.0);
+        double wl_frac = (wavelength % 40.0) / 40.0;
+    
+        if ( wl_low == 10 )
+        {
+            wl_low = 9;
+            wl_frac = 1.0;
+        }
+        
+        double direct_radiance =
+            ( 1.0 - turb_frac )
+          * (    (1.0 - wl_frac)
+             * arhosekskymodel_sr_internal(
+                     state,
+                     turb_low,
+                     wl_low,
+                     elevation
+                   )
+           +   wl_frac
+             * arhosekskymodel_sr_internal(
+                     state,
+                     turb_low,
+                     wl_low+1,
+                     elevation
+                   )
+          )
+        +   turb_frac
+            * (    ( 1.0 - wl_frac )
+             * arhosekskymodel_sr_internal(
+                     state,
+                     turb_low+1,
+                     wl_low,
+                     elevation
+                   )
+           +   wl_frac
+             * arhosekskymodel_sr_internal(
+                     state,
+                     turb_low+1,
+                     wl_low+1,
+                     elevation
+                   )
+          );
+        
+        double [] ldCoefficient = new double[6];
+    
+        for ( int i = 0; i < 6; i++ )
+            ldCoefficient[i] =
+              (1.0 - wl_frac) * limbDarkeningDatasets[wl_low  ][i]
+            +        wl_frac  * limbDarkeningDatasets[wl_low+1][i];
+    
+        // sun distance to diameter ratio, squared
+
+        final double sol_rad_sin = sin(state.solar_radius);
+        final double ar2 = 1 / ( sol_rad_sin * sol_rad_sin );
+        final double singamma = sin(gamma);
+        double sc2 = 1.0 - ar2 * singamma * singamma;
+        if (sc2 < 0.0 ) sc2 = 0.0;
+        double sampleCosine = sqrt (sc2);
+    
+        //   The following will be improved in future versions of the model:
+        //   here, we directly use fitted 5th order polynomials provided by the
+        //   astronomical community for the limb darkening effect. Astronomers need
+        //   such accurate fittings for their predictions. However, this sort of
+        //   accuracy is not really needed for CG purposes, so an approximated
+        //   dataset based on quadratic polynomials will be provided in a future
+        //   release.
+        
+        double  darkeningFactor =
+            ldCoefficient[0]
+          + ldCoefficient[1] * sampleCosine
+          + ldCoefficient[2] * pow( sampleCosine, 2.0 )
+          + ldCoefficient[3] * pow( sampleCosine, 3.0 )
+          + ldCoefficient[4] * pow( sampleCosine, 4.0 )
+          + ldCoefficient[5] * pow( sampleCosine, 5.0 );
+        
+        direct_radiance *= darkeningFactor;
+
+        return direct_radiance;
     }
     
     //   Delivers the complete function: sky + sun, including limb darkening.
     //   Please read the above description before using this - there are several
     //   caveats!
 
-    public float arhosekskymodel_solar_radiance(
-        ArHosekSkyModelState        state,
-        float                       theta,
-        float                       gamma,
-        float                       wavelength
+    public double arhosekskymodel_solar_radiance(
+        ArHosekSkyModelState         state,
+        double                       theta,
+        double                       gamma,
+        double                       wavelength
         )
     {
-        return 0;
+        double  direct_radiance =
+        arhosekskymodel_solar_radiance_internal2(
+            state,
+            wavelength,
+            ((MATH_PI/2.0)-theta),
+            gamma
+            );
+
+        double  inscattered_radiance =
+        arhosekskymodel_radiance(
+            state,
+            theta,
+            gamma,
+            wavelength
+            );
+    
+        return  direct_radiance + inscattered_radiance;
     }
     
     /*
@@ -449,23 +676,123 @@ public final class HosekWilkie
         return SphericalCoordinate.getRadiansBetween(v, sunPosition);
     }
     
-    public void init()
+    public void initStateRGB()
     {
         currentState = arhosek_rgb_skymodelstate_alloc_init(turbidity, albedo, SphericalCoordinate.elevationRadians(sunPosition));        
     }
     
-    public Color getColor(Vector3f v)
+    public void initStateXYZ()
     {
-        float gamma         = gamma(v);
-        float theta         = zenith(v);
-        
-        if(Math.toDegrees(theta) > 90)
-            return new Color();
-        
+        currentState = arhosek_xyz_skymodelstate_alloc_init(turbidity, albedo, SphericalCoordinate.elevationRadians(sunPosition));
+    }
+    
+    public void initStateRadiance()
+    {        
+        currentState = arhosekskymodelstate_alloc_init(SphericalCoordinate.elevationRadians(sunPosition), turbidity, albedo);
+    }
+    
+    public Color getRGB(Vector3f d)
+    {
+        Vector3f dir = d.clone();
+                
+        if(dir.y < 0)
+            return new Color();        
+                    
+        float gamma         = gamma(dir);
+        float theta         = zenith(dir);
+               
         double r = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 0);
         double g = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 1);
         double b = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 2)
                 ;
         return new Color(r, g, b).mul(exposure).simpleGamma(tonemapGamma);
+    }
+    
+    public Color getRGB_using_XYZ(Vector3f d)
+    {
+        Vector3f dir = d.clone();
+                
+        if(dir.y < 0)
+            return new Color();        
+                    
+        float gamma         = gamma(dir);
+        float theta         = zenith(dir);
+               
+        double X = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 0);
+        double Y = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 1);
+        double Z = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 2);
+        
+        Color color =  RGBSpace.convertXYZtoRGB(new XYZ(X, Y, Z));   
+        
+        return color.mul(exposure).simpleGamma(tonemapGamma);
+    }
+    
+    public Color getRGB_using_radiance(Vector3f d)
+    {
+        Vector3f dir = d.clone();
+                
+        if(dir.y < 0)
+            return new Color();        
+                    
+        float gamma         = gamma(dir);
+        float theta         = zenith(dir);
+        
+        float X, Y, Z;
+        X = Y = Z = 0;
+        
+        for(int i = 320; i<=720; i+=40)
+        {
+            double radiance = this.arhosekskymodel_radiance(currentState, theta, gamma, i);
+            X += CIE1931.getX(radiance, i);
+            Y += CIE1931.getY(radiance, i);
+            Z += CIE1931.getZ(radiance, i);
+        }
+        
+        Color color =  RGBSpace.convertXYZtoRGB(new XYZ(X, Y, Z).mul(40));   
+        return color.mul(exposure).simpleGamma(tonemapGamma);
+    }
+    
+    public Color getRGB_using_solar_radiance(Vector3f d)
+    {
+        Vector3f dir = d.clone();
+                
+        if(dir.y < 0)
+            return new Color();        
+                    
+        float gamma         = gamma(dir);
+        float theta         = zenith(dir);
+        
+        float X, Y, Z;
+        X = Y = Z = 0;
+        
+        for(int i = 320; i<=720; i+=40)
+        {
+            double radiance = this.arhosekskymodel_solar_radiance(currentState, theta, gamma, i);
+            X += CIE1931.getX(radiance, i);
+            Y += CIE1931.getY(radiance, i);
+            Z += CIE1931.getZ(radiance, i);
+        }
+        
+        Color color =  RGBSpace.convertXYZtoRGB(new XYZ(X, Y, Z).mul(40));   
+        return color.mul(0.000001f).simpleGamma(1.2f);
+    }
+    
+    public HDR getHDR(int size)
+    {
+         HDR hdr = new HDR(size, size);
+        
+        for(int j = 0; j<size; j++)
+            for(int i = 0; i<size; i++)
+            {
+                Color color = getRGB(SphericalCoordinate.sphericalDirection(i, j, size, size));
+                hdr.setColor(i, j, color);
+            }
+                
+        return hdr;
+    }
+    
+    public Envmap getEnvmap(int size)
+    {
+        return new Envmap(getHDR(size));
     }
 }

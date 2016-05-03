@@ -6,7 +6,6 @@
 package core.image.film;
 
 import core.color.Color;
-import core.image.tonemap.Reinhard;
 import java.nio.IntBuffer;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -16,7 +15,7 @@ import javafx.scene.image.WritablePixelFormat;
  *
  * @author user
  */
-public class Film {
+public class Framebuffer {
     private final int w, h;
     
     private Color[] colorAccum = null;
@@ -24,7 +23,7 @@ public class Film {
     
     private final int size;
     
-    public Film(int width, int height)
+    public Framebuffer(int width, int height)
     {
         this.w = width;
         this.h = height;
@@ -40,6 +39,11 @@ public class Film {
         }
     }
     
+    public Framebuffer copy()
+    {
+        return null;
+    }
+        
     public void clear()            
     {
         for(int i = 0; i<size; i++)
@@ -54,7 +58,12 @@ public class Film {
         if(!color.isBad())
             colorAccum[index(x, y)].addAssign(color);
         else
-            System.out.println("Color is bad");
+            System.out.println("Color is bad " +color);
+    }
+    
+    public void add(Color color, float x, float y)
+    {
+        add(color, (int)x, (int)y);
     }
     
     public int getWidth()
@@ -69,38 +78,11 @@ public class Film {
     
     public void updatePixels(float scale)
     {    
-        for(int index = 0; index<size; index++)
-        {            
+        for(int index = 0; index<size; index++)                  
             tonePixels[index].setColor(colorAccum[index].mul(scale));
-        }
-        
-        Reinhard tonemap = new Reinhard();
-        float maxLum = 0f;
-        float aveLum = 0f;
-        float N = 0f;
-
-        for(int i = 0; i<size; i++)
-        {
-            Color color = tonePixels[i].clone();
-            
-            if(color.luminance() > maxLum)
-                    maxLum = color.luminance();
-            
-            if(color.luminance() > -1f)
-            {
-                aveLum += Math.log(0.01 + color.luminance());
-                N++;
-            }
-        }
-        
-        aveLum /= N;
-        aveLum = (float)Math.exp(aveLum);
-        
-        for(Color c : tonePixels)
-        {
-            c.setColor(tonemap.toneMap(0.18f, aveLum, maxLum, c));  
-            c.setColor(c.simpleGamma());
-        }                 
+               
+        for(Color c : tonePixels)                  
+            c.setColor(c.simpleGamma());                     
     }
     
      public Image getImage()

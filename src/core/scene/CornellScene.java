@@ -128,7 +128,6 @@ public final class CornellScene extends Scene
         
         accelerator.setPrimitives(primitives);
         
-        lights.setDirectionalLight(new DirectionalLight(Color.WHITE, new Vector3f(0.3f, -1f, -1)));
     }
     
 }
