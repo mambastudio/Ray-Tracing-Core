@@ -149,7 +149,7 @@ public class StringParser {
         }
     }
     
-    public boolean peekNextTokenNumber()
+    public boolean peekNextTokenIsNumber()
     {
         String str = peekNextToken();
         return str.matches("-?\\d+(\\.\\d+)?");
@@ -172,28 +172,41 @@ public class StringParser {
     
     private boolean getNextLine()
     {       
+        String readLine = null;
         while(true)
         {
             try 
             {
-                line = bf.readLine();                
+                readLine = bf.readLine();                
             } 
             catch (IOException ex)
             {
                 Logger.getLogger(StringParser.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            if (line == null)
+            if (readLine == null)
                 return false;
             
-            if(line.isEmpty())
+            if(readLine.isEmpty())
                 continue;
                        
-            lineTokens = line.trim().split("[/\\s]+");            
-           
+            lineTokens = readLine.trim().split("[/\\s]+");            
+            line = readLine;
+            
             index = 0;
             return true;
         }
+    }
+    
+    public boolean contains(CharSequence sequence)
+    {
+        if(line == null) return false;        
+        return line.contains(sequence);
+    }
+    
+    public String getLine()
+    {
+        return line;
     }
     
     public static void writeString(File file, String string)

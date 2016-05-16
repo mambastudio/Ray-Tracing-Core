@@ -5,6 +5,8 @@
  */
 package core.math;
 
+import java.util.Arrays;
+
 /**
  *
  * @author user
@@ -56,5 +58,11 @@ public class IntArray
             System.arraycopy(oldArray, 0, array, 0, size);            
         }
         return array;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return Arrays.toString(trim());
     }
 }

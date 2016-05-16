@@ -5,6 +5,7 @@
  */
 package core.parser;
 
+import core.color.Color;
 import core.coordinates.Normal3f;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
@@ -19,109 +20,44 @@ import java.util.ArrayList;
  */
 public class OBJParser2 
 {
-    private static final ArrayList<Point3f> points = new ArrayList<>();    
-    private static final ArrayList<Normal3f> normals = new ArrayList<>();
+    public static ArrayList<Mesh_t> meshes = new ArrayList<>();
+    public static ArrayList<Material_t> materials = new ArrayList<>();
     
-    private static final FloatArray uvs = new FloatArray();
-    private static final IntArray vi = new IntArray();
-    
-    private static int nt;
-    private static int nv;
-   
-    private static final ArrayList<TriangleMesh> triangleMesh = new ArrayList<>();
-    
-    private static String groupName;
-    private static String objectName;
-    
-    public static void main(String... args)
+    public static class Mesh_t
     {
-        testRead();
-    }
-    
-    public static void testRead()
-    {
-        StringParser parser = new StringParser("C:\\Users\\user\\Desktop", "Josto.obj");
+        ArrayList<Point3f> positions;
+        ArrayList<Normal3f> normals;
+        ArrayList<Point2f> texcoords;
+        ArrayList<Integer> indices;
         
-        TriangleMesh mesh = null;
+        int number_vertices;            //number of vertices per face 
         
-        while(parser.hasNext())
-        {           
-            String peekToken = parser.peekNextToken();            
-            switch (peekToken) {
-                case "vn":                    
-                    readNormal(parser);
-                    break;
-                case "f":
-                    readFaces(parser);
-                    break;
-                case "usemtl":
-                    readUseMtl(parser);
-                    break;
-                default:
-                    parser.getNextToken();
-                    break;
-            }
-        }
+        String name;
     }
     
-    
-    public static void readUseMtl(StringParser parser)
+    public static class Material_t
     {
-        if(parser.getNextToken().equals("usemtl"))
-            System.out.println(parser.getNextToken());
-    }
-    
-    public static void readVertex(StringParser parser)
-    {           
-        if(parser.getNextToken().equals("v"))        
-            points.add(new Point3f(parser.getNextFloat(), parser.getNextFloat(), parser.getNextFloat()));             
-    }
-    
-    public static void readNormal(StringParser parser)
-    {
-        if(parser.getNextToken().equals("vn"))        
-            normals.add(new Normal3f(parser.getNextFloat(), parser.getNextFloat(), parser.getNextFloat()));         
-    }
-    
-    public static void readFaces(StringParser parser)
-    {
-        FloatArray floatArray = new FloatArray();
+        Color ambient;
+        Color diffuse;
+        Color specular;
+        Color transmittance;
+        Color emission;
         
-        if(parser.getNextToken().equals("f"))        
-            while(parser.hasNext() && parser.peekNextTokenNumber())            
-                floatArray.add(parser.getNextFloat());
-            
-        if(floatArray.getSize() == 3)
-        {
-            
-        }
-        else if(floatArray.getSize() == 6)
-        {
-            
-        }
-        else if(floatArray.getSize() == 8)
-        {
-            
-        }
-        else if(floatArray.getSize() == 9)
-        {
-            
-        }
-        else if(floatArray.getSize() == 12)
-        {
-            
-        }
+        float shininess;
+        float ior;      // index of refraction
+        float dissolve; // 1 == opaque; 0 == fully transparent
         
-    }
-    
-    private static TriangleMesh getTriangleMesh()
-    {
-        return new TriangleMesh(nt, nv, vi.trim(), (Point3f[])points.toArray(), 
-                (Normal3f[])normals.toArray(), (float[])uvs.trim());
-    }
-    
-    private static class Mesh
-    {
+        // illumination model (see http://www.fileformat.info/format/material/
+        int illum;
+
+        String ambient_texname;            // map_Ka
+        String diffuse_texname;            // map_Kd
+        String specular_texname;           // map_Ks
+        String specular_highlight_texname; // map_Ns
+        String bump_texname;               // map_bump, bump
+        String displacement_texname;       // disp
+        String alpha_texname;              // map_d
         
+        String name;
     }
 }

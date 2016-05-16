@@ -173,4 +173,9 @@ public class SphericalCoordinate
         float zenithDegrees = 90 - degrees;
         return directionDegrees(zenithDegrees, 0); //CONFIRM whether is zero 
     }
+    
+    public static boolean isInsideDisk(Vector3f v, double size)
+    {
+        return false;
+    }
 }
