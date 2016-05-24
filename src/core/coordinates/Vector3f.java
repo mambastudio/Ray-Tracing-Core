@@ -150,9 +150,9 @@ public class Vector3f
     
     public float get(int i)
     {
-        if(i == 0) return x;
-        else if(i == 1) return y;
-        else if(i == 2) return z;
+        if(i == 0) if((1f/x == Float.NEGATIVE_INFINITY)) return 0; else return x;
+        else if(i == 1) if((1f/y == Float.NEGATIVE_INFINITY)) return 0; else return y;
+        else if(i == 2)if((1f/z == Float.NEGATIVE_INFINITY)) return 0; else return z;
         else throw new UnsupportedOperationException("Invalid");
     }
     

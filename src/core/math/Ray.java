@@ -22,7 +22,7 @@ public class Ray {
     
     public int[] sign;
     
-    public static final float EPSILON = 0.001f;// 0.01f;
+    public static final float EPSILON = 0.01f;// 0.01f;
 
     public Ray() 
     {

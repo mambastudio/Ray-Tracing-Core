@@ -6,17 +6,17 @@
 package core;
 
 import core.accelerator.BoundingVolume;
-import core.accelerator.UniformGrid;
 import core.color.Color;
-import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
+import core.light.DirectionalLight;
 import core.math.BoundingBox;
 import core.math.BoundingSphere;
 import core.math.FloatValue;
 import static core.math.Geometry.mis2;
 import core.math.Ray;
 import core.math.Rng;
+import core.math.SphericalCoordinate;
 import java.util.ArrayList;
 
 /**
@@ -100,11 +100,14 @@ public class Scene
     {        
         lights.clear();
         
+        lights.setDirectionalLight(new DirectionalLight(Color.WHITE, SphericalCoordinate.reverseDirectionDegrees(-70, 0)));
         for(AbstractPrimitive prim : primitives)
            lights.add(prim);
         
         lights.addBackgroundLight();
         lights.addDirectionalLight();
+        
+        
     }    
     
     public Color directLightSampling(Intersection isect, FloatValue misWeight)

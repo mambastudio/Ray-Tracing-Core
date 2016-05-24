@@ -127,30 +127,33 @@ public class Triangle extends AbstractShape
 
     @Override
     public boolean intersectP(Ray r) {
-        Vector3f ao = p1.subV(r.o);
-        Vector3f bo = p2.subV(r.o);
-        Vector3f co = p3.subV(r.o);
+        Vector3f e1, e2, h, s, q;
+        double a, f, b1, b2;
         
-        Vector3f v0 = Vector3f.cross(co, bo);
-        Vector3f v1 = Vector3f.cross(bo, ao);
-        Vector3f v2 = Vector3f.cross(ao, co);
+        e1 = Point3f.sub(p2, p1);
+        e2 = Point3f.sub(p3, p1);
+        h = Vector3f.cross(r.d, e2);
+        a = Vector3f.dot(e1, h);
 
-        float v0d = Vector3f.dot(v0, r.d);
-        float v1d = Vector3f.dot(v1, r.d);
-        float v2d = Vector3f.dot(v2, r.d);
+        if (a > -0.0000001 && a < 0.0000001)
+            return false;
+
+        f = 1/a;
+        s = Point3f.sub(r.o, p1);
+	b1 = f * (Vector3f.dot(s, h));
+
+        if (b1 < 0.0 || b1 > 1.0)
+            return false;
+
+        q = Vector3f.cross(s, e1);
+	b2 = f * Vector3f.dot(r.d, q);
+
+	if (b2 < 0.0 || b1 + b2 > 1.0)
+            return false;
+
+	float t = (float) (f * Vector3f.dot(e2, q));
         
-        if(((v0d < 0.f)  && (v1d < 0.f)  && (v2d < 0.f)) ||
-           ((v0d >= 0.f) && (v1d >= 0.f) && (v2d >= 0.f)))
-        {
-            float distance = Vector3f.dot(n, ao) / Vector3f.dot(n, r.d);
-            
-            if((distance > r.getMin()) & (distance < r.getMax()))
-            {              
-                return true;
-            }
-        }
-        
-        return false;
+        return r.isInside(t);
     }
 
     @Override
@@ -163,10 +166,11 @@ public class Triangle extends AbstractShape
         h = Vector3f.cross(r.d, e2);
         a = Vector3f.dot(e1, h);
 
-        if (a > -0.00000000000001 && a < 0.0000000000001)
+        if (a > -0.0000001 && a < 0.0000001)
             return false;
 
         f = 1/a;
+        
         s = Point3f.sub(r.o, p1);
 	b1 = f * (Vector3f.dot(s, h));
 

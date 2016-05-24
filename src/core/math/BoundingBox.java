@@ -56,10 +56,9 @@ public class BoundingBox implements Cloneable
         float t0 = ray.getMin(), t1 = ray.getMax();
         for (int i = 0; i < 3; ++i) 
         {
-            // Update interval for _i_th bounding box slab, page 180
-            float invRayDir = 1f / ray.d.get(i);
-            float tNear = (minimum.get(i) - ray.o.get(i)) * invRayDir;
-            float tFar = (maximum.get(i) - ray.o.get(i)) * invRayDir;
+            // Update interval for _i_th bounding box slab, page 180           
+            float tNear = (minimum.get(i) - ray.o.get(i)) * ray.getInvDir().get(i);
+            float tFar = (maximum.get(i) - ray.o.get(i)) * ray.getInvDir().get(i);
 
             // Update parametric interval from slab intersection $t$s
             if (tNear > tFar) 

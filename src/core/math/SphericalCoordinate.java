@@ -129,6 +129,11 @@ public class SphericalCoordinate
         return directionRadians(toRadians(theta), toRadians(phi));
     }
     
+    public static Vector3f reverseDirectionDegrees(float theta, float phi)
+    {
+        return directionDegrees(theta, phi).neg();
+    }
+    
     public static Vector3f sphericalDirection(float i, float j, float width, float height)
     {
         //Since this is the right hand rule coordinate system, the phi covers 360 degrees
@@ -174,8 +179,10 @@ public class SphericalCoordinate
         return directionDegrees(zenithDegrees, 0); //CONFIRM whether is zero 
     }
     
-    public static boolean isInsideDisk(Vector3f v, double size)
+    public static boolean isInsideDisk(Vector3f v, float sizeRadiusDegrees, float elevationDegrees)
     {
-        return false;
+        Vector3f sunDirection = elevationDegrees(elevationDegrees);
+        float degreesBetween = getDegreesBetween(v, sunDirection);
+        return degreesBetween <= sizeRadiusDegrees;
     }
 }

@@ -93,7 +93,7 @@ public class Envmap extends AbstractBackground
         rayToLight.init();
         
         Color radiance = getColor(directionToLight);
-                       
+        
         if(cosAtLight != null)
             cosAtLight.value = 1.f;
        

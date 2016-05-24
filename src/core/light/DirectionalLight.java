@@ -14,6 +14,7 @@ import core.coordinates.Vector3f;
 import core.math.FloatValue;
 import core.math.Frame;
 import core.math.Ray;
+import core.math.SphericalCoordinate;
 import core.math.Transform;
 import core.math.Utility;
 
@@ -34,17 +35,18 @@ public class DirectionalLight extends AbstractLight
     }
     @Override
     public Color illuminate(Scene scene, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue cosAtLight) {
-        Vector3f dirToLight = frame.normal().neg();
+        Vector3f dirToLight = new Vector3f(-0.00f, 0.34f, 0.94f).normalize();
         
-        // Not used for infinite or delta lights
-        if(cosAtLight != null)
-            cosAtLight.value = 1.f;
+        //System.out.println(SphericalCoordinate.directionDegrees(-70, 0));
         
-        rayToLight.d.set(dirToLight);
+         rayToLight.d.set(dirToLight);
         rayToLight.o.set(receivingPosition);
         rayToLight.setMax(1e36f);
         rayToLight.init();
         
+        if(cosAtLight != null)
+            cosAtLight.value = 1.f;
+       
         return intensity.clone();
     }
 

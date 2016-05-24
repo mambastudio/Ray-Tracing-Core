@@ -41,4 +41,16 @@ public class ArHosekSkyModelState {
         }
         return builder.toString();
     }
+    
+    public double solarRadiusToDegrees()
+    {
+        double solarRadiusDegrees = Math.toDegrees(solar_radius);
+        return solarRadiusDegrees;
+    }
+    
+    public double elevationToDegrees()
+    {
+        double elevationDegrees = Math.toDegrees(elevation);
+        return elevationDegrees;
+    }
 }
