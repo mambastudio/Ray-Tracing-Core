@@ -13,21 +13,21 @@ import java.util.logging.Logger;
  *
  * @author user
  */
-public abstract class KernelExecution1 implements Runnable
+public abstract class KernelThread implements Runnable
 {
     boolean suspend = false;    
     boolean finish  = false;
     
     Thread thread = null;
     
-    ArrayList<KernelExecution1> arrayList = null;
+    ArrayList<KernelThread> arrayList = null;
     
-    public KernelExecution1()
+    public KernelThread()
     {
         thread = new Thread(this);
     }
     
-    public KernelExecution1(ArrayList<KernelExecution1> arrayList)
+    public KernelThread(ArrayList<KernelThread> arrayList)
     {
         this.arrayList = arrayList;
         this.arrayList.add(this);
@@ -43,7 +43,7 @@ public abstract class KernelExecution1 implements Runnable
         try {
             thread.join();
         } catch (InterruptedException ex) {
-            Logger.getLogger(KernelExecution1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(KernelThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -69,7 +69,7 @@ public abstract class KernelExecution1 implements Runnable
         return finish;
     }
     
-    //use this in a method in order to execute the thread state such pause & resume
+    //call this in an executing method in order to invoke thread state such pause & resume
     public synchronized void chill()
     {
         try

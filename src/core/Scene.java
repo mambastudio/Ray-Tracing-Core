@@ -99,15 +99,11 @@ public class Scene
     public void initLights()
     {        
         lights.clear();
-        
-        lights.setDirectionalLight(new DirectionalLight(Color.WHITE, SphericalCoordinate.reverseDirectionDegrees(-70, 0)));
+                
         for(AbstractPrimitive prim : primitives)
            lights.add(prim);
         
-        lights.addBackgroundLight();
-        lights.addDirectionalLight();
-        
-        
+        lights.init();       
     }    
     
     public Color directLightSampling(Intersection isect, FloatValue misWeight)

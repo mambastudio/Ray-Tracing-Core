@@ -251,4 +251,9 @@ public class Envmap extends AbstractBackground
     {        
        return distribution2D.sampleDiscrete(Rng.getFloat(), Rng.getFloat(), pdf);        
     }    
+
+    @Override
+    public boolean isCompound() {
+        return false;
+    }
 }

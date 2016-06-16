@@ -43,6 +43,11 @@ public class ExtendedList <V>
         list.add(v);
     }
     
+    public void addAll(ArrayList<V> arraylist)
+    {
+        list.addAll(arraylist);
+    }
+    
     public int size()
     {
         return list.size();

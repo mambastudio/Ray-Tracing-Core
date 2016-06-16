@@ -5,15 +5,19 @@
  */
 package core.thread;
 
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author user
+ * 
+ * This class is for thread implementation, and it's main focus is to utilize 
+ * java lambda feature. The class design to be standalone and hence does not require
+ * a thread class or execution service to invoke
+ * 
+ * The method execution is called in loop unless terminated by invoking 'finish'
+ * variable
+ * 
  */
-public class ReferencedExecution implements Runnable
+public class LambdaThread implements Runnable
 {
     //Where thread is made, interface and thread class
     Runnable runnable = null;
@@ -22,14 +26,6 @@ public class ReferencedExecution implements Runnable
     //Variables to control state of thread
     boolean suspend = false;    
     boolean finish  = false;
-    
-    ArrayList<ReferencedExecution> executionPool = null;
-    
-    public ReferencedExecution(ArrayList<ReferencedExecution> executionPool)
-    {
-        this.executionPool = executionPool;
-        this.executionPool.add(this);
-    }
             
     protected boolean terminated()
     {
@@ -63,9 +59,8 @@ public class ReferencedExecution implements Runnable
         while(true)
         {
             runnable.run();
-            if(terminated()) break;
+            if(terminated()) return;
         }
-        executionPool.remove(this);
     }
     
     public void setRunnable(Runnable runnable)
@@ -85,15 +80,6 @@ public class ReferencedExecution implements Runnable
         
         this.thread = new Thread(this);
         this.thread.start();
-    }
-    
-    public void join()
-    {
-        try {
-            thread.join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ReferencedExecution.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public void stopExecution()

@@ -27,6 +27,7 @@ public final class Color implements Serializable
     public static final Color CYAN = new Color(0, 1, 1);
     public static final Color MAGENTA = new Color(1, 0, 1);
     public static final Color GRAY = new Color(0.5f, 0.5f, 0.5f);
+    public static final Color LIGHTGRAY = new Color(0.8f);
 
     private static final float[] EXPONENT = new float[256];
 

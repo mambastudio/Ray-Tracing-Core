@@ -13,7 +13,7 @@ import core.math.Transform;
  */
 public abstract class AbstractBackground extends AbstractLight
 {
-     public AbstractBackground()
+    public AbstractBackground()
     {
         super(new Transform());
     }

@@ -14,7 +14,6 @@ import core.coordinates.Vector3f;
 import core.math.FloatValue;
 import core.math.Frame;
 import core.math.Ray;
-import core.math.SphericalCoordinate;
 import core.math.Transform;
 import core.math.Utility;
 
@@ -32,14 +31,12 @@ public class DirectionalLight extends AbstractLight
         super(new Transform());
         this.frame = new Frame(direction.normalize());
         this.intensity = color;
+        
     }
     @Override
     public Color illuminate(Scene scene, Point3f receivingPosition, Point2f rndTuple, Ray rayToLight, FloatValue cosAtLight) {
-        Vector3f dirToLight = new Vector3f(-0.00f, 0.34f, 0.94f).normalize();
         
-        //System.out.println(SphericalCoordinate.directionDegrees(-70, 0));
-        
-         rayToLight.d.set(dirToLight);
+        rayToLight.d.set(frame.normal().neg());
         rayToLight.o.set(receivingPosition);
         rayToLight.setMax(1e36f);
         rayToLight.init();
@@ -108,6 +105,11 @@ public class DirectionalLight extends AbstractLight
     @Override
     public float emissionPdfW(Scene scene, Vector3f w, float cosAtLight) {
         return Utility.concentricDiscPdfA() * scene.getBoundingSphere().invRadiusSqr;
+    }
+
+    @Override
+    public boolean isCompound() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -22,6 +22,7 @@ import core.color.sun.data.ArHosekSkyModelState;
 import core.coordinates.Vector3f;
 import core.image.HDR;
 import core.light.Envmap;
+import core.light.Sunsky;
 import core.math.SphericalCoordinate;
 import static java.lang.Math.cos;
 import static java.lang.Math.exp;
@@ -30,40 +31,24 @@ import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 import java.util.Arrays;
 
-
-
 /**
  *
  * @author user
  */
-
-public final class HosekWilkie 
-{
+public class HosekWilkie {
+    static int NIL                         = 0;
+    static double MATH_PI                   = 3.141592653589793;
+    static double MATH_DEG_TO_RAD           = ( MATH_PI / 180.0 );
+    static double MATH_RAD_TO_DEG           = ( 180.0 / MATH_PI );
+    static double DEGREES                   = MATH_DEG_TO_RAD;
+    static double TERRESTRIAL_SOLAR_RADIUS  = ( ( 0.51 * DEGREES ) / 2.0 );
     
-    int NIL                         = 0;
-    double MATH_PI                   = 3.141592653589793;
-    double MATH_DEG_TO_RAD           = ( MATH_PI / 180.0 );
-    double MATH_RAD_TO_DEG           = ( 180.0 / MATH_PI );
-    double DEGREES                   = MATH_DEG_TO_RAD;
-    double TERRESTRIAL_SOLAR_RADIUS  = ( ( 0.51 * DEGREES ) / 2.0 );
-
-    // internal functions
-    
-    Vector3f sunPosition = SphericalCoordinate.elevationDegrees(0);
-    
-    float turbidity = 1;
-    float albedo = 0;
-    float exposure = 0.01f;
-    float tonemapGamma = 3.2f;
-        
-    ArHosekSkyModelState currentState = new ArHosekSkyModelState();
-    
-    public HosekWilkie()
+    private  HosekWilkie()
     {
-        initStateRadiance();
+        
     }
-
-    public void ArHosekSkyModel_CookConfiguration(
+    
+    public static void ArHosekSkyModel_CookConfiguration(
         double[]                         dataset,
         ArHosekSkyModelConfiguration  config, 
         double                         turbidity, 
@@ -147,7 +132,7 @@ public final class HosekWilkie
         }
     }
     
-    double ArHosekSkyModel_CookRadianceConfiguration(
+    static double ArHosekSkyModel_CookRadianceConfiguration(
         double[]                          dataset, 
         double                            turbidity, 
         double                            albedo, 
@@ -210,7 +195,8 @@ public final class HosekWilkie
         return res;
     }
     
-    double ArHosekSkyModel_GetRadianceInternal(
+     
+    static double ArHosekSkyModel_GetRadianceInternal(
         ArHosekSkyModelConfiguration  configuration, 
         double                        theta, 
         double                        gamma
@@ -225,8 +211,7 @@ public final class HosekWilkie
             (configuration.values[2] + configuration.values[3] * expM + configuration.values[5] * rayM + configuration.values[6] * mieM + configuration.values[7] * zenith);
     }
     
-    
-    /* ----------------------------------------------------------------------------
+      /* ----------------------------------------------------------------------------
 
         arhosekskymodelstate_alloc_init() function
         ------------------------------------------
@@ -235,10 +220,10 @@ public final class HosekWilkie
         
         Spectral version
     ---------------------------------------------------------------------------- */
-    public ArHosekSkyModelState   arhosekskymodelstate_alloc_init(
-        float  solar_elevation,
-        float  atmospheric_turbidity,
-        float  ground_albedo
+    public static ArHosekSkyModelState   arhosekskymodelstate_alloc_init(
+        double  solar_elevation,
+        double  atmospheric_turbidity,
+        double  ground_albedo
         )
     {
         
@@ -270,7 +255,6 @@ public final class HosekWilkie
             state.emission_correction_factor_sun[wl] = 1.0;
             state.emission_correction_factor_sky[wl] = 1.0;
         }
-
         return state;        
     }
     
@@ -301,9 +285,9 @@ public final class HosekWilkie
     have to query the 'solar_radius' variable of the sky model state returned 
     *after* running this function.
 
----------------------------------------------------------------------------- */
+    ---------------------------------------------------------------------------- */
 
-    public ArHosekSkyModelState  arhosekskymodelstate_alienworld_alloc_init(
+     public static ArHosekSkyModelState  arhosekskymodelstate_alienworld_alloc_init(
         float  solar_elevation,
         float  solar_intensity,
         float  solar_surface_temperature_kelvin,
@@ -314,14 +298,14 @@ public final class HosekWilkie
         return null;
     }
     
-    public void arhosekskymodelstate_free(ArHosekSkyModelState  state)
+    public static void arhosekskymodelstate_free(ArHosekSkyModelState  state)
     {
         
     }
-
-    //Spectral version
     
-    public double arhosekskymodel_radiance(
+     //Spectral version
+    
+    public static double arhosekskymodel_radiance(
         ArHosekSkyModelState    state,
         double                  theta, 
         double                  gamma, 
@@ -368,8 +352,7 @@ public final class HosekWilkie
     
     // CIE XYZ and RGB versions
 
-
-    public ArHosekSkyModelState   arhosek_xyz_skymodelstate_alloc_init(
+    public static ArHosekSkyModelState   arhosek_xyz_skymodelstate_alloc_init(
         double  turbidity, 
         double  albedo, 
         double  elevation
@@ -403,7 +386,7 @@ public final class HosekWilkie
 
     
     
-    public ArHosekSkyModelState   arhosek_rgb_skymodelstate_alloc_init(
+    public static ArHosekSkyModelState   arhosek_rgb_skymodelstate_alloc_init(
         double  turbidity, 
         double  albedo, 
         double  elevation
@@ -435,7 +418,7 @@ public final class HosekWilkie
         return state;
     }
     
-    public double arhosek_tristim_skymodel_radiance(
+    public static double arhosek_tristim_skymodel_radiance(
         ArHosekSkyModelState    state,
         double                  theta,
         double                  gamma, 
@@ -449,10 +432,10 @@ public final class HosekWilkie
             * state.radiances[channel];
     }
     
-    final int pieces = 45;
-    final int order = 4;
+    static final int pieces = 45;
+    static final int order = 4;
 
-    public double arhosekskymodel_sr_internal(
+    public static double arhosekskymodel_sr_internal(
         ArHosekSkyModelState    state,
         int                     turbidity,
         int                     wl,
@@ -484,7 +467,7 @@ public final class HosekWilkie
         return  res * state.emission_correction_factor_sun[wl];
     }
     
-    double arhosekskymodel_solar_radiance_internal2(
+    static double arhosekskymodel_solar_radiance_internal2(
         ArHosekSkyModelState    state,
         double                  wavelength,
         double                  elevation,
@@ -589,7 +572,7 @@ public final class HosekWilkie
     //   Please read the above description before using this - there are several
     //   caveats!
 
-    public double arhosekskymodel_solar_radiance(
+    public static double arhosekskymodel_solar_radiance(
         ArHosekSkyModelState         state,
         double                       theta,
         double                       gamma,
@@ -615,135 +598,80 @@ public final class HosekWilkie
         return  direct_radiance + inscattered_radiance;
     }
     
-    /*
-    This struct holds the pre-computation data for one particular albedo value.
-    Most fields are self-explanatory, but users should never directly 
-    manipulate any of them anyway. The only consistent way to manipulate such 
-    structs is via the functions 'arhosekskymodelstate_alloc_init' and 
-    'arhosekskymodelstate_free'.
-    
-    'emission_correction_factor_sky'
-    'emission_correction_factor_sun'
-
-        The original model coefficients were fitted against the emission of 
-        our local sun. If a different solar emission is desired (i.e. if the
-        model is being used to predict skydome appearance for an earth-like 
-        planet that orbits a different star), these correction factors, which 
-        are determined during the alloc_init step, are applied to each waveband 
-        separately (they default to 1.0 in normal usage). This is the simplest 
-        way to retrofit this sort of capability to the existing model. The 
-        different factors for sky and sun are needed since the solar disc may 
-        be of a different size compared to the terrestrial sun.
-    */
-    
-    
-    public void setElevationDegrees(float degrees)
-    {
-        sunPosition = SphericalCoordinate.elevationDegrees(degrees);
-    }
-    
-    
-    
-    public void setTurbidity(float turbidity)
-    {
-        this.turbidity = turbidity;
-    }
-    
-    public void setAlbedo(float albedo)
-    {
-        this.albedo = albedo;
-    }
-    
-    public void setExposure(float exposure)
-    {
-        this.exposure = exposure;
-    }
-    
-    public void setTonemapGamma(float tonemapGamma)
-    {
-        this.tonemapGamma = tonemapGamma;
-    }
-  
-    float solarZenith()
-    {
-        return SphericalCoordinate.thetaRadians(sunPosition);
-    }
-    
-    float zenith(Vector3f v)
-    {
-        return SphericalCoordinate.thetaRadians(v);
-    }
-    
-    float gamma(Vector3f v)
+    static float gamma(Vector3f v, Vector3f sunPosition)
     {
         return SphericalCoordinate.getRadiansBetween(v, sunPosition);
     }
     
-    public void initStateRGB()
+    static float zenith(Vector3f v)
     {
-        currentState = arhosek_rgb_skymodelstate_alloc_init(turbidity, albedo, SphericalCoordinate.elevationRadians(sunPosition));        
+        return SphericalCoordinate.thetaRadians(v);
     }
     
-    public void initStateXYZ()
+    public static ArHosekSkyModelState initStateRGB(double turbidity, double albedo, Vector3f sunPosition)
     {
-        currentState = arhosek_xyz_skymodelstate_alloc_init(turbidity, albedo, SphericalCoordinate.elevationRadians(sunPosition));
+        return arhosek_rgb_skymodelstate_alloc_init(turbidity, albedo, SphericalCoordinate.elevationRadians(sunPosition));        
     }
     
-    public void initStateRadiance()
+    public static ArHosekSkyModelState initStateXYZ(double turbidity, double albedo, Vector3f sunPosition)
+    {
+        return arhosek_xyz_skymodelstate_alloc_init(turbidity, albedo, SphericalCoordinate.elevationRadians(sunPosition));
+    }
+    
+    public static ArHosekSkyModelState initStateRadiance(double turbidity, double albedo, Vector3f sunPosition)
     {        
-        currentState = arhosekskymodelstate_alloc_init(SphericalCoordinate.elevationRadians(sunPosition), turbidity, albedo);
+        return arhosekskymodelstate_alloc_init(SphericalCoordinate.elevationRadians(sunPosition), turbidity, albedo);
+    }
+        
+    public static boolean isInSolarDisk(Vector3f v, ArHosekSkyModelState currentState)
+    {
+        return SphericalCoordinate.isInsideDisk(v, (float) currentState.solarRadiusToDegrees(), (float) currentState.elevationToDegrees());            
     }
     
-    public Color getRGB(Vector3f d)
+    public static Color getRGB(Vector3f d, ArHosekSkyModelState currentState, double exposure, double tonemapGamma)
     {
         Vector3f dir = d.clone();
                 
         if(dir.y < 0)
             return new Color();        
                     
-        float gamma         = gamma(dir);
+        float gamma         = gamma(dir, currentState.getSolarDirection());
         float theta         = zenith(dir);
-               
-        double r = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 0);
-        double g = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 1);
-        double b = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 2)
-                ;
-        return new Color(r, g, b).mul(exposure).simpleGamma(tonemapGamma);
+        
+        double r = arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 0);
+        double g = arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 1);
+        double b = arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 2);
+        
+        return new Color(r, g, b).mul((float)exposure).simpleGamma((float)tonemapGamma);
     }
     
-    public Color getRGB_using_XYZ(Vector3f d)
+    public Color getRGB_using_XYZ(Vector3f d, ArHosekSkyModelState currentState, double exposure, double tonemapGamma)
     {
         Vector3f dir = d.clone();
                 
         if(dir.y < 0)
             return new Color();        
                     
-        float gamma         = gamma(dir);
+        float gamma         = gamma(dir, currentState.getSolarDirection());
         float theta         = zenith(dir);
                
-        double X = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 0);
-        double Y = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 1);
-        double Z = this.arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 2);
+        double X = arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 0);
+        double Y = arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 1);
+        double Z = arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 2);
         
         Color color =  RGBSpace.convertXYZtoRGB(new XYZ(X, Y, Z));   
         
-        return color.mul(exposure).simpleGamma(tonemapGamma);
+        return color.mul((float)exposure).simpleGamma((float)tonemapGamma);
     }
     
-    public Color getRGB_using_radiance_and_solar(Vector3f d)
-    {
-       
-            return getRGB_using_radiance(d);
-    }
-    
-    public Color getRGB_using_radiance(Vector3f d)
+    public static Color getRGB_using_radiance(Vector3f d, ArHosekSkyModelState currentState, double exposure, double tonemapGamma)
     {
         Vector3f dir = d.clone();
                 
         if(dir.y < 0)
             return new Color();        
                     
-        float gamma         = gamma(dir);
+        float gamma         = gamma(dir, currentState.getSolarDirection());
         float theta         = zenith(dir);
         
         float X, Y, Z;
@@ -751,17 +679,17 @@ public final class HosekWilkie
         
         for(int i = 320; i<=720; i+=40)
         {
-            double radiance = this.arhosekskymodel_radiance(currentState, theta, gamma, i);
+            double radiance = arhosekskymodel_radiance(currentState, theta, gamma, i);
             X += CIE1931.getX(radiance, i);
             Y += CIE1931.getY(radiance, i);
             Z += CIE1931.getZ(radiance, i);
         }
         
         Color color =  RGBSpace.convertXYZtoRGB(new XYZ(X, Y, Z).mul(40));   
-        return color.mul(exposure).simpleGamma(tonemapGamma);
+        return color.mul((float)exposure).simpleGamma((float)tonemapGamma);
     }
     
-    public Color getRGB_using_solar_radiance(Vector3f d)
+    public static Color getRGB_using_solar_radiance(Vector3f d, ArHosekSkyModelState currentState, double exposure)
     {
         Vector3f dir = d.clone();
                 
@@ -771,7 +699,7 @@ public final class HosekWilkie
         if(!SphericalCoordinate.isInsideDisk(d, (float) currentState.solarRadiusToDegrees(), (float) currentState.elevationToDegrees()))
             return new Color();
                     
-        float gamma         = gamma(dir);
+        float gamma         = gamma(dir, currentState.getSolarDirection());
         float theta         = zenith(dir);
         
         float X, Y, Z;
@@ -779,37 +707,45 @@ public final class HosekWilkie
         
         for(int i = 320; i<=720; i+=40)
         {
-            double radiance = this.arhosekskymodel_solar_radiance(currentState, theta, gamma, i);
+            double radiance = arhosekskymodel_solar_radiance(currentState, theta, gamma, i);
             X += CIE1931.getX(radiance, i);
             Y += CIE1931.getY(radiance, i);
             Z += CIE1931.getZ(radiance, i);
         }
         
         Color color =  RGBSpace.convertXYZtoRGB(new XYZ(X, Y, Z)).mul(5.0f);         
-        return color.mul(exposure);
+        return color.mul((float)exposure);
+    }   
+    
+    public static Color getSunColor(ArHosekSkyModelState currentState, double exposure)
+    {
+        Vector3f v = currentState.getSolarDirection();
+        return getRGB_using_solar_radiance(v, currentState, exposure);
     }
     
-    public boolean isInSolarDisk(Vector3f v)
+    public static HDR getHDR(int size, ArHosekSkyModelState currentState, double exposure, double tonemapGamma)
     {
-        return SphericalCoordinate.isInsideDisk(v, (float) currentState.solarRadiusToDegrees(), (float) currentState.elevationToDegrees());            
-    }
-    
-    public HDR getHDR(int size)
-    {
-         HDR hdr = new HDR(size, size);
-        
+        HDR hdr = new HDR(size, size);
+         
         for(int j = 0; j<size; j++)
             for(int i = 0; i<size; i++)
             {
-                Color color = getRGB_using_radiance_and_solar(SphericalCoordinate.sphericalDirection(i, j, size, size));               
+                Color color = getRGB_using_radiance(SphericalCoordinate.sphericalDirection(i, j, size, size), currentState, exposure, tonemapGamma); 
+                
                 hdr.setColor(i, j, color);
             }
                 
         return hdr;
     }
     
-    public Envmap getEnvmap(int size)
+    public static Envmap getEnvmap(int size, ArHosekSkyModelState currentState, double exposure, double tonemapGamma)
     {
-        return new Envmap(getHDR(size));
+        return new Envmap(getHDR(size, currentState, exposure, tonemapGamma));
+    }
+    
+    public static Sunsky getSunsky(int size, ArHosekSkyModelState currentState, double exposure, double tonemapGamma)
+    {
+       return new Sunsky(size, currentState, exposure, tonemapGamma);
+    
     }
 }

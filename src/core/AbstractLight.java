@@ -8,11 +8,11 @@ package core;
 import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
-import core.math.BoundingSphere;
 import core.color.Color;
 import core.math.FloatValue;
 import core.math.Ray;
 import core.math.Transform;
+import java.util.ArrayList;
 
 /**
  *
@@ -90,4 +90,12 @@ public abstract class AbstractLight
     public abstract float directPdfW(Scene scene, Point3f p, Vector3f w);
     public abstract float directPdfA(Scene scene, Vector3f w);
     public abstract float emissionPdfW(Scene scene, Vector3f w, float cosAtLight);
+    
+    // Is this a compound emitter consisting of several sub-objects
+    public abstract boolean isCompound();
+    
+    public ArrayList<AbstractLight> getLights()
+    {
+        return null;
+    }  
 }

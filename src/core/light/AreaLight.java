@@ -131,4 +131,9 @@ public class AreaLight extends AbstractLight
     {
         return cosAtLight * INV_PI_F;
     }
+
+    @Override
+    public boolean isCompound() {
+        return false;
+    }
 }

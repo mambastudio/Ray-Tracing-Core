@@ -5,7 +5,6 @@
  */
 package core;
 
-import core.light.DirectionalLight;
 import core.math.ExtendedList;
 import java.util.ArrayList;
 
@@ -13,14 +12,17 @@ import java.util.ArrayList;
  *
  * @author user
  */
-public class LightCache {
+public class LightCache 
+{
+    //Full list of light used in scene
     ExtendedList<AbstractLight> lightList = null;    
+        
+    //Also includes the sunsky
     AbstractBackground backgroundLight = null;
-    DirectionalLight directionalLight = null;
-    
+  
     public LightCache()
     {
-        lightList = new ExtendedList<>();            
+        lightList = new ExtendedList<>();         
     }
     
     public void clear()
@@ -28,21 +30,18 @@ public class LightCache {
         lightList.removeAll();
     }
     
-    public void addBackgroundLight()
+    public void init()
     {
         if(backgroundLight != null)
-            if(!lightList.contains(backgroundLight))
-                lightList.add(backgroundLight);
-                
+        {
+            lightList.add(backgroundLight);
+            
+            if(backgroundLight.isCompound())
+                lightList.addAll(backgroundLight.getLights());
+        }
+        
     }
-    
-    public void addDirectionalLight()
-    {
-        if(directionalLight != null)
-            if(!lightList.contains(directionalLight))
-                lightList.add(directionalLight);
-    }
-    
+        
     public void setBackgroundLight(AbstractBackground background)
     {
         this.backgroundLight = background;
@@ -52,25 +51,10 @@ public class LightCache {
     {
         return backgroundLight;
     }
-    
-    public void setDirectionalLight(DirectionalLight directionalLight)
-    {
-        this.directionalLight = directionalLight;
-    }
-    
-    public DirectionalLight getDirectionalLight()
-    {
-        return directionalLight;
-    }
-    
+              
     public boolean hasBackgroundLight()
     {
         return backgroundLight != null;
-    }
-    
-    public boolean hasDirectionalLight()
-    {
-        return directionalLight != null;
     }
     
     public void add(AbstractPrimitive primitive)
@@ -89,8 +73,7 @@ public class LightCache {
             primitive.refine(list);
         
             for(AbstractPrimitive prim : list)
-                lightList.add(prim.getAreaLight());
-            
+                lightList.add(prim.getAreaLight());            
         }       
     }
     

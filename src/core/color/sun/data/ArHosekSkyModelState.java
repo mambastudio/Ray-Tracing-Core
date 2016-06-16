@@ -5,6 +5,8 @@
  */
 package core.color.sun.data;
 
+import core.coordinates.Vector3f;
+import core.math.SphericalCoordinate;
 import java.util.Arrays;
 
 /**
@@ -52,5 +54,10 @@ public class ArHosekSkyModelState {
     {
         double elevationDegrees = Math.toDegrees(elevation);
         return elevationDegrees;
+    }
+    
+    public Vector3f getSolarDirection()
+    {       
+        return SphericalCoordinate.elevationRadians((float)elevation);        
     }
 }

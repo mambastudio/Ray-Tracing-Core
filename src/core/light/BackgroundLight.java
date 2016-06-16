@@ -11,7 +11,6 @@ import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import core.color.Color;
-import core.math.BoundingSphere;
 import core.math.FloatValue;
 import core.math.Frame;
 import core.math.Ray;
@@ -122,6 +121,11 @@ public class BackgroundLight extends AbstractBackground
             scene.getBoundingSphere().radiusSqr;
         
         return directPdf * positionPdf;
+    }
+
+    @Override
+    public boolean isCompound() {
+        return false;
     }
     
 }

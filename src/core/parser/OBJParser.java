@@ -89,7 +89,7 @@ public class OBJParser
         {
             String name = parser.getNextToken();
             System.out.println("object: " +name);
-            Material material = Material.createLambert(Color.WHITE);
+            Material material = Material.createLambert(Color.LIGHTGRAY);
             material.name = name;
             Geometry geometries = new Geometry(material);
             geometriesList.add(geometries);
@@ -102,7 +102,7 @@ public class OBJParser
         {
             String name = parser.getNextToken();
             System.out.println("group: " +name);
-            Material material = Material.createLambert(Color.WHITE);
+            Material material = Material.createLambert(Color.LIGHTGRAY);
             material.name = name;
             Geometry geometries = new Geometry(material);
             geometriesList.add(geometries);

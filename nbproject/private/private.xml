@@ -3,20 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/light/Envmap.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/math/Ray.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/accelerator/BoundingVolume.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/light/DirectionalLight.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/scene/CornellScene.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/accelerator/UniformGrid.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/color/sun/HosekWilkie.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/math/SphericalCoordinate.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/math/Frame.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/coordinates/Vector3f.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/Scene.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/light/Sunsky.java</file>
             <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/LightCache.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/math/BoundingBox.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/shape/Triangle.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/light/BackgroundLight.java</file>
         </group>
     </open-files>
 </project-private>

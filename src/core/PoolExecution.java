@@ -5,7 +5,7 @@
  */
 package core;
 
-import core.thread.KernelExecution1;
+import core.thread.KernelThread;
 import java.util.ArrayList;
 
 /**
@@ -14,33 +14,39 @@ import java.util.ArrayList;
  */
 public class PoolExecution 
 {
-    private final ArrayList<KernelExecution1> kernelList;
+    private final ArrayList<KernelThread> kernelList;
     
     public PoolExecution()
     {
         kernelList = new ArrayList<>();
     }
     
-    public void add(KernelExecution1 kernel)
+    public void add(KernelThread kernel)
     {
         kernelList.add(kernel);
     }
     
     public void start()
     {
-        for(KernelExecution1 execution : kernelList)
+        for(KernelThread execution : kernelList)
             execution.start();
     }
         
     public void stop()
     {
-        for(KernelExecution1 execution : kernelList)
+        for(KernelThread execution : kernelList)
             execution.stop();
     }
     
     public void pause()
     {
-        for(KernelExecution1 execution : kernelList)
+        for(KernelThread execution : kernelList)
             execution.pause();
+    }
+    
+    public void join()
+    {
+        for(KernelThread execution : kernelList)
+            execution.join();
     }
 }

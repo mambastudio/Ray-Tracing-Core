@@ -179,6 +179,11 @@ public class SphericalCoordinate
         return directionDegrees(zenithDegrees, 0); //CONFIRM whether is zero 
     }
     
+    public static Vector3f elevationRadians(float radians)
+    {
+        return elevationDegrees(toDegrees(radians));
+    }
+    
     public static boolean isInsideDisk(Vector3f v, float sizeRadiusDegrees, float elevationDegrees)
     {
         Vector3f sunDirection = elevationDegrees(elevationDegrees);

@@ -5,12 +5,8 @@
  */
 package core;
 
-import core.color.sun.HosekWilkie;
 import core.coordinates.Vector3f;
 import core.math.SphericalCoordinate;
-import static core.math.Utility.toRadians;
-import static java.lang.Math.PI;
-import static java.lang.Math.pow;
 import java.util.Comparator;
 
 /**
