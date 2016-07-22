@@ -470,4 +470,30 @@ public class Utility {
     {
         return (float)Math.pow(a, b);
     }
+    
+    public static int setBitOneAt(int value, int index)
+    {
+        return value | 1 << index;
+    }
+    
+    public static int setBitZeroAt(int value, int index)
+    {
+        return value & ~(1 << index);
+    }
+    
+    public static int setBitValueAt(int destination, int value, int index)
+    {
+        return destination | value << index;
+    }
+    
+    public static int setBitZeroRange(int value, int start, int end)
+    {
+        int finalValue = value;
+        
+        for(int i = start; i <= end; i++)
+            finalValue = setBitZeroAt(finalValue, i);
+        
+        return finalValue;
+    }
+    
 }

@@ -3,9 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/light/Sunsky.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/LightCache.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/light/BackgroundLight.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/image/formats/BitmapBGRAPre.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/image/formats/GenericBitmap.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/image/FastBitmap.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/color/Color.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/image/ByteImagePixels.java</file>
         </group>
     </open-files>
 </project-private>

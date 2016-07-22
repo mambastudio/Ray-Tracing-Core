@@ -36,12 +36,12 @@ import java.util.Arrays;
  * @author user
  */
 public class HosekWilkie {
-    static int NIL                         = 0;
-    static double MATH_PI                   = 3.141592653589793;
-    static double MATH_DEG_TO_RAD           = ( MATH_PI / 180.0 );
-    static double MATH_RAD_TO_DEG           = ( 180.0 / MATH_PI );
-    static double DEGREES                   = MATH_DEG_TO_RAD;
-    static double TERRESTRIAL_SOLAR_RADIUS  = ( ( 0.51 * DEGREES ) / 2.0 );
+    final static int NIL                         = 0;
+    final static double MATH_PI                   = 3.141592653589793;
+    final static double MATH_DEG_TO_RAD           = ( MATH_PI / 180.0 );
+    final static double MATH_RAD_TO_DEG           = ( 180.0 / MATH_PI );
+    final static double DEGREES                   = MATH_DEG_TO_RAD;
+    final static double TERRESTRIAL_SOLAR_RADIUS  = ( ( 0.51 * DEGREES ) / 2.0 );
     
     private  HosekWilkie()
     {
@@ -66,8 +66,6 @@ public class HosekWilkie {
         // alb 0 low turb
         
         elev_matrix = Arrays.copyOfRange(dataset, 9 * 6 * (int_turbidity-1), dataset.length);
-        
-        
         
         for(int i = 0; i < 9; ++i )
         {

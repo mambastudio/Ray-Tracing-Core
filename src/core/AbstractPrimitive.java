@@ -37,4 +37,9 @@ public abstract class AbstractPrimitive
     {
         return "primitive";
     }
+    
+    public void init()
+    {
+        
+    }
 }

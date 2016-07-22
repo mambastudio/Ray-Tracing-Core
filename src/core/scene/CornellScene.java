@@ -12,8 +12,6 @@ import core.accelerator.UniformGrid;
 import core.coordinates.Normal3f;
 import core.coordinates.Point3f;
 import core.color.Color;
-import core.coordinates.Vector3f;
-import core.light.DirectionalLight;
 import core.primitive.Geometry;
 import core.shape.Quad;
 import core.shape.Sphere;
@@ -43,7 +41,6 @@ public final class CornellScene extends Scene
         init();
     }
     
-    @Override
     public void init() 
     {                
         accelerator = new UniformGrid();

@@ -9,14 +9,12 @@ import core.accelerator.BoundingVolume;
 import core.color.Color;
 import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
-import core.light.DirectionalLight;
 import core.math.BoundingBox;
 import core.math.BoundingSphere;
 import core.math.FloatValue;
 import static core.math.Geometry.mis2;
 import core.math.Ray;
 import core.math.Rng;
-import core.math.SphericalCoordinate;
 import java.util.ArrayList;
 
 /**
@@ -33,13 +31,13 @@ public class Scene
     public Scene()
     {
         lights = new LightCache();
-        camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 500, 500, 45);
+        camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 45);
     }
     
     public Scene(int width, int height)
     {
         lights = new LightCache();
-        camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), width, height, 45);
+        camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 45);
     }
     
     public void prepareToRender()
@@ -47,18 +45,7 @@ public class Scene
         camera.setUp();
         initLights();
     }
-    
-    public void setCameraSize(int width, int height)
-    {
-        camera.xResolution = width;
-        camera.yResolution = height;
-    }
-    
-    public void init()
-    {
-        
-    }
-    
+            
     public void setPrimitives(ArrayList<AbstractPrimitive> primitives)
     {        
         this.primitives = new ArrayList<>();
@@ -195,5 +182,10 @@ public class Scene
         //Calculate total power output        
         Color color = radiance.mul(bsdfFactor.mul(cosWo.value / bsdfPdfW.value));           
         return color;        
+    }
+    
+    public int getThreads()
+    {
+        return 1;
     }
 }

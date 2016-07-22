@@ -202,7 +202,7 @@ public class Triangle extends AbstractShape
             else
             {
                 nhit = getNormal((float)(1d - b1 - b2), (float)b1, (float)b2);
-                if(Vector3f.dot(n, r.d) > 0)                    
+                if(Vector3f.dot(nhit, r.d) > 0)                    
                     nhit = nhit.neg();
                 dg.n = nhit;
             }

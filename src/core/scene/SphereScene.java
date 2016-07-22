@@ -54,7 +54,6 @@ public class SphereScene extends Scene
         init();
     }
     
-    @Override
     public final void init()
     {
         accelerator = new UniformGrid();

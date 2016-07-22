@@ -7,9 +7,11 @@ package core.shape;
 
 import core.AbstractShape;
 import core.coordinates.Normal3f;
+import core.coordinates.Point2f;
 import core.coordinates.Point3f;
 import core.math.BoundingBox;
 import core.math.DifferentialGeometry;
+import core.math.IntArray;
 import core.math.Ray;
 import core.math.Transform;
 import java.util.ArrayList;
@@ -19,48 +21,87 @@ import java.util.ArrayList;
  * @author user
  */
 public class TriangleMesh extends AbstractShape
-{
-    protected int ntris, nverts;    // number of triangles & vertices   
-    protected int[] vertexIndex;    // pointer to an array of vertex indices
-    protected Point3f[] p;          // array of nv vertex positions
-    protected Normal3f[] n;         // an optional array of normal vectors, one per vertex in the mesh   
-    protected float[] uvs;           // an optional array uv values, one of each vertex
+{    
+    //Global variables
+    protected static ArrayList<Point3f>  p  = new ArrayList<>();                    // array of nv vertex positions
+    protected static ArrayList<Normal3f> n  = new ArrayList<>();                    // an optional array of normal vectors, one per vertex in the mesh   
+    protected static ArrayList<Point2f>  uv = new ArrayList<>();                    // an optional array uv values, one of each vertex
     
+    //Local variables
+    protected IntArray   vertexIndex;  
+    protected IntArray   uvIndex;
+    protected IntArray   normalIndex;
+    
+       
     BoundingBox bounds = new BoundingBox();
+    String name = null;
     
-    public TriangleMesh(int nt, int nv, int[] vi,
-                 Point3f[] P, Normal3f[] N,
-                 float[] uv)
+    public TriangleMesh()
     {
         super(new Transform(), new Transform());
-        this.ntris = nt;
-        this.nverts = nv;
         
-        this.vertexIndex = new int[ntris*3];        
-        System.arraycopy(vi,0,vertexIndex,0,ntris*3);
-        // Copy _uv_, _N_, and _S_ vertex data, if present
-        if (uv!=null) 
-        {
-            uvs = new float[2*nverts];
-            System.arraycopy(uv,0,uvs,0,2*nverts);
-        }
-        else 
-            uvs = null;
-        p = new Point3f[nverts];
-        if (N!=null) 
-        {
-            n = new Normal3f[nverts];
-            System.arraycopy(N,0,n,0,nverts);
-        }
-        else n = null; 
+        vertexIndex = new IntArray();
+        uvIndex = new IntArray();
+        normalIndex = new IntArray();
+    }
+    
+    public TriangleMesh(String name)
+    {
+        super(new Transform(), new Transform());
         
-        // Transform mesh vertices to world space
+        vertexIndex = new IntArray();
+        uvIndex = new IntArray();
+        normalIndex = new IntArray();
         
-        for (int i = 0; i < nverts; ++i)
-        {
-            p[i] = P[i].clone();
-            bounds.include(p[i]);
-        }        
+        this.name = name;        
+    }
+    
+         
+    public static void addVertex(float x, float y, float z)
+    {
+        p.add(new Point3f(x, y, z));
+    }
+        
+    public static void addNormal(float x, float y, float z)
+    {
+        n.add(new Normal3f(x, y, z));
+    }
+    
+    public static void addUV(float x, float y)
+    {
+        uv.add(new Point2f(x, y));
+    }
+    
+    public static void clear()
+    {
+        p.clear();
+        n.clear();
+        uv.clear();
+    }
+    
+    public void addVertexIndex(int i, int j, int k)
+    {
+        vertexIndex.add(i, j, k);
+    }
+    
+    public void addUVIndex(int i, int j, int k)
+    {
+        uvIndex.add(i, j, k);
+    }
+    
+    public void addNormalIndex(int i, int j, int k)
+    {
+        normalIndex.add(i, j, k);
+    }
+    
+    public boolean hasNormal()
+    {
+        return normalIndex.getSize() > 0;
+    }
+    
+    public boolean hasUV()
+    {
+        return uvIndex.getSize() > 0;
     }
     
     @Override
@@ -93,9 +134,42 @@ public class TriangleMesh extends AbstractShape
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void refine(ArrayList<AbstractShape> refined)
+    @Override
+    public  ArrayList<AbstractShape> refine()
     {
-        for (int i = 0; i < ntris; ++i)
-            refined.add(new Triangle2(this, i));
+        //TODO
+        ArrayList<AbstractShape> refined = new ArrayList<>();
+        for(int i = 0; i<getTriangleSize(); i++)
+        {
+            TriangleM triangle = new TriangleM(this, i);            
+            refined.add(triangle);
+        }
+        return refined;
+    }
+    
+    public int getTriangleSize()
+    {
+        return vertexIndex.getSize()/3;
+    }
+    
+    public static String getMeshInfo()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("points   : ").append(p.size()).append("\n");
+        builder.append("vertices : ").append(n.size()).append("\n");
+        builder.append("uvs      : ").append(uv.size()).append("\n");
+        
+        return builder.toString();
+    }
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("name        : ").append(name).append("\n").append("\n");
+        builder.append("faces       : ").append(getTriangleSize()).append("\n");
+        builder.append("has UV      : ").append(hasUV()).append("\n");
+        builder.append("has normals : ").append(hasNormal()).append("\n");
+        return builder.toString();
     }
 }

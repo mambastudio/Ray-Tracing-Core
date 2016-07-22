@@ -16,6 +16,7 @@ import static core.math.Utility.cosf;
 import static core.math.Utility.sinf;
 import static core.math.Utility.toDegrees;
 import static core.math.Utility.toRadians;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -170,13 +171,22 @@ public class SphericalCoordinate
     public static float elevationDegrees(Vector3f v)
     {
         float zenithDegrees = thetaDegrees(v);
-        return 90 - zenithDegrees;        
+        return 90 - zenithDegrees;       
+                
     }
     
-    public static Vector3f elevationDegrees(float degrees)
+    public static Vector3f elevationDegrees(float elevationDegrees)
     {
-        float zenithDegrees = 90 - degrees;
-        return directionDegrees(zenithDegrees, 0); //CONFIRM whether is zero 
+        float phi = 0;
+        float zenithDegrees = abs(90 - elevationDegrees); 
+        
+        if(elevationDegrees > 90)
+        {
+            phi = 180;
+            
+        }
+        
+        return directionDegrees(zenithDegrees, phi); //CONFIRM whether is zero 
     }
     
     public static Vector3f elevationRadians(float radians)

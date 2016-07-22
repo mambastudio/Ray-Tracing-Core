@@ -11,7 +11,6 @@ import core.coordinates.Vector3f;
 import core.math.Matrix;
 import core.math.Ray;
 import core.math.Transform;
-import core.math.Utility;
 
 /**
  *
@@ -23,22 +22,17 @@ public class Camera
     public Point3f lookat;
     public Vector3f up;
     
-    public float xResolution;
-    public float yResolution;
-    
     public float fov;
     
     public Transform cameraTransform;   
     
     public float mImagePlaneDist;
    
-    public Camera(Point3f position, Point3f lookat, Vector3f up, float xResolution, float yResolution, float horizontalFOV)
+    public Camera(Point3f position, Point3f lookat, Vector3f up, float horizontalFOV)
     {
         this.position = position.clone();
         this.lookat = lookat.clone();
-        this.up = up.clone();
-        this.xResolution = xResolution;
-        this.yResolution = yResolution;
+        this.up = up.clone();        
         this.fov = horizontalFOV;        
         this.cameraTransform = new Transform();
     }
@@ -69,10 +63,7 @@ public class Camera
         Matrix mV_Inv = eInv.mul(viewToWorld);
                                         
         cameraTransform.m = mV;
-        cameraTransform.mInv = mV_Inv;      
-                
-        float tanHalfAngle = (float) Math.tan(fov * Utility.PI_F / 360.f);
-        mImagePlaneDist = xResolution / (2.f * tanHalfAngle);
+        cameraTransform.mInv = mV_Inv;                      
     }
     
     public Ray getFastRay(float x, float y, float xRes, float yRes)
@@ -104,8 +95,8 @@ public class Camera
     {
         return position;
     }
-        
-    public Ray generateRay(float x, float y)
+    
+    public Ray generateRay(float x, float y, float xResolution, float yResolution)
     {
         float d = (float) (1./Math.tan(Math.toRadians(fov)/2));
         
@@ -135,13 +126,13 @@ public class Camera
         return builder.toString(); 
     }
 
-    public boolean checkRaster(float x, float y) 
+    public boolean checkRaster(float x, float y, float xResolution, float yResolution) 
     {
         return x >= 0 && y >= 0 &&
             x < xResolution && y < yResolution;
     }
     
-    public Point2f worldToRaster(Point3f aHitpoint)            
+    public Point2f worldToRaster(Point3f aHitpoint, float xResolution, float yResolution)            
     {
         Point3f cHitpoint = cameraTransform.transform(aHitpoint);
         
@@ -159,7 +150,7 @@ public class Camera
     
     public Camera copy()
     {
-        Camera camera = new Camera(position, lookat, up, xResolution, yResolution, fov);
+        Camera camera = new Camera(position, lookat, up, fov);
         camera.setUp();
         return camera;
     }

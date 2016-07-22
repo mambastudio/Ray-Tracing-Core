@@ -96,5 +96,11 @@ public class LambdaThread implements Runnable
     {        
         suspend = false;
         notify();
-    }      
+    }  
+    
+    public static void executeThread(Runnable runnable)
+    {
+        Thread thread = new Thread(runnable);
+        thread.start();
+    }
 }

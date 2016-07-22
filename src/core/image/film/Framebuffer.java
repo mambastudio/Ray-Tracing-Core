@@ -6,6 +6,8 @@
 package core.image.film;
 
 import core.color.Color;
+import core.color.RGBSpace;
+import core.color.XYZ;
 import java.nio.IntBuffer;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -78,11 +80,37 @@ public class Framebuffer {
     
     public void updatePixels(float scale)
     {    
+        //Scale accumulation
         for(int index = 0; index<size; index++)                  
             tonePixels[index].setColor(colorAccum[index].mul(scale));
+        
+        //Average luminance
+        float aveLum = 0f;
+        float N = 0f;
+        for(int index = 0; index<size; index++)
+            if(tonePixels[index].luminance()> 0)
+            {
+                aveLum += Math.log(0.01 + tonePixels[index].luminance());
+                N++;
+            }
+        aveLum /= N;
+        aveLum = (float)Math.exp(aveLum);
+                 
+        System.out.println(aveLum);
                
-        for(Color c : tonePixels)                  
-            c.setColor(c.simpleGamma());                     
+        for(Color c : tonePixels)   
+        {
+            float L = c.luminance();
+            XYZ xyz = RGBSpace.convertRGBtoXYZ(c);
+            float Lscaled = 0.18f * (L/aveLum);
+            
+            xyz.xyz();
+            xyz.setY(Lscaled);
+            xyz.xyYtoXYZ();
+            
+            c.setColor(RGBSpace.convertXYZtoRGB(xyz));
+            c.setColor(c.simpleGamma());
+        }                     
     }
     
      public Image getImage()
@@ -115,4 +143,5 @@ public class Framebuffer {
     {
         return w * y + x;
     }
+    
 }

@@ -18,6 +18,12 @@ public class FloatArray {
         array = new float[0];
         size = 0;
     }
+    
+    public void clear()
+    {
+        array = new float[10];
+        size = 0;
+    }
 
     public final void add(float i)
     {
@@ -29,6 +35,12 @@ public class FloatArray {
         }
         array[size] = i;
         size++;
+    }
+    
+    public final void add(float... value)
+    {
+        for(float i : value)
+            add(i);
     }
 
     public final void set(int index, float value)
@@ -55,5 +67,5 @@ public class FloatArray {
             System.arraycopy(oldArray, 0, array, 0, size);            
         }
         return array;
-    }
+    }    
 }

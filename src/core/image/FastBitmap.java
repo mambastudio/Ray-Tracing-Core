@@ -17,8 +17,11 @@ import javafx.scene.image.WritablePixelFormat;
  */
 public class FastBitmap 
 {
+    
     private final int width, height;
     private ByteImagePixels pixels = null;
+    
+    //For javafx ui
     private WritableImage image = null;
     private WritablePixelFormat<ByteBuffer> format = null;
     

@@ -13,7 +13,8 @@ import core.color.Color;
  */
 public interface AbstractDisplay {
     
-    public void imageBegin();   
+    public void imageBegin(); 
+    public void imageBegin(int width, int height);
     public void imageUpdate(float scale);
     public void imageFill(float x, float y, Color c);
     public void imagePaint();

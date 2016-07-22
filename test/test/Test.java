@@ -5,6 +5,11 @@
  */
 package test;
 
+import core.thread.TimerExecution;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author user
@@ -12,8 +17,20 @@ package test;
 public class Test {
     public static void main(String... args)
     {
-        String string = "wewe ni mtoto mpotovu //";
+        TimerExecution execution = new TimerExecution(0, 5, 5, true, TimeUnit.SECONDS);
+        execution.execute(new Update());
         
-        System.out.println(string.contains("//"));
+    }
+    
+    static class Update implements Runnable
+    {
+        int i = 0;
+        @Override
+        public void run() {
+            i=i+5;
+            System.out.println("i: " +i); 
+            
+        }
+        
     }
 }

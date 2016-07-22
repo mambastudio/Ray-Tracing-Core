@@ -18,10 +18,16 @@ public class IntArray
 
     public IntArray()
     {
-        array = new int[0];
+        array = new int[10];
         size = 0;
     }
 
+    public void clear()
+    {
+        array = new int[10];
+        size = 0;
+    }
+    
     public final void add(int i)
     {
         if (size == array.length)
@@ -32,6 +38,12 @@ public class IntArray
         }
         array[size] = i;
         size++;
+    }
+    
+    public final void add(int... value)
+    {
+        for(int i : value)
+            add(i);
     }
 
     public final void set(int index, int value)

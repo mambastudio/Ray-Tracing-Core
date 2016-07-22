@@ -12,6 +12,7 @@ import core.coordinates.Point3f;
 import core.coordinates.Vector3f;
 import core.math.BoundingBox;
 import core.math.Ray;
+import core.shape.TriangleMesh;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,15 +40,15 @@ public final class BoundingVolume extends AbstractAccelerator
     }
 
     @Override
-    public void setPrimitives(ArrayList<AbstractPrimitive> primitives) {
-        //Initialize buildData array for primitives
-        
+    public void setPrimitives(ArrayList<AbstractPrimitive> primitives) 
+    {
+        //Initialize buildData array for primitives        
         this.primitives = primitives;
         
         ArrayList<BVHPrimitiveInfo> buildData = new ArrayList<>();
         for(int i = 0; i < primitives.size(); i++)
-        {
-            BoundingBox bbox = primitives.get(i).getWorldBounds();
+        {            
+            BoundingBox bbox = primitives.get(i).getWorldBounds();            
             buildData.add(new BVHPrimitiveInfo(i, bbox));
         }
         
@@ -100,10 +101,12 @@ public final class BoundingVolume extends AbstractAccelerator
         for(int i = start; i < end; ++i)
             bbox = BoundingBox.union(bbox, buildData.get(i).bounds);
         
+        //Calculate number of primitives
         int nPrimitives = end - start;
+        
+        //Create leaf BVHBuildNode
         if(nPrimitives  < 15)
-        {
-            //Create leaf BVHBuildNode
+        {            
             int firstPrimOffset = orderedPrims.size();
             for(int i = start; i<end; ++i)
             {
@@ -130,6 +133,7 @@ public final class BoundingVolume extends AbstractAccelerator
                 {
                     int primNum = buildData.get(i).primitiveNumber;
                     orderedPrims.add(primitives.get(primNum));
+                    
                 }
                 node.initLeaf(firstPrimOffset, nPrimitives, bbox);
                 return node;

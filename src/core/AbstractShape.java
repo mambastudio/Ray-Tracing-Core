@@ -12,6 +12,7 @@ import core.math.BoundingBox;
 import core.math.DifferentialGeometry;
 import core.math.Ray;
 import core.math.Transform;
+import java.util.ArrayList;
 
 /**
  *
@@ -48,6 +49,11 @@ public abstract class AbstractShape
             return n.neg();
         else
             return n;
+    }
+    
+    public  ArrayList<AbstractShape> refine()
+    {
+        return null;
     }
     
     public Point3f sampleA(float u1, float u2, Normal3f n) 

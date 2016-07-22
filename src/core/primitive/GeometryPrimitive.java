@@ -96,4 +96,10 @@ public class GeometryPrimitive extends AbstractPrimitive
     public void refine(ArrayList<AbstractPrimitive> refined) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Override
+    public String toString()
+    {
+        return shape.toString();
+    }
 }

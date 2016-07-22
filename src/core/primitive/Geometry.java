@@ -33,7 +33,7 @@ public class Geometry extends AbstractPrimitive
     public Geometry(Material material)
     {
         this.material = material;
-        this.accelerator = new UniformGrid();
+        this.accelerator = new BoundingVolume();
         this.gPrimitives = new ArrayList<>();
     }
     
@@ -44,9 +44,16 @@ public class Geometry extends AbstractPrimitive
     
     public void addGeometryPrimitive(AbstractShape shape)
     {
-        gPrimitives.add(new GeometryPrimitive(shape, material));
+        ArrayList<AbstractShape> shapes = shape.refine();
+        
+        if(shapes != null)
+            for(AbstractShape refinedShape : shapes)
+                gPrimitives.add(new GeometryPrimitive(refinedShape, material));
+        else
+            gPrimitives.add(new GeometryPrimitive(shape, material));        
     }
         
+    @Override
     public void init()
     {
         accelerator.setPrimitives(gPrimitives);        
@@ -61,7 +68,7 @@ public class Geometry extends AbstractPrimitive
     public boolean intersect(Ray ray, Intersection isect) 
     {
         if(accelerator.intersect(ray, isect))
-        {
+        {            
             isect.topPrimitive = this;
             return true;
         }
