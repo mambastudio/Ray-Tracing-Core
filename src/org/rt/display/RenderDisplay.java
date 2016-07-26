@@ -9,7 +9,7 @@ import org.rt.core.AbstractDisplay;
 import org.rt.core.color.Color;
 import org.rt.core.color.RGBSpace;
 import org.rt.core.color.XYZ;
-import rt.core.system.ZoomTool;
+import org.rt.core.system.ZoomTool;
 import java.nio.IntBuffer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
