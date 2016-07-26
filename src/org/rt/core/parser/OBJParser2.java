@@ -93,7 +93,7 @@ public class OBJParser2
         }              
         
         for(AbstractPrimitive prim : primitiveList)
-            prim.init();
+            prim.build();
                 
         return primitiveList;       
     }

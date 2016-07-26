@@ -77,7 +77,7 @@ public class OBJParser
         for(AbstractPrimitive primitive : geometriesList)
         {
             System.out.println("init object");
-            ((Geometry)primitive).init();
+            ((Geometry)primitive).build();
         }
         
         return geometriesList;

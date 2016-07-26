@@ -9,14 +9,11 @@ import org.rt.core.AbstractAccelerator;
 import org.rt.core.AbstractPrimitive;
 import org.rt.core.Intersection;
 import org.rt.core.coordinates.Point3f;
-import org.rt.core.coordinates.Vector3f;
 import org.rt.core.math.BoundingBox;
 import org.rt.core.math.Ray;
-import org.rt.core.shape.TriangleMesh;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  *
@@ -36,11 +33,11 @@ public final class BoundingVolume extends AbstractAccelerator
     
     public BoundingVolume(ArrayList<AbstractPrimitive> primitives)
     {        
-        setPrimitives(primitives);
+        build(primitives);
     }
 
     @Override
-    public void setPrimitives(ArrayList<AbstractPrimitive> primitives) 
+    public void build(ArrayList<AbstractPrimitive> primitives) 
     {
         //Initialize buildData array for primitives        
         this.primitives = primitives;

@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public abstract class AbstractAccelerator 
 {
-    public abstract void setPrimitives(ArrayList<AbstractPrimitive> primitives);
+    public abstract void build(ArrayList<AbstractPrimitive> primitives);
     public abstract boolean intersect(Ray r, Intersection isect);
     public abstract boolean intersectP(Ray r);
     

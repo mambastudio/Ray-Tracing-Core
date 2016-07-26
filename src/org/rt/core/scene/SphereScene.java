@@ -77,31 +77,31 @@ public class SphereScene extends Scene
         //back
         Geometry back = new Geometry(backM); 
         back.addGeometryPrimitive(new Quad(p4, p3, p7, p8, new Normal3f(0, 0, 1)));
-        back.init();
+        back.build();
         primitives.add(back);
         
         //left
         Geometry left = new Geometry(leftM);
         left.addGeometryPrimitive(new Quad(p1, p2, p3, p4, new Normal3f(1, 0, 0)));        
-        left.init();
+        left.build();
         primitives.add(left);
         
         //right
         Geometry right = new Geometry(rightM);    
         right.addGeometryPrimitive(new Quad(p5, p6, p7, p8, new Normal3f(-1, 0, 0)));     
-        right.init();
+        right.build();
         primitives.add(right);
                 
         //bottom        
         Geometry bottom = new Geometry(bottomM);
         bottom.addGeometryPrimitive(new Quad(p1, p4, p8, p5, new Normal3f(0, 1, 0)));   
-        bottom.init();
+        bottom.build();
         primitives.add(bottom);
         
         //sphere 
         Geometry sphere1 = new Geometry(sphereM);          
         sphere1.addGeometryPrimitive(new Sphere(new Point3f(0f, -0.5f, 0f), 0.5f));
-        sphere1.init();
+        sphere1.build();
         primitives.add(sphere1);
                 
         //light
@@ -117,10 +117,10 @@ public class SphereScene extends Scene
                                     new Point3f(1 * scale, 1 - disp, 1 * scale),
                                     new Point3f(1 * scale, 1 - disp, -1 * scale), n)); 
         
-        light.init();
+        light.build();
         primitives.add(light);
         
-        accelerator.setPrimitives(primitives);
+        accelerator.build(primitives);
        
     }
     

@@ -54,9 +54,9 @@ public class Geometry extends AbstractPrimitive
     }
         
     @Override
-    public void init()
+    public void build()
     {
-        accelerator.setPrimitives(gPrimitives);        
+        accelerator.build(gPrimitives);        
     }
 
     @Override

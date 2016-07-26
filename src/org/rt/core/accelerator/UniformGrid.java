@@ -40,11 +40,11 @@ public class UniformGrid extends AbstractAccelerator
         this.bounds = new BoundingBox();
         this.nVoxels = new int[3];
         
-        setPrimitives(primitives);
+        build(primitives);
     }
 
     @Override
-    public final void setPrimitives(ArrayList<AbstractPrimitive> primitives) {
+    public final void build(ArrayList<AbstractPrimitive> primitives) {
         this.primitives = primitives;
                 
         // Compute bounds and choose grid resolution

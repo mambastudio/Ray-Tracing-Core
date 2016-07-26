@@ -22,7 +22,7 @@ public class NullAccelerator extends AbstractAccelerator
     private final BoundingBox bound = new BoundingBox();
     
     @Override
-    public void setPrimitives(ArrayList<AbstractPrimitive> prims) {
+    public void build(ArrayList<AbstractPrimitive> prims) {
         for(AbstractPrimitive prim : prims)
         {            
             primitives.add(prim);
