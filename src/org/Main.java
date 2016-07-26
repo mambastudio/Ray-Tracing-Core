@@ -17,6 +17,8 @@ import javafx.stage.Stage;
  */
 public class Main extends Application
 {    
+    RayTraceCoreController controller = null;
+    
     public static void main(String... args)
     {
         Application.launch(args);
@@ -24,7 +26,10 @@ public class Main extends Application
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("RayTraceCore.fxml"));        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("RayTraceCore.fxml"));
+        Parent root = loader.load();
+        controller = loader.getController();
+        
         Scene scene = new Scene(root); 
         
         primaryStage.setScene(scene);
@@ -36,6 +41,12 @@ public class Main extends Application
         primaryStage.setOnCloseRequest(evt -> {
             //do changes in code when
         });        
+    }
+    
+    @Override
+    public void stop()
+    {
+        controller.stop(null);
     }
     
 }

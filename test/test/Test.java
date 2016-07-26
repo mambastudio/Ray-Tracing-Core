@@ -5,8 +5,9 @@
  */
 package test;
 
-import core.thread.TimerExecution;
+import org.rt.thread.TimerExecution;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,20 +18,31 @@ import java.util.logging.Logger;
 public class Test {
     public static void main(String... args)
     {
-        TimerExecution execution = new TimerExecution(0, 5, 5, true, TimeUnit.SECONDS);
-        execution.execute(new Update());
-        
+        AtomicReference<CustomString> atomicString = new AtomicReference<>(new CustomString("Wewe"));
+        CustomString string = atomicString.get();
+        string.set("aljdfal");
+        System.out.println(atomicString);
+        System.out.println(string);
     }
     
-    static class Update implements Runnable
+    static class CustomString
     {
-        int i = 0;
-        @Override
-        public void run() {
-            i=i+5;
-            System.out.println("i: " +i); 
-            
+        String string;
+        
+        CustomString(String string)
+        {
+            this.string = string;
         }
         
+        public void set(String string)
+        {
+            this.string = string;
+        }
+        
+        @Override
+        public String toString()
+        {
+            return string;
+        }
     }
 }
