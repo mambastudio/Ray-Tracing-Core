@@ -7,17 +7,14 @@ package org.rt.display;
 
 import org.rt.core.AbstractDisplay;
 import org.rt.core.color.Color;
-import org.rt.core.color.RGBSpace;
-import org.rt.core.color.XYZ;
 import org.rt.core.system.ZoomTool;
-import java.nio.IntBuffer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
+import org.rt.core.image.formats.BitmapRGB;
 
 /**
  *
@@ -123,16 +120,13 @@ public class RenderDisplay extends StackPane implements AbstractDisplay
 
     @Override
     public void imageFill(Color[] c) {
-        int[] arrayBuffer = new int[w * h];
+        BitmapRGB bitmap = new BitmapRGB(w, h);
         
-        WritableImage wImage = new WritableImage(w, h); 
-        WritablePixelFormat<IntBuffer> format = WritablePixelFormat.getIntArgbInstance(); 
-                
-        for(int i = 0; i < arrayBuffer.length; i++)
-            arrayBuffer[i] = c[i].toRGBA(1);
-                   
-        wImage.getPixelWriter().setPixels(0, 0, w, h, format, arrayBuffer, 0, w);
-        imageView.setImage(wImage);
+        for(int j = 0; j<h; j++)
+            for(int i = 0; i<w; i++)
+                bitmap.writeColor(c[index(i, j)], 1, i, j);
+        
+        imageView.setImage(bitmap.getImage());        
     }
 
     @Override

@@ -5,11 +5,8 @@
  */
 package test;
 
-import org.rt.thread.TimerExecution;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Arrays;
+import org.rt.core.color.Color;
 
 /**
  *
@@ -18,31 +15,12 @@ import java.util.logging.Logger;
 public class Test {
     public static void main(String... args)
     {
-        AtomicReference<CustomString> atomicString = new AtomicReference<>(new CustomString("Wewe"));
-        CustomString string = atomicString.get();
-        string.set("aljdfal");
-        System.out.println(atomicString);
-        System.out.println(string);
+        Color color = new Color(.5f, .1f, .2f);
+        System.out.println(color);
+        byte[] buf = Color.toByte(color.r, color.g, color.b);
+        float[] fbuf = Color.toFloat8(buf[0], buf[1], buf[2]);
+        System.out.println(Arrays.toString(fbuf));
     }
     
-    static class CustomString
-    {
-        String string;
-        
-        CustomString(String string)
-        {
-            this.string = string;
-        }
-        
-        public void set(String string)
-        {
-            this.string = string;
-        }
-        
-        @Override
-        public String toString()
-        {
-            return string;
-        }
-    }
+   
 }

@@ -5,6 +5,7 @@
  */
 package org.rt.core;
 
+import javafx.scene.image.Image;
 import org.rt.core.color.Color;
 
 /**
@@ -19,4 +20,5 @@ public abstract class AbstractBitmap {
     public abstract Color readColor(int x, int y);
     public abstract float readAlpha(int x, int y);
     public abstract void writeColor(Color color, float alpha, int x, int y); 
+    public abstract Image getImage();
 }

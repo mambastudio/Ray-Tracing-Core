@@ -9,6 +9,7 @@ import org.rt.core.AbstractBitmap;
 import org.rt.core.color.Color;
 import org.rt.core.math.Utility;
 import java.nio.ByteBuffer;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -93,4 +94,9 @@ public class BitmapBGRAPre extends AbstractBitmap
     {
         return bgraArray;
     }    
+
+    @Override
+    public Image getImage() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

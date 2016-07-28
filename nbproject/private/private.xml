@@ -3,10 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/org/rt/RayTracerAPI.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/core/render/SimpleRenderer.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/org/rt/core/ImageSampler.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/org/RayTraceCoreController.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/org/rt/core/color/Color.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/org/rt/core/math/Rng.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/org/rt/core/image/formats/BitmapARGB.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/org/rt/display/RenderDisplay.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/src/org/rt/core/image/formats/BitmapRGB.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Ray-Tracing-Core/test/test/Test.java</file>
         </group>
     </open-files>
 </project-private>

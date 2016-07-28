@@ -5,6 +5,11 @@
  */
 package org.rt.core.image.formats;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
+import javafx.scene.image.WritablePixelFormat;
 import org.rt.core.AbstractBitmap;
 import org.rt.core.color.Color;
 
@@ -14,30 +19,63 @@ import org.rt.core.color.Color;
  */
 public class BitmapRGB extends AbstractBitmap
 {
-
+    private final int w, h;
+    private final int[] data;
+    
+    public BitmapRGB(int w, int h)
+    {
+        this.w = w;
+        this.h = h;
+        this.data = new int[w * h];
+    }
+    
+    public BitmapRGB(int w, int h, int[] data)
+    {
+        this.w = w;
+        this.h = h;
+        this.data = data;
+    }
+    
     @Override
     public int getWidth() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return w;
     }
 
     @Override
     public int getHeight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return h;
     }
 
     @Override
     public Color readColor(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int index = index(x, y);        
+        float[] buf = Color.toFloat8(data[index]);        
+        return new Color(buf[1], buf[2], buf[3]); //buf[0] is alpha value
     }
 
     @Override
     public float readAlpha(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void writeColor(Color color, float alpha, int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int index = index(x, y);        
+        data[index] = Color.toInt8(1, color.r, color.g, color.b);        
+    }
+    
+    private int index(int x, int y)
+    {
+        return x + y * w;
+    }
+
+    @Override
+    public Image getImage() 
+    {       
+        WritableImage wImage = new WritableImage(w, h);
+        WritablePixelFormat<IntBuffer> format = WritablePixelFormat.getIntArgbInstance();       
+        wImage.getPixelWriter().setPixels(0, 0, w, h, format, data, 0, w);
+        return wImage;
     }
     
 }

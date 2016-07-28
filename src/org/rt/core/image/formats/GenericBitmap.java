@@ -5,6 +5,7 @@
  */
 package org.rt.core.image.formats;
 
+import javafx.scene.image.Image;
 import org.rt.core.AbstractBitmap;
 import org.rt.core.color.Color;
 
@@ -51,4 +52,9 @@ public class GenericBitmap extends AbstractBitmap
         this.color[x + y * w] = color;
         this.alpha[x + y * w] = alpha;
     }    
+
+    @Override
+    public Image getImage() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

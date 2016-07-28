@@ -12,7 +12,6 @@ import org.rt.core.AbstractShape;
 import org.rt.core.Intersection;
 import org.rt.core.Material;
 import org.rt.core.accelerator.BoundingVolume;
-import org.rt.core.accelerator.UniformGrid;
 import org.rt.core.coordinates.Normal3f;
 import org.rt.core.coordinates.Vector3f;
 import org.rt.core.light.AreaLight;

@@ -13,7 +13,7 @@ import org.rt.core.color.Color;
  *
  * @author user
  */
-public class BitmapRGBE extends AbstractBitmap
+public class BitmapARGB extends AbstractBitmap
 {
 
     @Override

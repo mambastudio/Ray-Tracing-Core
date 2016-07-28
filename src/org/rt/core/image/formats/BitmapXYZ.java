@@ -5,6 +5,7 @@
  */
 package org.rt.core.image.formats;
 
+import javafx.scene.image.Image;
 import org.rt.core.AbstractBitmap;
 import org.rt.core.color.Color;
 
@@ -37,6 +38,11 @@ public class BitmapXYZ extends AbstractBitmap
 
     @Override
     public void writeColor(Color color, float alpha, int x, int y) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Image getImage() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

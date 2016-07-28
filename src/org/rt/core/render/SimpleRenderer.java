@@ -114,12 +114,9 @@ public class SimpleRenderer implements ImageSampler
                 
             }
             
-            Color[] colors = new Color[width * height];
+            buffer.scaleBuffer();
+            Color[] colors = buffer.getScaledColorArray();
             
-            for(int i = 0; i<width * height; i++)
-            {
-                colors[i] = buffer.getScaled(i);
-            }
             
             display.imageFill(colors);
             

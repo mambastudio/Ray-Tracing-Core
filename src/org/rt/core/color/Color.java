@@ -7,6 +7,8 @@ package org.rt.core.color;
 
 import org.rt.core.math.Utility;
 import java.io.Serializable;
+import static java.lang.Double.min;
+import static java.lang.Math.floor;
 import static java.lang.Math.pow;
 import java.nio.ByteBuffer;
 
@@ -426,9 +428,100 @@ public final class Color implements Serializable
         return new Color(r, g, b);
     }
     
+    //static method for rgb, rgba, argb, bgra and other formats
+    public static int toInt8(float a, float b, float c, float d)
+    {
+        int ia = (int) (a * 255 + 0.5);
+        int ib = (int) (b * 255 + 0.5);
+        int ic = (int) (c * 255 + 0.5);
+        int id = (int) (d * 255 + 0.5);
+        ia = Utility.clamp(ia, 0, 255);
+        ib = Utility.clamp(ib, 0, 255);
+        ic = Utility.clamp(ic, 0, 255);
+        id = Utility.clamp(id, 0, 255);
+        return (ia << 24) | (ib << 16) | (ic << 8) | id;       
+    }
+    
+    //static method for rgb, rgba, argb, bgra and other formats
+    public static int toInt8(float a, float b, float c)
+    {
+        int ia = (int) (a * 255 + 0.5);
+        int ib = (int) (b * 255 + 0.5);
+        int ic = (int) (c * 255 + 0.5);       
+        ia = Utility.clamp(ia, 0, 255);
+        ib = Utility.clamp(ib, 0, 255);
+        ic = Utility.clamp(ic, 0, 255);        
+        return (ia << 16) | (ib << 18) | ic;       
+    }
+    
+    //static method for rgb, rgba, argb, bgra and other formats
+    public static float[] toFloat8(byte a, byte b, byte c, byte d)
+    {
+        float INV255 = 1f/255;
+        float[] buf = new float[4];
+        
+        buf[0] = (a & 0xFF) * INV255;
+        buf[1] = (b & 0xFF) * INV255;
+        buf[2] = (c & 0xFF) * INV255;
+        buf[3] = (d & 0xFF) * INV255;
+        
+        return buf;
+    }
+    
+     //static method for rgb, rgba, argb, bgra and other formats
+    public static float[] toFloat8(byte a, byte b, byte c)
+    {
+        float INV255 = 1f/255;
+        float[] buf = new float[3];
+        
+        buf[0] = (a & 0xFF) * INV255;
+        buf[1] = (b & 0xFF) * INV255;
+        buf[2] = (c & 0xFF) * INV255;
+                
+        return buf;
+    }
+    
+    // "& 0xFF" will convert a byte to int automatically
+    public static float toFloat8(byte a)
+    {
+        float INV255 = 1f/255;        
+        return (a & 0xFF) * INV255;
+    }
+        
+    //static method for rgb, rgba, argb, bgra and other formats
+    public static float[] toFloat8(int value)
+    {
+        float[] buf = new float[4];
+        
+        buf[0] = ((value >> 24) & 0xFF) / 255.0f;
+        buf[1] = ((value >> 16) & 0xFF) / 255.0f;
+        buf[2] = ((value >> 8) & 0xFF) / 255.0f;
+        buf[3] = (value & 0xFF) / 255.0f;
+       
+        return buf;
+    }
+    
+    //The conversion is almost impossible to remap from float to byte and back again
+    //see this... http://stackoverflow.com/questions/1914115/converting-color-value-from-float-0-1-to-byte-0-255
+    public static byte toByte(float value)
+    {
+        return (byte) (value * 255 + 0.5);
+    }
+    
+    public static byte[] toByte(float value1, float value2, float value3)
+    {
+        byte[] b = new byte[3];
+        b[0] = toByte(value1);
+        b[1] = toByte(value2);
+        b[2] = toByte(value3);
+        return b;
+    }
+    
     @Override
     public String toString()
     {
         return "r " +r+ " g " +g+ " b " +b;
     }
+    
+    
 }
