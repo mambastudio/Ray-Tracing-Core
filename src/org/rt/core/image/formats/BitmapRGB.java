@@ -5,7 +5,6 @@
  */
 package org.rt.core.image.formats;
 
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;

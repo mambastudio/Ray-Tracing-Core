@@ -11,23 +11,32 @@ import java.util.Arrays;
 /**
  *
  * @author user
+ * @param <K>
  */
-public class BatchThread 
+public class BatchThread <K extends KernelThread>
 {
-    ArrayList<KernelThread> threadList;
+    ArrayList<K> threadList;
     
     public BatchThread()
     {
         threadList = new ArrayList<>();
     }
     
-    public BatchThread(KernelThread... threads)            
+    public BatchThread(K... threads)            
     {
         this();
         threadList.addAll(Arrays.asList(threads));
     }
     
-    public void add(KernelThread... threads)
+    public K get(int index)
+    {
+        if(!threadList.isEmpty())
+            return threadList.get(index);
+        else
+            return null;
+    }
+    
+    public void add(K... threads)
     {
         threadList.addAll(Arrays.asList(threads));
     }

@@ -46,7 +46,7 @@ public class Main extends Application
     @Override
     public void stop()
     {
-        controller.stop(null);
+        controller.close();
     }
     
 }

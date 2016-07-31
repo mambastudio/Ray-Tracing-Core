@@ -16,5 +16,6 @@ public interface ImageSampler
      public void stop();
      public void pause();
      public void resume();
+     public void updateDisplay();
      public boolean isRunning();
 }

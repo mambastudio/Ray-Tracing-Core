@@ -33,6 +33,24 @@ public class Scene
         lights = new LightCache();        
     }
     
+    public void build()
+    {
+        for(AbstractPrimitive p : primitives)
+            p.build();
+        
+        accelerator.build(primitives);
+    }
+    
+    public ArrayList<AbstractPrimitive> getPrimitives()
+    {
+        return primitives;
+    }
+    
+    public void addAll(ArrayList<AbstractPrimitive> prims)
+    {
+        primitives.addAll(prims);
+    }
+                
     public Camera getCamera()
     {
         return camera;

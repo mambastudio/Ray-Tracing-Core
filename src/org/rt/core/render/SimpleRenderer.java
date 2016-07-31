@@ -27,11 +27,11 @@ public class SimpleRenderer implements ImageSampler
     Scene scene;
     AbstractDisplay display;
     
-    BatchThread threads;
+    BatchThread<RendererThread> renderThreads;
     
     public SimpleRenderer()
     {
-        this.threads = new BatchThread();
+        this.renderThreads = new BatchThread();        
     }
     
     @Override
@@ -39,42 +39,50 @@ public class SimpleRenderer implements ImageSampler
     {
         this.width = w; this.height = h;
         this.scene = scene;
-        
-        
+                
         return true;
     }
 
     @Override
     public void render(AbstractDisplay display) 
     {
-        
         for(int i = 0; i<scene.getThreads(); i++)
-            threads.add(new RendererThread(width, height));
+            renderThreads.add(new RendererThread(width, height));
         
         this.display = display;
         this.display.imageBegin(width, height);
         
-        threads.start();
+        renderThreads.start();        
+    }
+    
+    @Override
+    public void updateDisplay()
+    {
+        renderThreads.get(0).getBuffer().scaleBuffer();            
+        Color[] colors = renderThreads.get(0).getBuffer().getScaledColorArray();
+                        
+        display.imageFill(colors);
+        display.imagePaint();         
     }
 
     @Override
     public void stop() {
-        threads.stop();
+        renderThreads.stop();       
     }
 
     @Override
     public void pause() {
-        threads.pause();
+        renderThreads.pause();       
     }
 
     @Override
     public void resume() {
-        threads.resume();
+        renderThreads.resume();        
     }
 
     @Override
     public boolean isRunning() {
-        return !threads.isThreadListEmpty();
+        return !renderThreads.isThreadListEmpty();
     }
     
     private class RendererThread extends KernelThread
@@ -83,7 +91,12 @@ public class SimpleRenderer implements ImageSampler
         
         public RendererThread(int w, int h)
         {
-            buffer = new FrameBuffer(w, h);
+            buffer = new FrameBuffer(w, h);            
+        }
+        
+        public FrameBuffer getBuffer()
+        {
+            return buffer;
         }
         
         @Override
@@ -92,8 +105,6 @@ public class SimpleRenderer implements ImageSampler
             int   lightCount    = scene.lights.getSize();
             float lightPickProb = 1.f / lightCount;
                     
-            buffer.incrementAccum();
-            
             for(int pixID = 0; pixID < width * height; pixID++)
             {
                 chill(); if(terminated()) return;
@@ -107,20 +118,17 @@ public class SimpleRenderer implements ImageSampler
                 Intersection isect = new Intersection();
                 if(scene.intersect(ray, isect))
                 {
-                    Color color = isect.bsdf.getColor();
+                    
+                    Color color = scene.directLightSampling(isect, null);
                     buffer.add(x, y, color);
                     //System.out.println(color);
                 }
                 
             }
+            System.out.println("iteration " +buffer.getAccum());
             
-            buffer.scaleBuffer();
-            Color[] colors = buffer.getScaledColorArray();
+            buffer.incrementAccum();
             
-            
-            display.imageFill(colors);
-            
-            System.out.println(buffer.getAccum());
         }
         
     }

@@ -16,11 +16,13 @@ import org.rt.core.render.SimpleRenderer;
 import org.rt.core.scene.CornellScene;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
+import org.rt.thread.TimerExecution;
 
 /**
  * FXML Controller class
@@ -35,6 +37,9 @@ public class RayTraceCoreController implements Initializable {
     private final Camera camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 45);
     private final ImageSampler renderer = new SimpleRenderer();
     
+    //Update frame buffer and do other stuff
+    private TimerExecution timerControl = null;
+    
     /**
      * Initializes the controller class.
      * @param url
@@ -43,6 +48,13 @@ public class RayTraceCoreController implements Initializable {
        
     @FXML
     Tab viewPort;
+    @FXML
+    Button renderButton;
+    @FXML
+    Button pauseButton;
+    @FXML
+    Button stopButton;
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -60,6 +72,10 @@ public class RayTraceCoreController implements Initializable {
     public void render(ActionEvent e)
     {
         api.render(display);
+        timerControl = new TimerExecution(1, 5, TimeUnit.SECONDS);
+        timerControl.execute(() -> {
+            renderer.updateDisplay();
+        });
     }
     
     public void pause(ActionEvent e)
@@ -71,24 +87,50 @@ public class RayTraceCoreController implements Initializable {
                 case "Pause":
                     api.pause();
                     b.setText("Resume");
+                    if(timerControl != null)
+                        timerControl.pause();
                     break;
                 case "Resume":
                     api.resume();
                     b.setText("Pause");
-                    break;
+                    if(timerControl != null)
+                        timerControl.resume();
+                    break;                
             }
         }
+        
         
     }
     
     public void resume(ActionEvent e)            
     {
         api.resume();
+        
+        if(timerControl != null)
+            timerControl.resume();
     }
     
     public void stop(ActionEvent e)
     {
         api.stop();
+        Button b = (Button)e.getSource();
+        switch (b.getText()) 
+        {
+            case "Stop":
+                pauseButton.setText("Pause");                
+                break;
+        }
+        
+        if(timerControl != null)
+            timerControl.shutDown();
+    }
+    
+    public void close()
+    {
+        api.stop();
+        
+        if(timerControl != null)
+            timerControl.shutDown();
     }
     
 }

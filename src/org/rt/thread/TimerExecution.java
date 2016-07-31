@@ -14,7 +14,8 @@ import java.util.concurrent.TimeUnit;
  *
  * @author user
  */
-public class TimerExecution {
+public class TimerExecution 
+{
     ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     
     private final long initialDelay, period;

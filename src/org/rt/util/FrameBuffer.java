@@ -26,7 +26,7 @@ public class FrameBuffer
         this.w = w; this.h = h;
         this.size = w * h;
         this.buffer = new AtomicReference[size];  
-        this.accum = new AtomicInteger();
+        this.accum = new AtomicInteger(1);
         this.scaledColorArray = new Color[size];
         
         for(int i = 0; i < size; i++)

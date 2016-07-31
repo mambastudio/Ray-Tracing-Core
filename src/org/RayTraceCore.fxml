@@ -14,9 +14,9 @@
    <top>
       <HBox prefHeight="33.0" prefWidth="758.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#render" prefHeight="25.0" prefWidth="72.0" text="Render" />
-            <Button mnemonicParsing="false" onAction="#pause" prefHeight="25.0" prefWidth="73.0" text="Pause" />
-            <Button mnemonicParsing="false" onAction="#stop" prefHeight="25.0" prefWidth="76.0" text="Stop" />
+            <Button fx:id="renderButton" mnemonicParsing="false" onAction="#render" prefHeight="25.0" prefWidth="72.0" text="Render" />
+            <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pause" prefHeight="25.0" prefWidth="73.0" text="Pause" />
+            <Button fx:id="stopButton" mnemonicParsing="false" onAction="#stop" prefHeight="25.0" prefWidth="76.0" text="Stop" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" top="5.0" />
