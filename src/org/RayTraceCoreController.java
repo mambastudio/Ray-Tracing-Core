@@ -13,8 +13,8 @@ import org.rt.core.coordinates.Point3f;
 import org.rt.core.coordinates.Vector3f;
 import org.rt.display.RenderDisplay;
 import org.rt.core.render.SimpleRenderer;
-import org.rt.core.scene.CornellScene;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import javafx.event.ActionEvent;
@@ -22,6 +22,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
+import org.rt.core.AbstractPrimitive;
+import org.rt.core.scene.CornellSceneDescription;
 import org.rt.thread.TimerExecution;
 
 /**
@@ -31,8 +33,7 @@ import org.rt.thread.TimerExecution;
  */
 public class RayTraceCoreController implements Initializable {
 
-    private final RayTracerAPI api = new RayTracerAPI();
-    private final Scene scene = new CornellScene();
+    private final RayTracerAPI api = new RayTracerAPI();    
     private final RenderDisplay display = new RenderDisplay();
     private final Camera camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 45);
     private final ImageSampler renderer = new SimpleRenderer();
@@ -61,17 +62,18 @@ public class RayTraceCoreController implements Initializable {
         // TODO
                 
         viewPort.setContent(display);
-        
-        api.setScene(scene);
+                
+        api.createScene(CornellSceneDescription.getPrimitives());        
         api.setCamera(camera);
         api.setImageSize(600, 600);
-        api.setRenderer(renderer);
-       
-    }  
+        api.setRenderer(renderer);       
+    } 
     
     public void render(ActionEvent e)
     {
-        api.render(display);
+        if(!api.render(display))
+            return; 
+        
         timerControl = new TimerExecution(1, 5, TimeUnit.SECONDS);
         timerControl.execute(() -> {
             renderer.updateDisplay();

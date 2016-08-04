@@ -84,14 +84,41 @@ public class TriangleMesh extends AbstractShape
         vertexIndex.add(i, j, k);
     }
     
+    public void addVertexIndex2(int i, int j, int k)
+    {
+        int a = getIndex(i, p.size());
+        int b = getIndex(j, p.size());
+        int c = getIndex(k, p.size());
+        
+        vertexIndex.add(a, b, c);
+    }
+    
     public void addUVIndex(int i, int j, int k)
     {
         uvIndex.add(i, j, k);
     }
     
+    public void addUVIndex2(int i, int j, int k)
+    {
+        int a = getIndex(i, uv.size());
+        int b = getIndex(j, uv.size());
+        int c = getIndex(k, uv.size());
+        
+        uvIndex.add(a, b, c);
+    }
+    
     public void addNormalIndex(int i, int j, int k)
     {
         normalIndex.add(i, j, k);
+    }
+    
+     public void addNormalIndex2(int i, int j, int k)
+    {
+        int a = getIndex(i, n.size());
+        int b = getIndex(j, n.size());
+        int c = getIndex(k, n.size());
+        
+        normalIndex.add(a, b, c);
     }
     
     public boolean hasNormal()
@@ -102,6 +129,16 @@ public class TriangleMesh extends AbstractShape
     public boolean hasUV()
     {
         return uvIndex.getSize() > 0;
+    }
+    
+    private int getIndex(int index, int size)
+    {
+        if(index > 0)
+            return index - 1;
+        else if(index < 0)
+            return size - index;
+        else
+            throw new UnsupportedOperationException("weird index  " +index);
     }
     
     @Override

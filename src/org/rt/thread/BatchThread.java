@@ -44,25 +44,25 @@ public class BatchThread <K extends KernelThread>
     public void start()
     {
         for(KernelThread thread : threadList)
-            thread.start();
+            thread.startKernel();
     }
     
     public void pause()
     {
         for(KernelThread thread : threadList)
-            thread.pause();
+            thread.pauseKernel();
     }
     
     public void resume()
     {
         for(KernelThread thread : threadList)
-            thread.resume();
+            thread.resumeKernel();
     }
     
     public void stop()
     {
         for(KernelThread thread : threadList)            
-            thread.stop();
+            thread.stopKernel();
         
         threadList.removeAll(threadList);
     }
@@ -70,7 +70,12 @@ public class BatchThread <K extends KernelThread>
     public void join()
     {
         for(KernelThread thread : threadList)
-            thread.join();
+            thread.joinKernel();
+    }
+    
+    public boolean anyThreadActive()
+    {
+        return !isThreadListEmpty();
     }
     
     public boolean isThreadListEmpty()

@@ -15,10 +15,11 @@ public interface AbstractDisplay {
     
     public void imageBegin(); 
     public void imageBegin(int width, int height);
-    public void imageUpdate(float scale);
-    public void imageFill(float x, float y, Color c);
+    public void imageUpdate(float scale);    
     public void imagePaint();
     public void imageFill(Color[] c);
+    public void imageFill(float x, float y, Color c);
+    public void imageFill(AbstractBitmap bitmap);
     public void imageClear();
     
     public int getImageWidth();

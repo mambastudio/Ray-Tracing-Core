@@ -76,5 +76,18 @@ public class BitmapRGB extends AbstractBitmap
         wImage.getPixelWriter().setPixels(0, 0, w, h, format, data, 0, w);
         return wImage;
     }
+
+    @Override
+    public void writeColor(Color color, float alpha, int x, int y, int w, int h) {
+        int w1 = (int) (getWidth() - 1);
+        int h1 = (int) (getHeight() - 1);
+        
+        for (int dx = Math.min(x + w , w1); dx >= x; dx--)
+            for (int dy = Math.min(y + h, h1); dy >= y; dy--)
+            {          
+                //System.out.println(color);
+                writeColor(color, alpha, dx, dy);                
+            }
+    }
     
 }

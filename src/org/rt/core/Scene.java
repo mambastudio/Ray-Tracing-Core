@@ -72,7 +72,7 @@ public class Scene
         this.primitives = new ArrayList<>();
         this.primitives.clear();
         this.primitives.addAll(primitives);
-        this.accelerator = new BoundingVolume(this.primitives);
+        this.accelerator = new BoundingVolume();
         
     }
     

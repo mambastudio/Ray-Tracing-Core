@@ -45,5 +45,10 @@ public class BitmapARGB extends AbstractBitmap
     public Image getImage() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void writeColor(Color color, float alpha, int x, int y, int w, int h) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

@@ -14,6 +14,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
+import org.rt.core.AbstractBitmap;
 import org.rt.core.color.RGBSpace;
 import org.rt.core.color.XYZ;
 import org.rt.core.image.formats.BitmapRGB;
@@ -157,5 +158,10 @@ public class RenderDisplay extends StackPane implements AbstractDisplay
                 wImage.getPixelWriter().setColor(i, j, javafx.scene.paint.Color.BLACK);
         
         return wImage;
+    }
+
+    @Override
+    public void imageFill(AbstractBitmap bitmap) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

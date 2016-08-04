@@ -33,12 +33,12 @@ public abstract class KernelThread implements Runnable
         this.arrayList.add(this);
     }
     
-    public void start()
+    public void startKernel()
     {
         thread.start();
     }
     
-    public void join()
+    public void joinKernel()
     {
         try {
             thread.join();
@@ -47,24 +47,24 @@ public abstract class KernelThread implements Runnable
         }
     }
     
-    public void pause()
+    public void pauseKernel()
     {
         suspend = true;
     }
 
-    public synchronized void resume()
+    public synchronized void resumeKernel()
     {
         suspend = false;
         notify();
     }
   
-    public void stop()
+    public void stopKernel()
     {
         finish = true; 
-        resume();        
+        resumeKernel();        
     }
     
-    public boolean terminated()
+    public boolean kernelTerminated()
     {
         return finish;
     }
@@ -97,7 +97,7 @@ public abstract class KernelThread implements Runnable
         {
             chill(); //useful in start_&_pause state of thread;
             execute();
-            if(terminated()) break;
+            if(kernelTerminated()) break;
         }
         
         if(arrayList != null)

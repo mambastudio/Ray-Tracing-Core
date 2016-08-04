@@ -6,14 +6,9 @@
 package org.rt.core.parser;
 
 import org.rt.core.AbstractPrimitive;
-import org.rt.core.Intersection;
 import org.rt.core.Material;
-import org.rt.core.accelerator.NullAccelerator;
 import org.rt.core.color.Color;
-import org.rt.core.coordinates.Point3f;
-import org.rt.core.coordinates.Vector3f;
 import org.rt.core.math.IntArray;
-import org.rt.core.math.Ray;
 import org.rt.core.primitive.Geometry;
 import org.rt.core.shape.TriangleMesh;
 import java.io.File;
@@ -26,8 +21,7 @@ import java.util.ArrayList;
  */
 public class OBJParser2 
 {
-    public static ArrayList<TriangleMesh> meshes = new ArrayList<>();
-    
+    public static ArrayList<TriangleMesh> meshes = new ArrayList<>();    
     public static ArrayList<AbstractPrimitive> primitiveList = new ArrayList<>();
     
     public static void main(String... args)
@@ -90,11 +84,7 @@ public class OBJParser2
             Geometry geometry = new Geometry(material);
             geometry.addGeometryPrimitive(mesh);
             primitiveList.add(geometry);
-        }              
-        
-        for(AbstractPrimitive prim : primitiveList)
-            prim.build();
-                
+        }                              
         return primitiveList;       
     }
     
@@ -268,4 +258,6 @@ public class OBJParser2
         mesh.addNormalIndex(array[2]-1, array[5]-1, array[8]-1);     
         mesh.addNormalIndex(array[2]-1, array[8]-1, array[11]-1);          
     }
+    
+    
 }

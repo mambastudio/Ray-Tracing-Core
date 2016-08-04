@@ -107,7 +107,7 @@ public class SimpleRenderer implements ImageSampler
                     
             for(int pixID = 0; pixID < width * height; pixID++)
             {
-                chill(); if(terminated()) return;
+                chill(); if(kernelTerminated()) return;
                 
                 int x = pixID % width;
                 int y = pixID / height;

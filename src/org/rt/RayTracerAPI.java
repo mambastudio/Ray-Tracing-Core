@@ -5,10 +5,13 @@
  */
 package org.rt;
 
+import java.util.ArrayList;
 import org.rt.core.AbstractDisplay;
+import org.rt.core.AbstractPrimitive;
 import org.rt.core.Camera;
 import org.rt.core.ImageSampler;
 import org.rt.core.Scene;
+import org.rt.core.math.BoundingBox;
 
 /**
  *
@@ -16,7 +19,7 @@ import org.rt.core.Scene;
  */
 public class RayTracerAPI 
 {
-    private Scene scene;
+    private Scene scene = new Scene();
     private ImageSampler renderer;
     private Camera camera;
     
@@ -30,11 +33,6 @@ public class RayTracerAPI
     public void setCamera(Camera camera)
     {
         this.camera = camera;
-    }
-    
-    public void setScene(Scene scene)
-    {
-        this.scene = scene;
     }
     
     public void setImageSize(int imageWidth, int imageHeight)
@@ -58,17 +56,23 @@ public class RayTracerAPI
         this.renderer = renderer;
     }
     
-    public void render(AbstractDisplay display)
+    public boolean isRendererRunning()
+    {
+        if(renderer == null) return false;
+        else return renderer.isRunning();
+    }
+    
+    public boolean render(AbstractDisplay display)
     {
         if(renderer == null) 
         {
             System.out.println("renderer null");
-            return;
+            return false;
         }
         else if(renderer.isRunning())
         {
             System.out.println("still probably running or paused or about to finish a task intensive process");
-            return;
+            return false;
         }
         
         this.camera.setUp();
@@ -76,8 +80,17 @@ public class RayTracerAPI
         this.scene.prepareToRender();
         this.renderer.prepare(scene, imageWidth, imageHeight);
         this.renderer.render(display);
+        
+        return true;
     }
     
+    
+    public void createScene(ArrayList<AbstractPrimitive> primitives)
+    {
+        scene.setPrimitives(primitives);
+        scene.build();
+    }
+        
     public void pause()
     {
         this.renderer.pause();
@@ -91,5 +104,10 @@ public class RayTracerAPI
     public void resume()
     {
         this.renderer.resume();
+    }
+    
+    public BoundingBox getWorldBounds()
+    {
+        return scene.getWorldBounds();
     }
 }
