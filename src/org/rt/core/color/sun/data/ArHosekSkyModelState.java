@@ -78,4 +78,18 @@ public class ArHosekSkyModelState {
     {       
         return SphericalCoordinate.elevationRadians((float)elevation);        
     }
+    
+    public ArHosekSkyModelState copy() 
+    {
+        ArHosekSkyModelState state = new ArHosekSkyModelState();
+        System.arraycopy(configs, 0, state.configs, 0, configs.length);
+        System.arraycopy(radiances, 0, state.radiances, 0, radiances.length);
+        System.arraycopy(emission_correction_factor_sky, 0, state.emission_correction_factor_sky, 0, emission_correction_factor_sky.length);
+        System.arraycopy(emission_correction_factor_sun, 0, state.emission_correction_factor_sun, 0, emission_correction_factor_sun.length);
+        state.albedo = albedo;
+        state.elevation = elevation;
+        state.solar_radius = solar_radius;
+        state.turbidity = turbidity;
+        return state;
+    }
 }

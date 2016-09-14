@@ -24,8 +24,11 @@
 package org.rt;
 
 import java.util.ArrayList;
+import org.rt.core.AbstractBackground;
 import org.rt.core.AbstractDisplay;
+import org.rt.core.AbstractLight;
 import org.rt.core.AbstractPrimitive;
+import org.rt.core.AbstractSceneDescription;
 import org.rt.core.Camera;
 import org.rt.core.ImageSampler;
 import org.rt.core.Scene;
@@ -103,10 +106,22 @@ public class RayTracerAPI
     }
     
     
+    public void createScene(AbstractSceneDescription sceneDescription)
+    {
+        scene.setPrimitives(sceneDescription.getPrimitives());
+        scene.setBackground(sceneDescription.getBackground());
+        scene.build();
+    }
+    
+    public void buildScene()
+    {
+        scene.build();
+    }
+    
     public void createScene(ArrayList<AbstractPrimitive> primitives)
     {
         scene.setPrimitives(primitives);
-        scene.build();
+        scene.setBackground(null);
     }
         
     public void pause()

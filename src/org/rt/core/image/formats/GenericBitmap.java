@@ -56,19 +56,19 @@ public class GenericBitmap extends AbstractBitmap
 
     @Override
     public Color readColor(int x, int y) {
-        return color[x + y * w];
+        return color[index(x, y)];
     }
 
     @Override
     public float readAlpha(int x, int y) {
-        return alpha[x + y * w];
+        return alpha[index(x, y)];
     }
 
     @Override
     public void writeColor(Color color, float alpha, int x, int y) 
     {
-        this.color[x + y * w] = color;
-        this.alpha[x + y * w] = alpha;
+        this.color[index(x, y)] = color;
+        this.alpha[index(x, y)] = alpha;
     }    
 
     @Override
@@ -78,6 +78,24 @@ public class GenericBitmap extends AbstractBitmap
 
     @Override
     public void writeColor(Color color, float alpha, int x, int y, int w, int h) {
+        int w1 = (int) (getWidth() - 1);
+        int h1 = (int) (getHeight() - 1);
+        
+        for (int dx = Math.min(x + w , w1); dx >= x; dx--)
+            for (int dy = Math.min(y + h, h1); dy >= y; dy--)
+            {          
+                //System.out.println(color);
+                writeColor(color, alpha, dx, dy);                
+            }
+    }
+    
+    public int index(int x, int y)
+    {
+        return x + y * w;
+    }
+
+    @Override
+    public void writeColor(Color[] color, float[] alpha, int x, int y, int w, int h) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -23,23 +23,22 @@
  */
 package org.rt.core.math;
 
+import org.rt.core.coordinates.Point2f;
 import org.rt.core.coordinates.Point3f;
 import org.rt.core.coordinates.Vector3f;
+import static org.rt.core.math.Utility.PI_F;
+import static org.rt.core.math.Utility.cosf;
+import static org.rt.core.math.Utility.sinf;
+import static org.rt.core.math.Utility.sqrtf;
 /**
  *
  * @author user
  */
 public class SamplingDisk 
 {
-    private float radius = 1;
-    private Point3f pos = new Point3f();
+    private float radius = 1;    
     private final Frame frame = new Frame();
-    
-    public SamplingDisk()
-    {
         
-    }
-    
     public SamplingDisk(float radius)
     {
         this.radius = radius;
@@ -49,4 +48,17 @@ public class SamplingDisk
     {
         frame.setFromZ(dir);
     }
+    
+    public Point2f sampleDisk(float r1, float r2)
+    {
+        float r = sqrtf(r1);
+        float theta = 2f * PI_F * r2;
+        
+        float x = r * cosf(theta);
+        float y = r * sinf(theta);
+                
+        return new Point2f(x * radius, y * radius);
+    }
+    
+    
 }

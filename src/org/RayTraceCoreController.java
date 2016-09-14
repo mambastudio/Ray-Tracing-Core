@@ -37,8 +37,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import org.rt.core.scene.CornellSceneDescription;
+import org.rt.core.scene.CornellSingleSphere;
+import org.rt.core.system.UI;
+import static org.rt.core.system.UI.Module.DISP;
+import org.rt.core.system.UserInterface;
+import org.rt.core.system.ui.SimpleInterface;
 import org.rt.thread.TimerExecution;
 
 /**
@@ -49,7 +54,7 @@ import org.rt.thread.TimerExecution;
 public class RayTraceCoreController implements Initializable {
 
     private final RayTracerAPI api = new RayTracerAPI();    
-    private final RenderDisplay display = new RenderDisplay();
+    private final RenderDisplay display = new RenderDisplay(false);
     private final Camera camera = new Camera(new Point3f(0, 0, 4), new Point3f(), new Vector3f(0, 1, 0), 45);
     private final ImageSampler renderer = new SimpleRenderer();
     
@@ -71,6 +76,11 @@ public class RayTraceCoreController implements Initializable {
     @FXML
     Button stopButton;
     
+    @FXML
+    Label renderSize;
+    
+    
+    SimpleInterface sinterface;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -78,14 +88,28 @@ public class RayTraceCoreController implements Initializable {
                 
         viewPort.setContent(display);
                 
-        api.createScene(CornellSceneDescription.getPrimitives());        
+        api.createScene(new CornellSingleSphere());        
         api.setCamera(camera);
         api.setImageSize(600, 600);
-        api.setRenderer(renderer);       
+        api.setRenderer(renderer);     
+        //api.setBackroundLight(new BackgroundLight(Color.WHITE));
+        
+        sinterface = new SimpleInterface();
+        UI.set(sinterface);
+        
+        bind();
+        
     } 
     
-    public void render(ActionEvent e)
+    public void bind()
     {
+        renderSize.textProperty().bind(sinterface.displaySize);
+    }
+    
+    public void render(ActionEvent e)
+    {                
+        sinterface.print(DISP, "600 x 600");
+        
         if(!api.render(display))
             return; 
         

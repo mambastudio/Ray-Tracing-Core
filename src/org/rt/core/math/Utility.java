@@ -158,6 +158,15 @@ public class Utility {
         return a;
     }
     
+    public static float min(float a, float b, float c) {
+        if (a > b)
+            a = b;
+        if (a > c)
+            a = c;
+        return a;
+    }
+
+    
     
     public static boolean isBad(float value)
     {

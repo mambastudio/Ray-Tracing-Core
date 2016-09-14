@@ -39,5 +39,6 @@ public abstract class AbstractBitmap {
     public abstract float readAlpha(int x, int y);
     public abstract void writeColor(Color color, float alpha, int x, int y); 
     public abstract void writeColor(Color color, float alpha, int x, int y, int w, int h);
+    public abstract void writeColor(Color[] color, float[] alpha, int x, int y, int w, int h);
     public abstract Image getImage();
 }

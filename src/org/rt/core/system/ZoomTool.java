@@ -48,7 +48,7 @@ public class ZoomTool
         accumY.set(0);
     }
     
-    public static void setMouseValue(double mouseValueX, double mouseValueY)
+    public static void setOnMousePressed(double mouseValueX, double mouseValueY)
     {
         mouseX.set(mouseValueX);
         mouseY.set(mouseValueY);

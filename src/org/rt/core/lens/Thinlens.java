@@ -23,10 +23,26 @@
  */
 package org.rt.core.lens;
 
+import org.rt.core.AbstractLens;
+import org.rt.core.coordinates.Point2f;
+import org.rt.core.coordinates.Point3f;
+import org.rt.core.math.Ray;
+
 /**
  *
  * @author user
  */
-public class Thinlens {
+public class Thinlens extends AbstractLens
+{
+
+    @Override
+    public Ray generateRay(float x, float y, float xResolution, float yResolution, float lensX, float lensY) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Point2f generatePixel(Point3f aHitpoint, float xResolution, float yResolution, float lensX, float lensY) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

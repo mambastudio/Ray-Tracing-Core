@@ -77,12 +77,14 @@ public final class BoundingVolume extends AbstractAccelerator
         
         bound = root.bounds;
         
+        //System.out.println("b Nodes " +totalNodes[0]);
+        
         //Compute representation of depth-first traversal of BVH tree
         nodes = new LinearBVHNode[totalNodes[0]];
         for(int i = 0; i<totalNodes[0]; ++i)
             nodes[i] = new LinearBVHNode();
         int offset[] = new int[1];
-        flattenBVHTree(root, offset);
+        flattenBVHTree(root, offset);        
     }
     
     public int flattenBVHTree(BVHBuildNode node, int[] offset)
@@ -154,7 +156,8 @@ public final class BoundingVolume extends AbstractAccelerator
                 return node;
             }
             
-            //Partition primitives into equally-sized subsets            
+            //Partition primitives into equally-sized subsets         
+           
             sort(buildData, start, end, dim);         
             node.initInterior(dim, recursiveBuild(buildData, start, mid,
                                                   totalNodes, orderedPrims),
@@ -313,11 +316,7 @@ public final class BoundingVolume extends AbstractAccelerator
         {
             primitiveNumber = pn;
             bounds = b;
-            
-            Point3f p1 = b.minimum.mul(0.5f);
-            Point3f p2 = b.maximum.mul(0.5f);
-            
-            centroid = new Point3f(p1.x + p2.x, p1.y + p2.y, p1.z + p2.z);
+            centroid = b.getCenter();            
         }
     }
     
@@ -329,8 +328,7 @@ public final class BoundingVolume extends AbstractAccelerator
         int secondChildOffset; //interior
         
         int nPrimitives;        // 0 -> interior node
-        int axis;               // interior node: xyz
-        int pad[] = new int[2]; // ensure 32 byte total size
+        int axis;               // interior node: xyz        
     }
     
     public class ComparePoints implements Comparator<BVHPrimitiveInfo>

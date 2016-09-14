@@ -99,24 +99,14 @@ public class TriangleMesh extends AbstractShape
     
     public void addVertexIndex(int i, int j, int k)
     {
-        vertexIndex.add(i, j, k);
-    }
-    
-    public void addVertexIndex2(int i, int j, int k)
-    {
         int a = getIndex(i, p.size());
         int b = getIndex(j, p.size());
         int c = getIndex(k, p.size());
         
         vertexIndex.add(a, b, c);
     }
-    
+        
     public void addUVIndex(int i, int j, int k)
-    {
-        uvIndex.add(i, j, k);
-    }
-    
-    public void addUVIndex2(int i, int j, int k)
     {
         int a = getIndex(i, uv.size());
         int b = getIndex(j, uv.size());
@@ -124,13 +114,8 @@ public class TriangleMesh extends AbstractShape
         
         uvIndex.add(a, b, c);
     }
-    
-    public void addNormalIndex(int i, int j, int k)
-    {
-        normalIndex.add(i, j, k);
-    }
-    
-     public void addNormalIndex2(int i, int j, int k)
+        
+     public void addNormalIndex(int i, int j, int k)
     {
         int a = getIndex(i, n.size());
         int b = getIndex(j, n.size());
@@ -154,7 +139,7 @@ public class TriangleMesh extends AbstractShape
         if(index > 0)
             return index - 1;
         else if(index < 0)
-            return size - index;
+            return size + index;
         else
             throw new UnsupportedOperationException("weird index  " +index);
     }

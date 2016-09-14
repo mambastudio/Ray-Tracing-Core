@@ -69,6 +69,11 @@ public class BoundingBox implements Cloneable
         return Point3f.mid(minimum, maximum);
     }
     
+    public final float getCenter(int dim)
+    {
+        return Point3f.mid(minimum, maximum).get(dim);
+    }
+    
     public boolean intersectP(Ray ray, float[] hitt) 
     {
         float t0 = ray.getMin(), t1 = ray.getMax();

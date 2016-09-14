@@ -23,11 +23,14 @@
  */
 package org.rt.core;
 
+import static java.lang.Math.abs;
 import org.rt.core.coordinates.Point2f;
 import org.rt.core.coordinates.Point3f;
 import org.rt.core.coordinates.Vector3f;
 import org.rt.core.math.Matrix;
 import org.rt.core.math.Ray;
+import org.rt.core.math.Rng;
+import org.rt.core.math.SamplingDisk;
 import org.rt.core.math.Transform;
 
 /**
@@ -126,10 +129,27 @@ public class Camera
         Vector3f rd = new Vector3f(px, py, pz).normalize();
         Point3f ro = new Point3f();
         
-        cameraTransform.inverse().transformAssign(ro);
-        cameraTransform.inverse().transformAssign(rd);
+        Ray r = new Ray(ro, rd);
         
-        return new Ray(ro, rd);
+        float focalDistance = focalDistance();
+        float ft = focalDistance/abs(r.d.z);        
+        Point3f pFocus = r.getPoint(ft);
+        
+        SamplingDisk disk = new SamplingDisk(0.5f);
+        Point2f lensUV = disk.sampleDisk(Rng.getFloat(), Rng.getFloat());
+        
+        Point3f oo = new Point3f(lensUV.x, lensUV.y, 0);
+        Vector3f dd = pFocus.subV(oo);
+        
+        cameraTransform.inverse().transformAssign(oo);
+        cameraTransform.inverse().transformAssign(dd);
+        
+        return new Ray(oo, dd);
+    }
+    
+    private float focalDistance()
+    {
+        return lookat.subV(position).length();
     }
     
     @Override

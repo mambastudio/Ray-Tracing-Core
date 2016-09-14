@@ -94,6 +94,11 @@ public class Scene
         
     }
     
+    public void setBackground(AbstractBackground background)
+    {
+        lights.setBackgroundLight(background);
+    }
+    
     public boolean intersect(Ray ray, Intersection isect)
     {
         boolean hit = accelerator.intersect(ray, isect);

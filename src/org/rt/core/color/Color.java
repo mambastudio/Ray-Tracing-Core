@@ -148,6 +148,16 @@ public final class Color implements Serializable
         }
     }
     
+    public float getMax()
+    {
+        return Utility.max(r, g, b);
+    }
+    
+    public float getMin()
+    {
+        return Utility.min(r, g, b);
+    }
+    
     public final boolean isBad()
     {
         return (Float.isNaN(this.r)) || (Float.isNaN(this.g)) || (Float.isNaN(this.b)) ||
@@ -533,6 +543,28 @@ public final class Color implements Serializable
         b[1] = toByte(value2);
         b[2] = toByte(value3);
         return b;
+    }
+    
+    public static final Color blend(Color c1, Color c2, float b) {
+        return blend(c1, c2, b, new Color());
+    }
+
+    public static final Color blend(Color c1, Color c2, float b, Color dest) {
+        dest.r = (1.0f - b) * c1.r + b * c2.r;
+        dest.g = (1.0f - b) * c1.g + b * c2.g;
+        dest.b = (1.0f - b) * c1.b + b * c2.b;
+        return dest;
+    }
+
+    public static final Color blend(Color c1, Color c2, Color b) {
+        return blend(c1, c2, b, new Color());
+    }
+
+    public static final Color blend(Color c1, Color c2, Color b, Color dest) {
+        dest.r = (1.0f - b.r) * c1.r + b.r * c2.r;
+        dest.g = (1.0f - b.g) * c1.g + b.g * c2.g;
+        dest.b = (1.0f - b.b) * c1.b + b.b * c2.b;
+        return dest;
     }
     
     @Override

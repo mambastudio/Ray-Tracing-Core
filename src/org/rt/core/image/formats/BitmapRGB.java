@@ -23,12 +23,13 @@
  */
 package org.rt.core.image.formats;
 
-import java.nio.IntBuffer;
+import java.nio.ByteBuffer;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
 import org.rt.core.AbstractBitmap;
 import org.rt.core.color.Color;
+import org.rt.core.color.ColorCoding;
 
 /**
  *
@@ -37,22 +38,15 @@ import org.rt.core.color.Color;
 public class BitmapRGB extends AbstractBitmap
 {
     private final int w, h;
-    private final int[] data;
+    private final byte[] data;
     
     public BitmapRGB(int w, int h)
     {
         this.w = w;
         this.h = h;
-        this.data = new int[w * h];
+        this.data = new byte[w * h * 3];
     }
-    
-    public BitmapRGB(int w, int h, int[] data)
-    {
-        this.w = w;
-        this.h = h;
-        this.data = data;
-    }
-    
+        
     @Override
     public int getWidth() {
         return w;
@@ -66,32 +60,35 @@ public class BitmapRGB extends AbstractBitmap
     @Override
     public Color readColor(int x, int y) {
         int index = index(x, y);        
-        float[] buf = Color.toFloat8(data[index]);        
-        return new Color(buf[1], buf[2], buf[3]); //buf[0] is alpha value
+        float[] buf = ColorCoding.toFloat8(data[index+0], data[index+1], data[index+2]);
+        return new Color(buf[1], buf[2], buf[3]); 
     }
 
     @Override
     public float readAlpha(int x, int y) {
-        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
+        return 1f;
     }
 
     @Override
     public void writeColor(Color color, float alpha, int x, int y) {
-        int index = index(x, y);        
-        data[index] = Color.toInt8(1, color.r, color.g, color.b);        
+        int index = index(x, y); 
+        byte[] buf = ColorCoding.toByte(color.r, color.g, color.b);
+        data[index+0] = buf[0];
+        data[index+1] = buf[1];
+        data[index+2] = buf[2];
     }
     
     private int index(int x, int y)
     {
-        return x + y * w;
+        return (x + y * w )* 3;
     }
 
     @Override
     public Image getImage() 
     {       
-        WritableImage wImage = new WritableImage(w, h);
-        WritablePixelFormat<IntBuffer> format = WritablePixelFormat.getIntArgbInstance();       
-        wImage.getPixelWriter().setPixels(0, 0, w, h, format, data, 0, w);
+        WritableImage wImage = new WritableImage(w, h);        
+        PixelFormat<ByteBuffer> pixelFormat = PixelFormat.getByteRgbInstance();        
+        wImage.getPixelWriter().setPixels(0, 0, w, h, pixelFormat, data, 0, w * 3);
         return wImage;
     }
 
@@ -106,6 +103,10 @@ public class BitmapRGB extends AbstractBitmap
                 //System.out.println(color);
                 writeColor(color, alpha, dx, dy);                
             }
+    }    
+
+    @Override
+    public void writeColor(Color[] color, float[] alpha, int x, int y, int w, int h) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }

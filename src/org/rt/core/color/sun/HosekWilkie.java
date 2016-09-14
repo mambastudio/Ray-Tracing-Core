@@ -48,18 +48,19 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 import java.util.Arrays;
+import org.rt.core.math.Utility;
 
 /**
  *
  * @author user
  */
 public class HosekWilkie {
-    final static int NIL                         = 0;
-    final static double MATH_PI                   = 3.141592653589793;
-    final static double MATH_DEG_TO_RAD           = ( MATH_PI / 180.0 );
-    final static double MATH_RAD_TO_DEG           = ( 180.0 / MATH_PI );
-    final static double DEGREES                   = MATH_DEG_TO_RAD;
-    final static double TERRESTRIAL_SOLAR_RADIUS  = ( ( 0.51 * DEGREES ) / 2.0 );
+    final static int NIL                            = 0;
+    final static double MATH_PI                     = 3.141592653589793;
+    final static double MATH_DEG_TO_RAD             = ( MATH_PI / 180.0 );
+    final static double MATH_RAD_TO_DEG             = ( 180.0 / MATH_PI );
+    final static double DEGREES                     = MATH_DEG_TO_RAD;
+    private static double TERRESTRIAL_SOLAR_RADIUS  = ( ( 12.9 * DEGREES ) / 2.0 );
     
     private  HosekWilkie()
     {
@@ -648,8 +649,10 @@ public class HosekWilkie {
     {
         Vector3f dir = d.clone();
                 
-        if(dir.y < 0)
-            return new Color();        
+        if(dir.y < 0.01)
+        {
+            return new Color();
+        }       
                     
         float gamma         = gamma(dir, currentState.getSolarDirection());
         float theta         = zenith(dir);
@@ -658,6 +661,7 @@ public class HosekWilkie {
         double g = arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 1);
         double b = arhosek_tristim_skymodel_radiance(currentState, theta, gamma, 2);
         
+        //System.out.println(new Color(r,g,b));
         return new Color(r, g, b).mul((float)exposure).simpleGamma((float)tonemapGamma);
     }
     
@@ -702,10 +706,10 @@ public class HosekWilkie {
         }
         
         Color color =  RGBSpace.convertXYZtoRGB(new XYZ(X, Y, Z).mul(40));   
-        return color.mul((float)exposure).simpleGamma((float)tonemapGamma);
+        return color;
     }
     
-    public static Color getRGB_using_solar_radiance(Vector3f d, ArHosekSkyModelState currentState, double exposure)
+    public static Color getRGB_using_solar_radiance(Vector3f d, ArHosekSkyModelState currentState, double exposure, double tonegamma)
     {
         Vector3f dir = d.clone();
                 
@@ -729,14 +733,37 @@ public class HosekWilkie {
             Z += CIE1931.getZ(radiance, i);
         }
         
-        Color color =  RGBSpace.convertXYZtoRGB(new XYZ(X, Y, Z)).mul(5.0f);         
+        Color color =  RGBSpace.convertXYZtoRGB(new XYZ(X, Y, Z)).mul(0.01f);         
         return color.mul((float)exposure);
     }   
     
     public static Color getSunColor(ArHosekSkyModelState currentState, double exposure)
     {
         Vector3f v = currentState.getSolarDirection();
-        return getRGB_using_solar_radiance(v, currentState, exposure);
+        return getRGB_using_solar_radiance(v, currentState, exposure, 1);
+    }
+    
+    public static Color[] getColor(ArHosekSkyModelState skyState, ArHosekSkyModelState sunState, int width, int height, float exposure, float tonemap)
+    {
+        Color [] colors = new Color[width * height];
+        
+        for(int j = 0; j<height; j++)
+            for(int i = 0; i<width; i++)
+            {
+                
+                Color sun = getRGB_using_solar_radiance(SphericalCoordinate.sphericalDirection(i, j, width, height), sunState, exposure, tonemap);
+                Color sky = getRGB(SphericalCoordinate.sphericalDirection(i, j, width, height), skyState, exposure, tonemap);
+                float sunAlpha = Math.min(sun.getMin(), 1);
+
+                Color col = Color.blend(sky, sun, sunAlpha);
+                colors[i + j * width] = col;
+            }
+        return colors;
+    }
+    
+    public static void setSunSize(double size)
+    {
+        TERRESTRIAL_SOLAR_RADIUS = ( ( size * DEGREES ) / 2.0 );
     }
     
     public static HDR getHDR(int size, ArHosekSkyModelState currentState, double exposure, double tonemapGamma)

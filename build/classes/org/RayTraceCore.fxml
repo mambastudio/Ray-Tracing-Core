@@ -74,7 +74,7 @@
                   <HBox prefHeight="28.0" prefWidth="204.0" spacing="10.0">
                      <children>
                         <Label prefHeight="28.0" prefWidth="94.0" text="Render size" />
-                        <Label prefHeight="28.0" prefWidth="65.0" text="__" />
+                        <Label fx:id="renderSize" prefHeight="28.0" prefWidth="65.0" text="__" />
                      </children>
                   </HBox>
                </children>

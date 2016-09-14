@@ -46,7 +46,19 @@ public class RenderDisplay extends StackPane implements AbstractDisplay
     private int w, h, size;    
     ImageView imageView;
     Color[] colorArray = null;
+    boolean imageMoveable = true;
     
+    public RenderDisplay()
+    {
+        imageView = new ImageView();
+        getChildren().add(imageView);
+    }
+    
+    public RenderDisplay(boolean imageMoveable)
+    {
+        this();
+        this.imageMoveable = imageMoveable;
+    }
     @Override
     public void imageBegin() 
     {
@@ -59,24 +71,24 @@ public class RenderDisplay extends StackPane implements AbstractDisplay
         this.w = width; this.h = height;
         this.size = width * height;
         
-        ZoomTool.reset();
+        if(imageMoveable)
+        {
+            ZoomTool.reset();
         
-        setOnMousePressed((MouseEvent e) -> {
-            ZoomTool.setMouseValue(e.getX(), e.getY());                
-        });
+            setOnMousePressed((MouseEvent e) -> {
+                ZoomTool.setOnMousePressed(e.getX(), e.getY());                
+            });
         
-        setOnMouseDragged((MouseEvent e) -> {
-            ZoomTool.pan(imageView, e);            
-        });
+            setOnMouseDragged((MouseEvent e) -> {
+                ZoomTool.pan(imageView, e);            
+            });
         
-        setOnScroll((ScrollEvent event) -> {
-            ZoomTool.zoom(imageView, event);          
-        });   
-        
-        imageView = new ImageView();
-        imageView.setImage(getImageNull());
-        getChildren().add(imageView);
-        
+            setOnScroll((ScrollEvent event) -> {
+                ZoomTool.zoom(imageView, event);          
+            });   
+        }
+        imageClear();
+                 
         imageView.setScaleX(1);
         imageView.setScaleY(1);
        
@@ -93,14 +105,19 @@ public class RenderDisplay extends StackPane implements AbstractDisplay
     @Override
     public synchronized void imageFill(float x, float y, Color c) 
     {
-        imageFill((int)x, (int)y, c);
+        colorArray[index(x, y)] = c;
     }
     
-    private void imageFill(int x, int y, Color c) 
+    private int index(int x, int y)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return x + y * w;
     }
-
+    
+    private int index(float x, float y)
+    {
+        return index((int)x, (int)y);
+    }
+    
     @Override
     public void imagePaint() 
     {        
@@ -149,8 +166,7 @@ public class RenderDisplay extends StackPane implements AbstractDisplay
     @Override
     public void imageClear() 
     {
-        imageView.setImage(getImageNull());
-        getChildren().add(imageView);
+        imageView.setImage(getImageNull());        
     }
 
     @Override
@@ -162,11 +178,6 @@ public class RenderDisplay extends StackPane implements AbstractDisplay
     public int getImageHeight() {
         return h;
     }
-    
-    private int index(int x, int y)
-    {
-        return w * y + x;
-    }    
     
     private Image getImageNull()
     {
@@ -180,6 +191,8 @@ public class RenderDisplay extends StackPane implements AbstractDisplay
 
     @Override
     public void imageFill(AbstractBitmap bitmap) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(int j = 0; j < h; j++)
+            for(int i = 0; i < w; i++)
+                imageFill(i, j, bitmap.readColor(i, j));
     }
 }

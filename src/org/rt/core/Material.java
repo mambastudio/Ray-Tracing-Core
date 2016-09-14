@@ -78,6 +78,13 @@ public class Material implements Serializable
         name = "diffuse surface";
     }
     
+    public static Material createDefaultLambert()
+    {
+        Material material = new Material();
+        material.diffuseReflectance.setColor(new Color(0.9, 0.9, 0.9));
+        return material;
+    }
+    
     public static Material createLambert(Color color)
     {
         Material material = new Material();

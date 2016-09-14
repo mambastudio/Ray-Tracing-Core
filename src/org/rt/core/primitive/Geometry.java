@@ -36,7 +36,7 @@ import org.rt.core.light.AreaLight;
 import org.rt.core.math.BoundingBox;
 import org.rt.core.math.Ray;
 import java.util.ArrayList;
-
+import org.rt.core.accelerator.IterativeBVH;
 /**
  *
  * @author user
@@ -50,7 +50,7 @@ public class Geometry extends AbstractPrimitive
     public Geometry(Material material)
     {
         this.material = material;
-        this.accelerator = new BoundingVolume();
+        this.accelerator = new IterativeBVH();
         this.gPrimitives = new ArrayList<>();
     }
     
@@ -73,7 +73,9 @@ public class Geometry extends AbstractPrimitive
     @Override
     public void build()
     {
-        accelerator.build(gPrimitives);        
+        accelerator.build(gPrimitives);     
+        //BVH2 bvh = new BVH2();
+        //bvh.build(gPrimitives);
     }
 
     @Override
