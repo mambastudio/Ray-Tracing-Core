@@ -92,10 +92,10 @@ public class DynamicDisplay extends StackPane implements AbstractDisplay
       
         w = (int)(width     * 0.9D);
         h = (int)(height    * 0.9D);
-        if (w > h) 
-            w = h;    
-        if (w < h) 
-            h = w;
+        //if (w > h) 
+        //    w = h;    
+        //if (w < h) 
+        //    h = w;
         
         if(w <= 0) w = 1;
         if(h <= 0) h = 1;
