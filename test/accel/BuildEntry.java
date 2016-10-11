@@ -21,24 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package test;
-
-import java.util.Arrays;
-import org.rt.util.IntArray;
+package accel;
 
 /**
  *
  * @author user
  */
-public class Test {
-    public static void main(String... args)
-    {        
-        IntArray arr = new IntArray(4, 3, 2);
-        System.out.println(Arrays.toString(arr.trim()));
-        arr.insert(1, 9, 8, 7, 6);
-        System.out.println(Arrays.toString(arr.trim()));
-        System.out.println(Arrays.toString(arr.remove(1, 1+2)));
-        System.out.println(Arrays.toString(arr.trim()));
+public class BuildEntry implements Struct {
+    // If non-zero then this is the index of the parent. (used in offsets)
+        int parent;
+        // The range of objects in the object list covered by this node.
+        int start, end;
+
+    @Override
+    public int[] getArray() {
+        return new int[]{parent, start, end};
     }
-    
+
+    @Override
+    public void setArray(int... array) {
+        if(array != null && array.length <= size())
+        {
+            parent = array[0];
+            start  = array[1];
+            end    = array[2];
+        }
+    }
+
+    @Override
+    public int size() {
+        return 3;
+    }
 }

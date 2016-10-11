@@ -23,8 +23,13 @@
  */
 package org.rt.core.parser.data;
 
-import org.rt.core.math.FloatArray;
-import org.rt.core.math.IntArray;
+import java.util.ArrayList;
+import org.rt.util.FloatArray;
+import org.rt.util.IntArray;
+import static org.rt.core.parser.data.MeshData.TriangleType.FACE;
+import static org.rt.core.parser.data.MeshData.TriangleType.FACE_NORMAL;
+import static org.rt.core.parser.data.MeshData.TriangleType.FACE_UV;
+import static org.rt.core.parser.data.MeshData.TriangleType.FACE_UV_NORMAL;
 
 /**
  *
@@ -32,26 +37,53 @@ import org.rt.core.math.IntArray;
  */
 public class MeshData
 {
-    FloatArray positions;
+    FloatArray points;
     FloatArray normals;
-    FloatArray texcoords;
-    IntArray indices;
+    FloatArray uvs;
     
-    String name;
+    IntArray triangles;
+        
+    ArrayList<String> objects;
+    ArrayList<String> groups;
+    ArrayList<MaterialData> materials;
+    
+    String name;  
+    
+    public enum TriangleType {FACE, FACE_UV, FACE_NORMAL, FACE_UV_NORMAL, ALL};
     
     public MeshData()
     {
-        positions = new FloatArray();
+        points = new FloatArray();
         normals = new FloatArray();
-        texcoords = new FloatArray();
-        indices = new IntArray();
+        uvs = new FloatArray();
+        
+        triangles = new IntArray();
+        
+        objects = new ArrayList<>();
+        groups = new ArrayList<>();
+        materials = new ArrayList<>();
         
         name = null;
     }
-        
-    public void addPosition(float x, float y, float z)
+    
+    public int getFaceData(int index, int offset)
     {
-        positions.add(x, y, z);
+        return triangles.get(index * 10 + offset);
+    }
+    
+    public void addObject(String name)
+    {
+        objects.add(name);
+    }
+    
+    public void addGroup(String name)            
+    {
+        groups.add(name);
+    }
+        
+    public void addVertex(float x, float y, float z)
+    {
+        points.add(x, y, z);
     }
         
     public void addNormal(float x, float y, float z)
@@ -61,20 +93,44 @@ public class MeshData
     
     public void addTexCoord(float x, float y)
     {
-        texcoords.add(x, y);
+        uvs.add(x, y);
     }
     
+    public void addTriangle(TriangleType type, int... value)
+    {
+        if(type == FACE)           
+            addTriangle(value[0], value[1], value[2], -1, -1, -1, -1, -1, -1, -1);
+        else if(type == FACE_UV)
+            addTriangle(value[0], value[1], value[2], value[3], value[4], value[5], -1, -1, -1, -1);
+        else if(type == FACE_NORMAL)
+            addTriangle(value[0], value[1], value[2], -1, -1, -1, value[3], value[4], value[5], -1);
+        else if(type == FACE_UV_NORMAL)
+            addTriangle(value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8], -1);
+    }
+        
+    public void addTriangle(int vert1, int vert2, int vert3, int uv1, int uv2, int uv3, int norm2, int norm3, int norm1, int material)
+    {
+        triangles.add(vert1, vert2, vert3,  uv1, uv2, uv3, norm1, norm2, norm3, material);
+    }
+        
     public void trimAll()
     {
-        positions.trim();
+        points.trim();
         normals.trim();
-        texcoords.trim();
-        indices.trim();
+        uvs.trim(); 
+        triangles.trim();
     }
     
     @Override
     public String toString()
     {
-        return name;
-    }
+        StringBuilder builder = new StringBuilder();
+        builder.append("objects = ").append(objects.size()).append("\n");
+        builder.append("groups  = ").append(groups.size()).append("\n").append("\n");
+        builder.append("points  = ").append(points.size()/3).append("\n");
+        builder.append("normals = ").append(normals.size()/3).append("\n");
+        builder.append("uvs     = ").append(uvs.size()/3).append("\n").append("\n");        
+        builder.append("faces   = ").append(triangles.size()/10).append("\n");
+        return builder.toString();
+    }    
 }

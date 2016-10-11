@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2016 user.
@@ -21,69 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.rt.core.math;
+package accel;
+
+import org.rt.util.IntArray;
 
 /**
  *
  * @author user
  */
-public class FloatArray {
-    private float[] array;
-    private int size;
-
-    public FloatArray()
+public class BuildEntryStack {
+    private final IntArray stack = new IntArray();
+    private int top = 0;
+    
+    public void push(BuildEntry entry)
     {
-        array = new float[0];
-        size = 0;
+        stack.add(entry.getArray());
+        top += entry.size();
     }
     
-    public void clear()
+    public BuildEntry pop()
     {
-        array = new float[10];
-        size = 0;
-    }
-
-    public final void add(float i)
-    {
-        if (size == array.length)
-        {
-            float[] oldArray = array;
-            array = new float[(size * 3) / 2 + 1];
-            System.arraycopy(oldArray, 0, array, 0, size);
-        }
-        array[size] = i;
-        size++;
+        BuildEntry entry = new BuildEntry();
+        int[] arr = stack.remove(top - entry.size(), top);
+        entry.setArray(arr);
+        top -= entry.size();
+        return entry;
     }
     
-    public final void add(float... value)
+    public boolean isEmpty()
     {
-        for(float i : value)
-            add(i);
+        return stack.size() == 0;
     }
-
-    public final void set(int index, float value)
-    {
-        array[index] = value;
-    }
-
-    public final float get(int index)
-    {
-        return array[index];
-    }
-
-    public final int getSize()
-    {
-        return size;
-    }
-
-    public final float[] trim()
-    {
-        if (size < array.length)
-        {
-            float[] oldArray = array;
-            array = new float[size];
-            System.arraycopy(oldArray, 0, array, 0, size);            
-        }
-        return array;
-    }    
 }

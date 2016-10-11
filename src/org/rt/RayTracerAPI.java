@@ -95,8 +95,12 @@ public class RayTracerAPI
             System.out.println("still probably running or paused or about to finish a task intensive process");
             return false;
         }
+        else if(camera == null)
+        {
+            System.out.println("camera is null");
+            return false;
+        }        
         
-        this.camera.setUp();
         this.scene.setCamera(camera);
         this.scene.prepareToRender();
         this.renderer.prepare(scene, imageWidth, imageHeight);
@@ -106,7 +110,7 @@ public class RayTracerAPI
     }
     
     
-    public void createScene(AbstractSceneDescription sceneDescription)
+    public void setScene(AbstractSceneDescription sceneDescription)
     {
         scene.setPrimitives(sceneDescription.getPrimitives());
         scene.setBackground(sceneDescription.getBackground());

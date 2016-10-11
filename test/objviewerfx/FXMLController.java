@@ -50,7 +50,7 @@ public class FXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         border.setCenter(display);        
-        api.createScene(new SphereScene());        
+        api.setScene(new SphereScene());        
         api.setCamera(camera);        
         api.setRenderer(renderer);
         api.render(display);

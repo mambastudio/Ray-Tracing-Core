@@ -21,24 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package test;
+package accel;
 
-import java.util.Arrays;
-import org.rt.util.IntArray;
+import org.rt.core.Intersection;
+import org.rt.core.math.BoundingBox;
+import org.rt.core.math.Ray;
 
 /**
  *
  * @author user
  */
-public class Test {
-    public static void main(String... args)
-    {        
-        IntArray arr = new IntArray(4, 3, 2);
-        System.out.println(Arrays.toString(arr.trim()));
-        arr.insert(1, 9, 8, 7, 6);
-        System.out.println(Arrays.toString(arr.trim()));
-        System.out.println(Arrays.toString(arr.remove(1, 1+2)));
-        System.out.println(Arrays.toString(arr.trim()));
-    }
-    
+public interface PrimitiveList 
+{
+    public int getNumPrimitives();
+    public BoundingBox getPrimitiveBound(int primID);
+    public BoundingBox getWorldBounds();
+    public boolean intersectPrimitive(Ray r, int primID, Intersection state);
 }

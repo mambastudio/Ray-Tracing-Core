@@ -88,7 +88,7 @@ public class RayTraceCoreController implements Initializable {
                 
         viewPort.setContent(display);
                 
-        api.createScene(new CornellSingleSphere());        
+        api.setScene(new CornellSingleSphere());        
         api.setCamera(camera);
         api.setImageSize(600, 600);
         api.setRenderer(renderer);     

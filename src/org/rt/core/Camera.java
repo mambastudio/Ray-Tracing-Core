@@ -89,13 +89,13 @@ public class Camera
     
     public Ray getFastRay(float x, float y, float xRes, float yRes)
     {        
-        float fov = (float)Math.toRadians(this.fov);
+        float fv = (float)Math.toRadians(this.fov);
         
         Vector3f look = lookat.subV(position);
         Vector3f Du = Vector3f.cross(look, up).normalize();
         Vector3f Dv = Vector3f.cross(look, Du).normalize();
        
-        float fl = xRes / (2.0F * (float)Math.tan(0.5F * fov));
+        float fl = xRes / (2.0F * (float)Math.tan(0.5F * fv));
         
         Vector3f vp = look.normalize();
         vp.x = (vp.x * fl - 0.5F * (xRes * Du.x + yRes * Dv.x));

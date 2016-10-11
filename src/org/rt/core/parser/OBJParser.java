@@ -26,7 +26,7 @@ package org.rt.core.parser;
 import org.rt.core.AbstractPrimitive;
 import org.rt.core.Material;
 import org.rt.core.color.Color;
-import org.rt.core.math.IntArray;
+import org.rt.util.IntArray;
 import org.rt.core.primitive.Geometry;
 import org.rt.core.shape.TriangleMesh;
 import java.io.File;
@@ -159,35 +159,35 @@ public class OBJParser
         while(parser.hasNext() && parser.peekNextTokenIsNumber())  
             intArray.add(parser.getNextInt());
         
-        if(intArray.getSize() == 3)
+        if(intArray.size() == 3)
         {
             read_triangle(intArray);
         }
-        else if(intArray.getSize() == 4)
+        else if(intArray.size() == 4)
         {
             read_quad(intArray);
         }
-        else if(intArray.getSize() == 6 && doubleBackSlash)
+        else if(intArray.size() == 6 && doubleBackSlash)
         {
             read_triangle_with_normals(intArray);
         }
-        else if(intArray.getSize() == 6)
+        else if(intArray.size() == 6)
         {
             read_triangle_with_uvs(intArray);
         }       
-        else if(intArray.getSize() == 8 && doubleBackSlash)
+        else if(intArray.size() == 8 && doubleBackSlash)
         {           
             read_quad_with_normals(intArray);            
         }
-         else if(intArray.getSize() == 8)
+         else if(intArray.size() == 8)
         {                        
             read_quad_with_uvs(intArray);
         }
-        else if(intArray.getSize() == 9)
+        else if(intArray.size() == 9)
         {
             read_triangle_with_uvs_normals(intArray);
         }
-        else if(intArray.getSize() == 12)
+        else if(intArray.size() == 12)
         {
             read_quad_with_uvs_normals(intArray);
         }    

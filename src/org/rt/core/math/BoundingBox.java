@@ -142,6 +142,11 @@ public class BoundingBox implements Cloneable
         return ret;
     }
     
+    public void include(float x, float y, float z)
+    {
+        include(new Point3f(x, y, z));
+    }
+    
     public final void include(Point3f p) 
     {
         if (p != null) {

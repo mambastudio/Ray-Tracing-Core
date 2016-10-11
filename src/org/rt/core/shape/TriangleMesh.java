@@ -29,7 +29,7 @@ import org.rt.core.coordinates.Point2f;
 import org.rt.core.coordinates.Point3f;
 import org.rt.core.math.BoundingBox;
 import org.rt.core.math.DifferentialGeometry;
-import org.rt.core.math.IntArray;
+import org.rt.util.IntArray;
 import org.rt.core.math.Ray;
 import org.rt.core.math.Transform;
 import java.util.ArrayList;
@@ -126,12 +126,12 @@ public class TriangleMesh extends AbstractShape
     
     public boolean hasNormal()
     {
-        return normalIndex.getSize() > 0;
+        return normalIndex.size() > 0;
     }
     
     public boolean hasUV()
     {
-        return uvIndex.getSize() > 0;
+        return uvIndex.size() > 0;
     }
     
     private int getIndex(int index, int size)
@@ -189,7 +189,7 @@ public class TriangleMesh extends AbstractShape
     
     public int getTriangleSize()
     {
-        return vertexIndex.getSize()/3;
+        return vertexIndex.size()/3;
     }
     
     public static String getMeshInfo()
